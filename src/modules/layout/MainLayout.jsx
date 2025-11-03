@@ -26,10 +26,8 @@ const MainLayout = ({ children }) => {
         </header>
 
         {/* ─── Main Content ─────────────────────────── */}
-        <main className="flex-1 p-4 bg-gray-100 overflow-y-auto">
-          <div className="bg-white rounded-xl shadow-sm p-6 min-h-[85vh] font-primary">
-            {children}
-          </div>
+        <main className="flex-1 p-5 bg-gradient-to-br from-primary/50 via-primary-dark to-secondary-light overflow-y-auto">
+          {children}
         </main>
       </div>
     </div>
