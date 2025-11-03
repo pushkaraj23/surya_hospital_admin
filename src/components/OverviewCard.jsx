@@ -1,27 +1,24 @@
-import React from 'react';
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import React from "react";
 
-const OverviewCard = ({ title, value, icon: Icon, color }) => (
-  <Card sx={{ minWidth: 275, boxShadow: 3, borderLeft: `5px solid ${color}`,borderRadius: 'var(--border-radius-base)',
-    transition: 'transform 0.2s',
-    '&:hover': {
-      transform: 'translateY(-5px)',
-      boxShadow: '0 8px 15px rgba(0,0,0,0.15)',
-    }, }}>
-    <CardContent>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Box>
-          <Typography color="text.secondary" gutterBottom>
-            {title}
-          </Typography>
-          <Typography variant="h4" component="div" sx={{ fontWeight: 'bold' }}>
-            {value}
-          </Typography>
-        </Box>
-        <Icon sx={{ color: color, fontSize: 40, opacity: 0.7 }} />
-      </Box>
-    </CardContent>
-  </Card>
-);
+const OverviewCard = ({ title, value, icon: Icon, color = "bg-primary" }) => {
+  return (
+    <div
+      className={`relative p-5 rounded-xl shadow-md border-l-4 text-white flex items-center justify-between transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg ${color}`}
+    >
+      <div>
+        <h4 className="text-sm font-secondary uppercase opacity-90 tracking-wide">
+          {title}
+        </h4>
+        <p className="text-3xl font-semibold mt-1 font-primary">{value}</p>
+      </div>
+
+      {Icon && (
+        <div className="opacity-80">
+          <Icon className="text-4xl" />
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default OverviewCard;
