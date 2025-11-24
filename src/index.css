@@ -6,3 +6,11 @@
 * {
     @apply font-secondary
 }
+.scrollbarhHide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.scrollbarHide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
