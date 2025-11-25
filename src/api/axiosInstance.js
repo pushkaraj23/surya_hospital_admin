@@ -1,25 +1,3 @@
-// import axios from "axios";
-
-// const axiosInstance = axios.create({
-//   baseURL: " http://localhost:8654/api/",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// });
-
-// axiosInstance.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     // handle errors globally
-//     console.error("API Error:", error.response?.data || error.message);
-//     return Promise.reject(error);
-//   }
-// );
-
-// export default axiosInstance;
-
-
-
 import axios from "axios";
 
 const axiosInstance = axios.create({

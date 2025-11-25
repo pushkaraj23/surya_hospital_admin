@@ -1518,7 +1518,7 @@ const GalleryManagement = () => {
                 {/* Header */}
                 <div className="bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] shadow-md rounded-xl p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-1">
                             <PhotoLibrary /> Gallery Management
                         </h1>
                         <p className="text-gray-600 mt-2">Organize your photos and videos into albums</p>

@@ -12,6 +12,7 @@ import NewsEventsManagement from "./modules/dashboard/pages/NewsEventsManagement
 import DepartmentManagement from "./modules/dashboard/pages/DepartmentManagement";
 import Inquiry from "./modules/dashboard/pages/Inquiry";
 import Feedback from "./modules/dashboard/pages/Feedback";
+import Contact from "./modules/doctors/pages/Contact";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/blog" element={<BlogAdmin />} />
         <Route path="/gallery" element={<GalleryManagement />} />
         <Route path="/news" element={<NewsEventsManagement />} />
+        <Route path="/contact" element={<Contact/>} />
         <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Routes>
     </MainLayout>

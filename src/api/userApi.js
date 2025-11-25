@@ -1413,3 +1413,44 @@ export const getRecentContacts = async (days = 7) => {
     throw error;
   }
 };
+
+
+
+//CONTACT
+// ✅ CONTACT API FUNCTIONS
+export const fetchContacts = async () => {
+  try {
+    const response = await axiosInstance.get('/contact');
+    console.log("✅ fetchContacts response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error fetching contacts:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to fetch contacts");
+  }
+};
+
+// ✅ UTILITY FUNCTIONS
+export const filterContacts = (contacts, searchTerm) => {
+  if (!searchTerm.trim()) {
+    return contacts;
+  }
+
+  const term = searchTerm.toLowerCase();
+  return contacts.filter(contact =>
+    contact.name?.toLowerCase().includes(term) ||
+    contact.phone?.includes(term) ||
+    contact.email?.toLowerCase().includes(term) ||
+    contact.subject?.toLowerCase().includes(term) ||
+    contact.message?.toLowerCase().includes(term)
+  );
+};
+
+export const formatDate = (dateString) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};

@@ -8,6 +8,7 @@ import {
   Menu as MenuIcon,
   Article,
   PhotoLibrary,
+  Contacts,
 } from "@mui/icons-material";
 import { Newspaper } from "lucide-react";
 
@@ -19,12 +20,14 @@ const Sidebar = () => {
     { path: "/", label: "Dashboard", icon: DashboardIcon },
     { path: "/doctors", label: "Doctors", icon: People },
     { path: "/department", label: "Department", icon: Article },
-    { path: "/appointment", label: "Appointments", icon: CalendarToday },
-    { path: "/inquiries", label: "Inquiries", icon: QuestionAnswer },
-    { path: "/feedback", label: "Feedbacks", icon: QuestionAnswer },
+
     { path: "/blog", label: "Blog", icon: Article },
     { path: "/gallery", label: "Gallery", icon: PhotoLibrary },
     { path: "/news", label: "News", icon: Newspaper },
+    { path: "/appointment", label: "Appointments", icon: CalendarToday },
+    // { path: "/inquiries", label: "Inquiries", icon: QuestionAnswer },
+    { path: "/feedback", label: "Feedbacks", icon: QuestionAnswer },
+    { path: "/contact", label: "Contact", icon: Contacts }
   ];
 
   return (
@@ -66,8 +69,8 @@ const Sidebar = () => {
                 >
                   <Icon
                     className={`text-[22px] ${isActive
-                        ? "text-white"
-                        : "text-accent group-hover:text-accent"
+                      ? "text-white"
+                      : "text-accent group-hover:text-accent"
                       }`}
                   />
                   {!collapsed && (

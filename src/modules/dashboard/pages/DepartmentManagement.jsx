@@ -651,7 +651,7 @@
 //   // ✅ Convert services string to array
 //   const parseServices = (servicesString) => {
 //     if (!servicesString.trim()) return null;
-    
+
 //     // Split by new lines or commas and clean up
 //     return servicesString
 //       .split(/[\n,]/)
@@ -1251,9 +1251,9 @@ export default function DepartmentManagement() {
   // ✅ Scroll to form when editing starts
   useEffect(() => {
     if (editingId && formRef.current) {
-      formRef.current.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
+      formRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
       });
     }
   }, [editingId]);
@@ -1328,7 +1328,7 @@ export default function DepartmentManagement() {
   // ✅ Convert services string to array
   const parseServices = (servicesString) => {
     if (!servicesString.trim()) return null;
-    
+
     // Split by new lines or commas and clean up
     return servicesString
       .split(/[\n,]/)
@@ -1386,7 +1386,7 @@ export default function DepartmentManagement() {
   // ✅ Handle Edit - Convert services array back to string for editing
   const handleEdit = (dept) => {
     console.log("✏️ Editing department:", dept);
-    
+
     // Set editing state first
     setEditingId(dept.id);
     setFormData({
@@ -1400,13 +1400,13 @@ export default function DepartmentManagement() {
       experience: dept.experience?.toString() || ""
     });
     setError("");
-    
+
     // Scroll to form after a small delay to ensure state is updated
     setTimeout(() => {
       if (formRef.current) {
-        formRef.current.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
+        formRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
         });
       }
     }, 100);
@@ -1834,43 +1834,48 @@ export default function DepartmentManagement() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex items-center space-x-2">
+                        <div className="flex flex-col items-center space-x-2">
                           <button
                             onClick={() => handleViewDetails(dept)}
-                            className="text-green-600 hover:text-green-900 p-2 rounded-lg hover:bg-green-50 transition"
+                            className="text-green-600 hover:text-green-900 p-2 gap-1 rounded-lg flex hover:bg-green-50 transition"
                             title="View details"
                           >
                             <Eye size={18} />
+                            View
                           </button>
                           <button
                             onClick={() => handleEdit(dept)}
                             disabled={updateMutation.isLoading || deleteMutation.isLoading}
-                            className="text-amber-600 hover:text-amber-900 p-2 rounded-lg hover:bg-amber-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="text-amber-600 hover:text-amber-900 p-2 gap-1 rounded-lg flex hover:bg-amber-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Edit department"
                           >
                             <Edit2 size={18} />
+                            Edit
                           </button>
                           <button
                             onClick={() => handleToggleStatus(dept)}
                             disabled={toggleStatusMutation.isLoading}
-                            className="text-orange-600 hover:text-orange-900 p-2 rounded-lg hover:bg-orange-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="text-orange-600 hover:text-orange-900 p-2 gap-1 rounded-lg flex hover:bg-orange-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
                             title={dept.isactive ? "Deactivate" : "Activate"}
                           >
                             {toggleStatusMutation.isLoading && toggleStatusMutation.variables?.id === dept.id ? (
                               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
                             ) : (
+
                               <Power size={18} />
+
                             )}
                           </button>
                           <button
                             onClick={() => handleDelete(dept.id)}
                             disabled={deleteMutation.isLoading}
-                            className="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="text-red-600 hover:text-red-900 p-2 rounded-lg gap-1 flex hover:bg-red-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
                             title="Delete department"
                           >
                             {deleteMutation.isLoading && deleteMutation.variables === dept.id ? (
                               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
                             ) : (
+
                               <Trash2 size={18} />
                             )}
                           </button>

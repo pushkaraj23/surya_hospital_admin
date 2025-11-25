@@ -102,7 +102,7 @@ const NewsEventsManagement = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         try {
             if (editingItem) {
                 // Update existing item
@@ -115,7 +115,7 @@ const NewsEventsManagement = () => {
                 const newItem = await addNewsEvent(formData);
                 setItems(prev => [...prev, newItem]);
             }
-            
+
             resetForm();
             setShowForm(false);
             setError('');
@@ -204,7 +204,7 @@ const NewsEventsManagement = () => {
                 )}
 
                 {/* Header */}
-                <div className="bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] p-5 rounded-xl shadow-sm mb-6 border border-gray-200">
+                <div className="bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] p-3 rounded-xl shadow-sm mb-6 border border-gray-200">
                     <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
                         <Newspaper className="text-blue-600" />
                         News & Events Management
