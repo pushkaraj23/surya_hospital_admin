@@ -334,17 +334,17 @@ export const searchDoctors = async (searchTerm) => {
 export const toggleDoctorExpert = async (id, isexpert) => {
   try {
     console.log("⭐ Toggling doctor expert status:", { id, isexpert });
-    
+
     // Use PATCH for partial update if your backend supports it
     const response = await axiosInstance.patch(`/doctors/${id}/expert`, {
       isexpert: isexpert
     });
-    
+
     console.log("✅ Doctor expert status toggled:", response.data);
     return response.data;
   } catch (error) {
     console.error("❌ Error toggling doctor expert status:", error);
-    
+
     // Fallback to PUT if PATCH is not supported
     try {
       console.log("🔄 Trying PUT as fallback...");
@@ -1517,9 +1517,35 @@ export const getFacilitiesByDept = async (deptId) => {
   }
 };
 
+// export const createFacility = async (facilityData) => {
+//   try {
+//     const response = await axiosInstance.post('/facilities', facilityData);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error creating facility:", error);
+//     throw error;
+//   }
+// };
+
+// export const updateFacility = async (id, facilityData) => {
+//   try {
+//     const response = await axiosInstance.put(`/facilities/update/${id}`, facilityData);
+//     return response.data;
+//   } catch (error) {
+//     console.error(`Error updating facility ${id}:`, error);
+//     throw error;
+//   }
+// };
+
+// In your userApi.js
 export const createFacility = async (facilityData) => {
   try {
-    const response = await axiosInstance.post('/facilities', facilityData);
+    // When facilityData is FormData, axios automatically sets the correct Content-Type header
+    const response = await axiosInstance.post('/facilities', facilityData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     return response.data;
   } catch (error) {
     console.error("Error creating facility:", error);
@@ -1529,7 +1555,11 @@ export const createFacility = async (facilityData) => {
 
 export const updateFacility = async (id, facilityData) => {
   try {
-    const response = await axiosInstance.put(`/facilities/update/${id}`, facilityData);
+    const response = await axiosInstance.put(`/facilities/update/${id}`, facilityData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     return response.data;
   } catch (error) {
     console.error(`Error updating facility ${id}:`, error);
@@ -1554,6 +1584,25 @@ export const getDepartments = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching departments:", error);
+    throw error;
+  }
+};
+
+
+export const uploadSingleFile = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await axiosInstance.post('/single', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data; // { success, message, filePath }
+  } catch (error) {
+    console.error('Error uploading file:', error);
     throw error;
   }
 };
