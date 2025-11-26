@@ -27,7 +27,8 @@ const Sidebar = () => {
     { path: "/appointment", label: "Appointments", icon: CalendarToday },
     // { path: "/inquiries", label: "Inquiries", icon: QuestionAnswer },
     { path: "/feedback", label: "Feedbacks", icon: QuestionAnswer },
-    { path: "/contact", label: "Contact", icon: Contacts }
+    { path: "/contact", label: "Contact", icon: Contacts },
+     { path: "/facilities", label: "Facilities", icon: Newspaper },
   ];
 
   return (

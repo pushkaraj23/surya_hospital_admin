@@ -350,7 +350,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-2">
-      <div className=" mx-auto px-2 sm:px-2 lg:px-2">
+      <div className=" mx-auto px-2 sm:px-1 lg:px-1">
         {/* Header */}
         <div className="mb-8 bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] shadow-md rounded-xl p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center">
           <div>

@@ -92,14 +92,14 @@ export const getDoctors = async () => {
     console.log("🔍 Fetching all doctors...");
     const response = await axiosInstance.get("/doctors");
     console.log("✅ Doctors fetched:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) {
       return response.data;
     } else if (response.data && Array.isArray(response.data.data)) {
       return response.data.data;
     }
-    
+
     console.warn("⚠️ Unexpected response structure:", response.data);
     return [];
   } catch (error) {
@@ -117,7 +117,7 @@ export const getDoctorById = async (id) => {
     return response.data;
   } catch (error) {
     console.error("❌ Error fetching doctor by ID:", error.response?.data || error.message);
-    
+
     if (error.response?.status === 404) {
       throw new Error(`Doctor with ID ${id} not found`);
     }
@@ -129,7 +129,7 @@ export const getDoctorById = async (id) => {
 export const addDoctor = async (doctorData) => {
   try {
     console.log("➕ Adding doctor:", doctorData);
-    
+
     // Format data to match backend expectations
     const formattedData = {
       fullname: doctorData.fullname,
@@ -142,15 +142,15 @@ export const addDoctor = async (doctorData) => {
       schedule: doctorData.schedule || {},
       isactive: doctorData.isactive !== undefined ? doctorData.isactive : true,
     };
-    
+
     console.log("📤 Formatted data:", formattedData);
-    
+
     const response = await axiosInstance.post("/doctors", formattedData);
     console.log("✅ Doctor added:", response.data);
     return response.data;
   } catch (error) {
     console.error("❌ Error adding doctor:", error.response?.data || error.message);
-    
+
     if (error.response?.status === 400) {
       throw new Error(error.response?.data?.message || "Invalid doctor data");
     }
@@ -162,7 +162,7 @@ export const addDoctor = async (doctorData) => {
 export const updateDoctor = async (id, doctorData) => {
   try {
     console.log("🔄 Updating doctor:", { id, doctorData });
-    
+
     // Format data to match backend expectations
     const formattedData = {
       fullname: doctorData.fullname,
@@ -175,9 +175,9 @@ export const updateDoctor = async (id, doctorData) => {
       schedule: doctorData.schedule || {},
       isactive: doctorData.isactive !== undefined ? doctorData.isactive : true,
     };
-    
+
     console.log("📤 Formatted data:", formattedData);
-    
+
     // Try PATCH first (more common for partial updates)
     const response = await axiosInstance.put(`/doctors/update/${id}`, formattedData);
     console.log("✅ Doctor updated:", response.data);
@@ -191,7 +191,7 @@ export const updateDoctor = async (id, doctorData) => {
       return response.data;
     } catch (putError) {
       console.error("❌ Error updating doctor:", putError.response?.data || putError.message);
-      
+
       if (putError.response?.status === 404) {
         throw new Error(`Doctor with ID ${id} not found`);
       } else if (putError.response?.status === 400) {
@@ -211,7 +211,7 @@ export const deleteDoctor = async (id) => {
     return response.data;
   } catch (error) {
     console.error("❌ Error deleting doctor:", error.response?.data || error.message);
-    
+
     if (error.response?.status === 404) {
       throw new Error(`Doctor with ID ${id} not found`);
     } else if (error.response?.status === 400) {
@@ -230,7 +230,7 @@ export const toggleDoctorStatus = async (id, isactive) => {
     return response.data;
   } catch (error) {
     console.error("❌ Error toggling doctor status:", error.response?.data || error.message);
-    
+
     if (error.response?.status === 404) {
       throw new Error(`Doctor with ID ${id} not found`);
     }
@@ -238,20 +238,22 @@ export const toggleDoctorStatus = async (id, isactive) => {
   }
 };
 
+// ✅ Toggle expert mutation - Fixed version
+
 
 export const getDoctorsByDepartment = async (departmentId) => {
   try {
     console.log("🔍 Fetching doctors by department:", departmentId);
     const response = await axiosInstance.get(`/doctors?departmentid=${departmentId}`);
     console.log("✅ Doctors fetched for department:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) {
       return response.data;
     } else if (response.data && Array.isArray(response.data.data)) {
       return response.data.data;
     }
-    
+
     return [];
   } catch (error) {
     console.error("❌ Error fetching doctors by department:", error.response?.data || error.message);
@@ -264,14 +266,14 @@ export const getDoctorsBySpecialization = async (specialization) => {
     console.log("🔍 Fetching doctors by specialization:", specialization);
     const response = await axiosInstance.get(`/doctors?specialization=${specialization}`);
     console.log("✅ Doctors fetched for specialization:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) {
       return response.data;
     } else if (response.data && Array.isArray(response.data.data)) {
       return response.data.data;
     }
-    
+
     return [];
   } catch (error) {
     console.error("❌ Error fetching doctors by specialization:", error.response?.data || error.message);
@@ -288,14 +290,14 @@ export const getActiveDoctors = async () => {
     console.log("🔍 Fetching active doctors...");
     const response = await axiosInstance.get("/doctors?isactive=true");
     console.log("✅ Active doctors fetched:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) {
       return response.data;
     } else if (response.data && Array.isArray(response.data.data)) {
       return response.data.data;
     }
-    
+
     return [];
   } catch (error) {
     console.error("❌ Error fetching active doctors:", error.response?.data || error.message);
@@ -313,18 +315,47 @@ export const searchDoctors = async (searchTerm) => {
     console.log("🔍 Searching doctors:", searchTerm);
     const response = await axiosInstance.get(`/doctors?search=${encodeURIComponent(searchTerm)}`);
     console.log("✅ Search results:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) {
       return response.data;
     } else if (response.data && Array.isArray(response.data.data)) {
       return response.data.data;
     }
-    
+
     return [];
   } catch (error) {
     console.error("❌ Error searching doctors:", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Failed to search doctors");
+  }
+};
+
+// Add this to your userApi.js
+export const toggleDoctorExpert = async (id, isexpert) => {
+  try {
+    console.log("⭐ Toggling doctor expert status:", { id, isexpert });
+    
+    // Use PATCH for partial update if your backend supports it
+    const response = await axiosInstance.patch(`/doctors/${id}/expert`, {
+      isexpert: isexpert
+    });
+    
+    console.log("✅ Doctor expert status toggled:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error toggling doctor expert status:", error);
+    
+    // Fallback to PUT if PATCH is not supported
+    try {
+      console.log("🔄 Trying PUT as fallback...");
+      const response = await axiosInstance.put(`/doctors/update/${id}`, {
+        isexpert: isexpert
+      });
+      return response.data;
+    } catch (putError) {
+      console.error("❌ PUT also failed:", putError);
+      throw new Error(putError.response?.data?.message || "Failed to update expert status");
+    }
   }
 };
 
@@ -337,7 +368,7 @@ export const updateDoctorSchedule = async (id, schedule) => {
     return response.data;
   } catch (error) {
     console.error("❌ Error updating doctor schedule:", error.response?.data || error.message);
-    
+
     if (error.response?.status === 404) {
       throw new Error(`Doctor with ID ${id} not found`);
     }
@@ -349,21 +380,21 @@ export const updateDoctorSchedule = async (id, schedule) => {
 export const bulkUpdateDoctors = async (doctorsData) => {
   try {
     console.log("📦 Bulk updating doctors:", doctorsData);
-    
+
     // Execute all updates in parallel
-    const updatePromises = doctorsData.map(({ id, data }) => 
+    const updatePromises = doctorsData.map(({ id, data }) =>
       updateDoctor(id, data)
     );
-    
+
     const results = await Promise.allSettled(updatePromises);
-    
+
     const successful = results.filter(r => r.status === 'fulfilled').map(r => r.value);
     const failed = results.filter(r => r.status === 'rejected');
-    
+
     if (failed.length > 0) {
       console.warn("⚠️ Some updates failed:", failed);
     }
-    
+
     console.log("✅ Bulk update completed:", { successful: successful.length, failed: failed.length });
     return successful;
   } catch (error) {
@@ -377,7 +408,7 @@ export const getDoctorStats = async () => {
   try {
     console.log("📊 Fetching doctor statistics...");
     const doctors = await getDoctors();
-    
+
     const stats = {
       total: doctors.length,
       active: doctors.filter(d => d.isactive).length,
@@ -386,26 +417,26 @@ export const getDoctorStats = async () => {
       byDepartment: {},
       averageExperience: 0,
     };
-    
+
     // Count by specialization
     doctors.forEach(doctor => {
       if (doctor.specialization) {
-        stats.bySpecialization[doctor.specialization] = 
+        stats.bySpecialization[doctor.specialization] =
           (stats.bySpecialization[doctor.specialization] || 0) + 1;
       }
-      
+
       if (doctor.departmentid) {
-        stats.byDepartment[doctor.departmentid] = 
+        stats.byDepartment[doctor.departmentid] =
           (stats.byDepartment[doctor.departmentid] || 0) + 1;
       }
     });
-    
+
     // Calculate average experience
     const totalExperience = doctors.reduce((sum, d) => sum + (d.experience_years || 0), 0);
-    stats.averageExperience = doctors.length > 0 
-      ? (totalExperience / doctors.length).toFixed(1) 
+    stats.averageExperience = doctors.length > 0
+      ? (totalExperience / doctors.length).toFixed(1)
       : 0;
-    
+
     console.log("✅ Doctor statistics:", stats);
     return stats;
   } catch (error) {
@@ -420,12 +451,12 @@ export const fetchAppointments = async () => {
   try {
     const res = await axiosInstance.get("/appointments");
     console.log("✅ fetchAppointments response:", res.data);
-    
+
     // Handle different response structures
     if (Array.isArray(res.data)) return res.data;
     if (Array.isArray(res.data?.data)) return res.data.data;
     if (Array.isArray(res.data?.appointments)) return res.data.appointments;
-    
+
     console.warn("Unexpected response structure:", res.data);
     return [];
   } catch (error) {
@@ -439,7 +470,7 @@ export const createAppointment = async (payload) => {
   try {
     console.log("🔄 createAppointment payload:", payload);
     const res = await axiosInstance.post("/appointments", payload);
-    
+
     if (res.status >= 200 && res.status < 300) {
       console.log("✅ createAppointment success:", res.data);
       return res.data;
@@ -455,9 +486,9 @@ export const createAppointment = async (payload) => {
 export const updateAppointment = async ({ id, payload }) => {
   try {
     console.log("🔄 updateAppointment called with:", { id, payload });
-    
+
     const res = await axiosInstance.put(`/appointments/update/${id}`, payload);
-    
+
     console.log("✅ updateAppointment success:", res.data);
     return res.data;
   } catch (error) {
@@ -474,9 +505,9 @@ export const updateAppointment = async ({ id, payload }) => {
 export const updateAppointmentAlt = async (id, payload) => {
   try {
     console.log("🔄 updateAppointmentAlt called with:", { id, payload });
-    
+
     const res = await axiosInstance.post(`/appointments/update/${id}`, payload);
-    
+
     console.log("✅ updateAppointmentAlt success:", res.data);
     return res.data;
   } catch (error) {
@@ -490,7 +521,7 @@ export const deleteAppointment = async (id) => {
   try {
     console.log("🔄 deleteAppointment called with id:", id);
     const res = await axiosInstance.delete(`/appointments/${id}`);
-    
+
     if (res.status >= 200 && res.status < 300) {
       console.log("✅ deleteAppointment success");
       return res.data;
@@ -507,7 +538,7 @@ export const fetchAppointmentById = async (id) => {
   try {
     console.log("🔄 fetchAppointmentById called with id:", id);
     const res = await axiosInstance.get(`/appointments/${id}`);
-    
+
     if (res.status >= 200 && res.status < 300) {
       console.log("✅ fetchAppointmentById success:", res.data);
       return res.data;
@@ -523,9 +554,9 @@ export const fetchAppointmentById = async (id) => {
 export const updateAppointmentStatus = async (id, status) => {
   try {
     console.log("🔄 updateAppointmentStatus called:", { id, status });
-    
+
     const res = await axiosInstance.put(`/appointments/update/${id}`, { status });
-    
+
     console.log("✅ updateAppointmentStatus success:", res.data);
     return res.data;
   } catch (error) {
@@ -545,7 +576,7 @@ export const testAppointmentEndpoints = async () => {
   ];
 
   console.log("🧪 Testing Appointment Endpoints...");
-  
+
   for (const test of tests) {
     try {
       console.log(`Testing: ${test.description}`);
@@ -574,12 +605,12 @@ export const getNewsEvents = async () => {
   try {
     const response = await axiosInstance.get("/news_events");
     console.log("✅ getNewsEvents response:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) return response.data;
     if (Array.isArray(response.data?.data)) return response.data.data;
     if (Array.isArray(response.data?.news_events)) return response.data.news_events;
-    
+
     console.warn("Unexpected response structure:", response.data);
     return [];
   } catch (error) {
@@ -661,8 +692,8 @@ export const deleteNewsEvent = async (id) => {
 export const toggleNewsEventStatus = async (id, isActive) => {
   try {
     console.log("🔄 toggleNewsEventStatus:", { id, isActive });
-    const response = await axiosInstance.put(`/news_events/update/${id}`, { 
-      isactive: isActive 
+    const response = await axiosInstance.put(`/news_events/update/${id}`, {
+      isactive: isActive
     });
     console.log("✅ toggleNewsEventStatus success:", response.data);
     return response.data;
@@ -713,12 +744,12 @@ export const getBlogs = async () => {
   try {
     const response = await axiosInstance.get("/blogs");
     console.log("✅ getBlogs response:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) return response.data;
     if (Array.isArray(response.data?.data)) return response.data.data;
     if (Array.isArray(response.data?.blogs)) return response.data.blogs;
-    
+
     console.warn("Unexpected response structure:", response.data);
     return [];
   } catch (error) {
@@ -814,8 +845,8 @@ export const deleteBlog = async (id) => {
 export const toggleBlogStatus = async (id, isActive) => {
   try {
     console.log("🔄 toggleBlogStatus:", { id, isActive });
-    const response = await axiosInstance.put(`/blogs/update/${id}`, { 
-      isactive: isActive 
+    const response = await axiosInstance.put(`/blogs/update/${id}`, {
+      isactive: isActive
     });
     console.log("✅ toggleBlogStatus success:", response.data);
     return response.data;
@@ -840,7 +871,7 @@ export const getActiveBlogs = async () => {
 export const getBlogsByCategory = async (category) => {
   try {
     const allBlogs = await getBlogs();
-    return allBlogs.filter(blog => 
+    return allBlogs.filter(blog =>
       blog.category?.toLowerCase() === category.toLowerCase() && blog.isactive === true
     );
   } catch (error) {
@@ -866,7 +897,7 @@ export const searchBlogs = async (query) => {
   try {
     const blogs = await getBlogs();
     const searchTerm = query.toLowerCase();
-    return blogs.filter(blog => 
+    return blogs.filter(blog =>
       blog.title?.toLowerCase().includes(searchTerm) ||
       blog.content?.toLowerCase().includes(searchTerm) ||
       blog.author?.toLowerCase().includes(searchTerm) ||
@@ -894,24 +925,24 @@ const generateSlug = (title) => {
 export const uploadGalleryFile = async (file) => {
   try {
     console.log("🔄 uploadGalleryFile:", file.name);
-    
+
     const formData = new FormData();
     formData.append('file', file);
-    
+
     // Using the correct upload endpoint
     const response = await axiosInstance.post('/uploads/single', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
-    
+
     console.log("✅ uploadGalleryFile success:", response.data);
-    
+
     // Return the uploaded file path from the response
     if (response.data.success && response.data.filePath) {
       return response.data.filePath;
     }
-    
+
     throw new Error(response.data.message || "Upload failed");
   } catch (error) {
     console.error("❌ Error uploading gallery file:", error.response?.data || error.message);
@@ -924,12 +955,12 @@ export const getGallery = async () => {
   try {
     const response = await axiosInstance.get("/gallery");
     console.log("✅ getGallery response:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) return response.data;
     if (Array.isArray(response.data?.data)) return response.data.data;
     if (Array.isArray(response.data?.gallery)) return response.data.gallery;
-    
+
     console.warn("Unexpected response structure:", response.data);
     return [];
   } catch (error) {
@@ -1009,8 +1040,8 @@ export const deleteGalleryItem = async (id) => {
 export const toggleGalleryStatus = async (id, isActive) => {
   try {
     console.log("🔄 toggleGalleryStatus:", { id, isActive });
-    const response = await axiosInstance.put(`/gallery/update/${id}`, { 
-      isactive: isActive 
+    const response = await axiosInstance.put(`/gallery/update/${id}`, {
+      isactive: isActive
     });
     console.log("✅ toggleGalleryStatus success:", response.data);
     return response.data;
@@ -1035,7 +1066,7 @@ export const getActiveGallery = async () => {
 export const getGalleryByCategory = async (category) => {
   try {
     const allItems = await getGallery();
-    return allItems.filter(item => 
+    return allItems.filter(item =>
       item.category?.toLowerCase() === category.toLowerCase() && item.isactive === true
     );
   } catch (error) {
@@ -1048,7 +1079,7 @@ export const getGalleryByCategory = async (category) => {
 export const getGalleryByType = async (type) => {
   try {
     const allItems = await getGallery();
-    return allItems.filter(item => 
+    return allItems.filter(item =>
       item.type?.toLowerCase() === type.toLowerCase() && item.isactive === true
     );
   } catch (error) {
@@ -1074,7 +1105,7 @@ export const searchGallery = async (query) => {
   try {
     const gallery = await getGallery();
     const searchTerm = query.toLowerCase();
-    return gallery.filter(item => 
+    return gallery.filter(item =>
       item.title?.toLowerCase().includes(searchTerm) ||
       item.category?.toLowerCase().includes(searchTerm) ||
       item.type?.toLowerCase().includes(searchTerm)
@@ -1155,14 +1186,14 @@ export const searchFeedback = async (query) => {
   try {
     const feedback = await getAllFeedback();
     const searchTerm = query.toLowerCase();
-    
-    const results = feedback.filter(item => 
+
+    const results = feedback.filter(item =>
       item.fullname?.toLowerCase().includes(searchTerm) ||
       item.feedback?.toLowerCase().includes(searchTerm) ||
       item.mobilenumber?.includes(searchTerm) ||
       item.rating?.toString().includes(searchTerm)
     );
-    
+
     console.log(`✅ Search for "${query}" returned ${results.length} results`);
     return results;
   } catch (error) {
@@ -1213,8 +1244,8 @@ export const getFeedbackByRating = async (minRating) => {
 // ✅ Toggle feedback approval status
 export const toggleFeedbackApproval = async (id, currentStatus) => {
   try {
-    const updatedFeedback = await updateFeedback(id, { 
-      isapproved: !currentStatus 
+    const updatedFeedback = await updateFeedback(id, {
+      isapproved: !currentStatus
     });
     console.log(`✅ Toggled approval status for feedback ID ${id} to ${!currentStatus}`);
     return updatedFeedback;
@@ -1228,12 +1259,12 @@ export const toggleFeedbackApproval = async (id, currentStatus) => {
 export const getFeedbackStats = async () => {
   try {
     const feedback = await getAllFeedback();
-    
+
     const stats = {
       total: feedback.length,
       approved: feedback.filter(item => item.isapproved).length,
       pending: feedback.filter(item => !item.isapproved).length,
-      averageRating: feedback.length > 0 
+      averageRating: feedback.length > 0
         ? (feedback.reduce((acc, item) => acc + item.rating, 0) / feedback.length).toFixed(1)
         : 0,
       ratingDistribution: {
@@ -1244,7 +1275,7 @@ export const getFeedbackStats = async () => {
         1: feedback.filter(item => item.rating === 1).length,
       }
     };
-    
+
     console.log('✅ Successfully calculated feedback statistics');
     return stats;
   } catch (error) {
@@ -1321,8 +1352,8 @@ export const searchContacts = async (query) => {
   try {
     const contacts = await getAllContacts();
     const searchTerm = query.toLowerCase();
-    
-    const results = contacts.filter(contact => 
+
+    const results = contacts.filter(contact =>
       contact.fullname?.toLowerCase().includes(searchTerm) ||
       contact.email?.toLowerCase().includes(searchTerm) ||
       contact.subject?.toLowerCase().includes(searchTerm) ||
@@ -1330,7 +1361,7 @@ export const searchContacts = async (query) => {
       contact.mobilenumber?.includes(searchTerm) ||
       contact.status?.toLowerCase().includes(searchTerm)
     );
-    
+
     console.log(`✅ Search for "${query}" returned ${results.length} results`);
     return results;
   } catch (error) {
@@ -1368,7 +1399,7 @@ export const updateContactStatus = async (id, newStatus) => {
 export const getContactStats = async () => {
   try {
     const contacts = await getAllContacts();
-    
+
     const statusCounts = contacts.reduce((acc, contact) => {
       acc[contact.status] = (acc[contact.status] || 0) + 1;
       return acc;
@@ -1386,7 +1417,7 @@ export const getContactStats = async () => {
         return new Date(contact.createdat) > sevenDaysAgo;
       }).length
     };
-    
+
     console.log('✅ Successfully calculated contact statistics');
     return stats;
   } catch (error) {
@@ -1401,11 +1432,11 @@ export const getRecentContacts = async (days = 7) => {
     const contacts = await getAllContacts();
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
-    
-    const recent = contacts.filter(contact => 
+
+    const recent = contacts.filter(contact =>
       new Date(contact.createdat) > cutoffDate
     );
-    
+
     console.log(`✅ Found ${recent.length} contacts from last ${days} days`);
     return recent;
   } catch (error) {
@@ -1453,4 +1484,76 @@ export const formatDate = (dateString) => {
     hour: '2-digit',
     minute: '2-digit'
   });
+};
+
+
+export const getDepartmentById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/departments/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching department ${id}:`, error);
+    throw error;
+  }
+};
+// Facility functions
+export const getFacilities = async () => {
+  try {
+    const response = await axiosInstance.get('/facilities');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching facilities:", error);
+    throw error;
+  }
+};
+
+export const getFacilitiesByDept = async (deptId) => {
+  try {
+    const response = await axiosInstance.get(`/facilities/dept/${deptId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching facilities for department ${deptId}:`, error);
+    throw error;
+  }
+};
+
+export const createFacility = async (facilityData) => {
+  try {
+    const response = await axiosInstance.post('/facilities', facilityData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating facility:", error);
+    throw error;
+  }
+};
+
+export const updateFacility = async (id, facilityData) => {
+  try {
+    const response = await axiosInstance.put(`/facilities/update/${id}`, facilityData);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating facility ${id}:`, error);
+    throw error;
+  }
+};
+
+export const deleteFacility = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/facilities/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting facility ${id}:`, error);
+    throw error;
+  }
+};
+
+// Department functions
+export const getDepartments = async () => {
+  try {
+    const response = await axiosInstance.get('/departments');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+    throw error;
+  }
 };

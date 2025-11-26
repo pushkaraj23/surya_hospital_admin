@@ -1,0 +1,659 @@
+import React, { useState, useEffect } from 'react';
+import {
+    getDepartments,
+    getFacilities,
+    getFacilitiesByDept,
+    createFacility,
+    updateFacility,
+    deleteFacility
+} from '../../../api/userApi';
+
+const FacilitiesComponent = () => {
+    const [departments, setDepartments] = useState([]);
+    const [facilities, setFacilities] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [deptLoading, setDeptLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [editingFacility, setEditingFacility] = useState(null);
+    const [showForm, setShowForm] = useState(false);
+    const [selectedDepartment, setSelectedDepartment] = useState('all'); // NEW: Department filter
+
+    // Form state
+    const [formData, setFormData] = useState({
+        name: '',
+        category: '',
+        description: '',
+        photos: [''],
+        isactive: true,
+        departmentId: ''
+    });
+
+    // Fetch departments and facilities on component mount
+    useEffect(() => {
+        fetchDepartments();
+        fetchFacilities();
+    }, []);
+
+    const fetchDepartments = async () => {
+        setDeptLoading(true);
+        setError('');
+        try {
+            const data = await getDepartments();
+            setDepartments(data);
+        } catch (err) {
+            setError('Failed to fetch departments: ' + err.message);
+        } finally {
+            setDeptLoading(false);
+        }
+    };
+
+    const fetchFacilities = async () => {
+        setLoading(true);
+        setError('');
+        try {
+            const data = await getFacilities();
+            setFacilities(data);
+            setSelectedDepartment('all'); // Reset filter
+        } catch (err) {
+            setError('Failed to fetch facilities: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // NEW: Handle department filter change
+    const handleDepartmentFilterChange = async (deptId) => {
+        setSelectedDepartment(deptId);
+
+        if (deptId === 'all') {
+            await fetchFacilities();
+        } else {
+            await fetchFacilitiesByDept(deptId);
+        }
+    };
+
+    const fetchFacilitiesByDept = async (deptId) => {
+        setLoading(true);
+        setError('');
+        try {
+            const data = await getFacilitiesByDept(deptId);
+            setFacilities(data);
+        } catch (err) {
+            setError(`Failed to fetch facilities for selected department: ` + err.message);
+            // If department fetch fails, fall back to all facilities
+            await fetchFacilities();
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    const handlePhotoChange = (index, value) => {
+        const newPhotos = [...formData.photos];
+        newPhotos[index] = value;
+        setFormData(prev => ({ ...prev, photos: newPhotos }));
+    };
+
+    const addPhotoField = () => {
+        setFormData(prev => ({
+            ...prev,
+            photos: [...prev.photos, '']
+        }));
+    };
+
+    const removePhotoField = (index) => {
+        if (formData.photos.length > 1) {
+            const newPhotos = formData.photos.filter((_, i) => i !== index);
+            setFormData(prev => ({ ...prev, photos: newPhotos }));
+        }
+    };
+
+    const resetForm = () => {
+        setFormData({
+            name: '',
+            category: '',
+            description: '',
+            photos: [''],
+            isactive: true,
+            departmentId: ''
+        });
+        setEditingFacility(null);
+        setShowForm(false);
+        setError('');
+        setSuccess('');
+    };
+
+    // FIXED: Normalize photos array helper function
+    const normalizePhotos = (photos) => {
+        if (!photos || !Array.isArray(photos)) return [];
+
+        // Flatten nested arrays and filter out empty strings
+        return photos.flat(Infinity).filter(photo => photo && photo.trim() !== '');
+    };
+
+    const handleCreateFacility = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+        setSuccess('');
+
+        try {
+            // Filter out empty photo strings - use flat array format
+            const filteredPhotos = formData.photos.filter(photo => photo.trim() !== '');
+
+            const submitData = {
+                name: formData.name,
+                category: formData.category,
+                description: formData.description,
+                photos: filteredPhotos.length > 0 ? filteredPhotos : [], // Flat array format
+                isactive: formData.isactive,
+                departmentId: parseInt(formData.departmentId), // Ensure it's a number
+                createdat: new Date().toISOString() // Add createdat timestamp
+            };
+
+            // Debug logging
+            console.log('Submitting facility data:', submitData);
+
+            const response = await createFacility(submitData);
+            console.log('Create facility response:', response);
+
+            setSuccess('Facility created successfully!');
+
+            // Refresh the facilities list based on current filter
+            if (selectedDepartment === 'all') {
+                await fetchFacilities();
+            } else {
+                await fetchFacilitiesByDept(selectedDepartment);
+            }
+
+            resetForm();
+        } catch (err) {
+            console.error('Create facility error:', err);
+            console.error('Error response:', err.response?.data);
+            setError('Failed to create facility: ' + (err.response?.data?.message || err.message));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleUpdateFacility = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+        setSuccess('');
+
+        try {
+            // Filter out empty photo strings - use flat array format
+            const filteredPhotos = formData.photos.filter(photo => photo.trim() !== '');
+
+            const submitData = {
+                name: formData.name,
+                category: formData.category,
+                description: formData.description,
+                photos: filteredPhotos.length > 0 ? filteredPhotos : [], // Flat array format
+                isactive: formData.isactive,
+                departmentId: parseInt(formData.departmentId) // Ensure it's a number
+            };
+
+            // Debug logging
+            console.log('Updating facility:', editingFacility.id);
+            console.log('Update data:', submitData);
+
+            const response = await updateFacility(editingFacility.id, submitData);
+            console.log('Update facility response:', response);
+
+            setSuccess('Facility updated successfully!');
+
+            // Refresh the facilities list based on current filter
+            if (selectedDepartment === 'all') {
+                await fetchFacilities();
+            } else {
+                await fetchFacilitiesByDept(selectedDepartment);
+            }
+
+            resetForm();
+        } catch (err) {
+            console.error('Update facility error:', err);
+            console.error('Error response:', err.response?.data);
+            setError('Failed to update facility: ' + (err.response?.data?.message || err.message));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteFacility = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this facility?')) {
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+        setSuccess('');
+
+        try {
+            await deleteFacility(id);
+            setSuccess('Facility deleted successfully!');
+
+            // Refresh the facilities list based on current filter
+            if (selectedDepartment === 'all') {
+                await fetchFacilities();
+            } else {
+                await fetchFacilitiesByDept(selectedDepartment);
+            }
+        } catch (err) {
+            setError('Failed to delete facility: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const startEdit = (facility) => {
+        setEditingFacility(facility);
+
+        // FIXED: Normalize photos and handle departmentId/departmentid
+        const normalizedPhotos = normalizePhotos(facility.photos);
+        const deptId = facility.departmentId || facility.departmentid;
+
+        setFormData({
+            name: facility.name,
+            category: facility.category,
+            description: facility.description,
+            photos: normalizedPhotos.length > 0 ? normalizedPhotos : [''],
+            isactive: facility.isactive,
+            departmentId: deptId ? deptId.toString() : ''
+        });
+        setShowForm(true);
+    };
+
+    // FIXED: Handle both departmentId and departmentid, compare as numbers
+    const getDepartmentName = (facility) => {
+        const deptId = facility.departmentId || facility.departmentid;
+
+        if (!deptId) return 'No Department';
+
+        // If department_name is already in the facility object, use it
+        if (facility.department_name) {
+            return facility.department_name;
+        }
+
+        // Otherwise, look it up from departments array
+        const dept = departments.find(d => parseInt(d.id) === parseInt(deptId));
+        return dept ? dept.name : 'Unknown Department';
+    };
+
+    return (
+        <div className="min-h-screen  ">
+            <div className=" mx-auto px-1 py-2 ">
+                {/* Header */}
+                {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+                    <div className="mb-4 sm:mb-0">
+                        <h1 className="text-3xl font-bold text-gray-900">Facilities Management</h1>
+                        <p className="text-gray-600 mt-2">Manage all hospital facilities</p>
+                    </div>
+                    <button
+                        onClick={() => setShowForm(true)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={loading}
+                    >
+                        Add New Facility
+                    </button>
+                </div> */}
+                <div className=" mx-auto px- sm:px-2 lg:px-1">
+                    <div className="mb-6 bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] shadow-md rounded-xl p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                        <div>
+                            <h1 className="text-2xl font-bold text-gray-900">📊 Facilities Management</h1>
+                            <p className="text-gray-600 mt-2">
+                                Manage all hospital facilities
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => setShowForm(true)}
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={loading}
+                            >
+                                Add New Facility
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {/* Messages */}
+                {error && (
+                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div className="flex items-center">
+                            <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm text-red-700">{error}</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {success && (
+                    <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-center">
+                            <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm text-green-700">{success}</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Facility Form Modal */}
+                {showForm && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                        <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                            <div className="flex justify-between items-center p-6 border-b border-gray-200">
+                                <h3 className="text-xl font-semibold text-gray-900">
+                                    {editingFacility ? 'Edit Facility' : 'Create New Facility'}
+                                </h3>
+                                <button
+                                    onClick={resetForm}
+                                    disabled={loading}
+                                    className="text-gray-400 hover:text-gray-600 text-2xl font-light disabled:opacity-50"
+                                >
+                                    ×
+                                </button>
+                            </div>
+
+                            <form onSubmit={editingFacility ? handleUpdateFacility : handleCreateFacility} className="p-6">
+                                <div className="space-y-6">
+                                    {/* Department Selection */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Department *
+                                        </label>
+                                        <select
+                                            name="departmentId"
+                                            value={formData.departmentId}
+                                            onChange={handleInputChange}
+                                            required
+                                            disabled={loading || deptLoading}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                        >
+                                            <option value="">Select a department...</option>
+                                            {departments.map(dept => (
+                                                <option key={dept.id} value={dept.id}>
+                                                    {dept.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        {deptLoading && (
+                                            <p className="text-xs text-gray-500 mt-1">Loading departments...</p>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Facility Name *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleInputChange}
+                                            required
+                                            disabled={loading}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Category *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="category"
+                                            value={formData.category}
+                                            onChange={handleInputChange}
+                                            required
+                                            disabled={loading}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Description *
+                                        </label>
+                                        <textarea
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleInputChange}
+                                            required
+                                            disabled={loading}
+                                            rows="4"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 resize-vertical"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-3">
+                                            Photo URLs
+                                        </label>
+                                        <div className="space-y-3">
+                                            {formData.photos.map((photo, index) => (
+                                                <div key={index} className="flex gap-3">
+                                                    <input
+                                                        type="url"
+                                                        value={photo}
+                                                        onChange={(e) => handlePhotoChange(index, e.target.value)}
+                                                        placeholder="https://example.com/image.jpg"
+                                                        disabled={loading}
+                                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removePhotoField(index)}
+                                                        disabled={formData.photos.length === 1 || loading}
+                                                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={addPhotoField}
+                                                disabled={loading}
+                                                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                Add Photo URL
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            name="isactive"
+                                            checked={formData.isactive}
+                                            onChange={handleInputChange}
+                                            disabled={loading}
+                                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                        />
+                                        <label className="ml-2 block text-sm text-gray-700">
+                                            Active Facility
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-3 justify-end pt-6 mt-6 border-t border-gray-200">
+                                    <button
+                                        type="button"
+                                        onClick={resetForm}
+                                        disabled={loading}
+                                        className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {loading ? 'Saving...' : (editingFacility ? 'Update Facility' : 'Create Facility')}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
+                {/* Facilities List */}
+                <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div className="px-6 py-4 border-b border-gray-200">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div className="flex items-center gap-4 flex-1">
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                    All Facilities ({facilities.length})
+                                </h3>
+
+                                {/* NEW: Department Filter Dropdown */}
+                                {/* <div className="flex items-center gap-2">
+                                    <label className="text-sm text-gray-600">Filter by:</label>
+                                    <select
+                                        value={selectedDepartment}
+                                        onChange={(e) => handleDepartmentFilterChange(e.target.value)}
+                                        disabled={loading || deptLoading}
+                                        className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                    >
+                                        <option value="all">All Departments</option>
+                                        {departments.map(dept => (
+                                            <option key={dept.id} value={dept.id}>
+                                                {dept.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div> */}
+                            </div>
+
+                            {loading && (
+                                <div className="flex items-center text-gray-500">
+                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Loading facilities...
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {!loading && facilities.length === 0 ? (
+                        <div className="text-center py-12">
+                            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <h3 className="mt-2 text-sm font-medium text-gray-900">No facilities found</h3>
+                            <p className="mt-1 text-sm text-gray-500">
+                                {selectedDepartment === 'all'
+                                    ? 'Get started by creating a new facility.'
+                                    : 'No facilities found for this department.'}
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                            {facilities.map(facility => {
+                                const normalizedPhotos = normalizePhotos(facility.photos);
+
+                                return (
+                                    <div key={facility.id} className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                                        {/* Facility Images */}
+                                        <div className="h-48 bg-gray-200 rounded-t-lg overflow-hidden">
+                                            {normalizedPhotos.length > 0 ? (
+                                                <img
+                                                    src={normalizedPhotos[0]}
+                                                    alt={facility.name}
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.target.style.display = 'none';
+                                                    }}
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                                    <svg className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Facility Info */}
+                                        <div className="p-4">
+                                            <div className="flex items-start justify-between mb-3">
+                                                <h4 className="text-lg font-semibold text-gray-900 truncate">{facility.name}</h4>
+                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${facility.isactive
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-red-100 text-red-800'
+                                                    }`}>
+                                                    {facility.isactive ? 'Active' : 'Inactive'}
+                                                </span>
+                                            </div>
+
+                                            <p className="text-sm text-blue-600 font-medium mb-2">{facility.category}</p>
+                                            <p className="text-sm text-gray-600 line-clamp-2 mb-2">{facility.description}</p>
+
+                                            {/* Department Info */}
+                                            <div className="mb-4">
+                                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                                    </svg>
+                                                    {getDepartmentName(facility)}
+                                                </span>
+                                            </div>
+
+                                            <div className="flex items-center justify-between text-xs text-gray-500">
+                                                <span>ID: {facility.id}</span>
+                                                <span>Created: {new Date(facility.createdat).toLocaleDateString()}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Actions */}
+                                        <div className="px-4 py-3 bg-gray-50 rounded-b-lg border-t border-gray-200 flex gap-2">
+                                            <button
+                                                onClick={() => startEdit(facility)}
+                                                disabled={loading}
+                                                className="flex-1 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-3 py-2 rounded text-sm font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteFacility(facility.id)}
+                                                disabled={loading}
+                                                className="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default FacilitiesComponent;
