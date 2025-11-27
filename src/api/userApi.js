@@ -330,7 +330,6 @@ export const searchDoctors = async (searchTerm) => {
   }
 };
 
-// Add this to your userApi.js
 export const toggleDoctorExpert = async (id, isexpert) => {
   try {
     console.log("⭐ Toggling doctor expert status:", { id, isexpert });
@@ -444,7 +443,11 @@ export const getDoctorStats = async () => {
     throw new Error("Failed to fetch doctor statistics");
   }
 };
+// ========================================
 
+
+
+// ====================Appointments====================
 
 // ✅ Fetch all appointments
 export const fetchAppointments = async () => {
@@ -596,6 +599,7 @@ export const testAppointmentEndpoints = async () => {
     }
   }
 };
+// ========================================
 
 
 // ==================== NEWS & EVENTS API FUNCTIONS ====================
@@ -735,6 +739,8 @@ export const getActiveNewsEvents = async () => {
     throw error;
   }
 };
+// ========================================
+
 
 
 // ==================== BLOGS API FUNCTIONS ====================
@@ -918,10 +924,14 @@ const generateSlug = (title) => {
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '');
 };
+// ========================================
+
+
 
 
 // ==================== GALLERY API FUNCTIONS ====================
-// ✅ Upload gallery file (updated to use correct endpoint with axios)
+
+// ✅ Upload gallery file 
 export const uploadGalleryFile = async (file) => {
   try {
     console.log("🔄 uploadGalleryFile:", file.name);
@@ -1115,8 +1125,10 @@ export const searchGallery = async (query) => {
     throw error;
   }
 };
+// ========================================
 
 
+// ====================Feedback====================
 
 
 const FEEDBACK_BASE_URL = '/feedback'; // Relative path since baseURL is set
@@ -1284,6 +1296,11 @@ export const getFeedbackStats = async () => {
   }
 };
 
+// ========================================
+
+
+
+// ====================Contacts/Inquiries====================
 
 const CONTACT_BASE_URL = '/inquiries'; // Adjust based on your API endpoint
 
@@ -1496,6 +1513,13 @@ export const getDepartmentById = async (id) => {
     throw error;
   }
 };
+
+// ========================================
+
+
+
+// ====================Facility====================
+
 // Facility functions
 export const getFacilities = async () => {
   try {
@@ -1517,27 +1541,6 @@ export const getFacilitiesByDept = async (deptId) => {
   }
 };
 
-// export const createFacility = async (facilityData) => {
-//   try {
-//     const response = await axiosInstance.post('/facilities', facilityData);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error creating facility:", error);
-//     throw error;
-//   }
-// };
-
-// export const updateFacility = async (id, facilityData) => {
-//   try {
-//     const response = await axiosInstance.put(`/facilities/update/${id}`, facilityData);
-//     return response.data;
-//   } catch (error) {
-//     console.error(`Error updating facility ${id}:`, error);
-//     throw error;
-//   }
-// };
-
-// In your userApi.js
 export const createFacility = async (facilityData) => {
   try {
     // When facilityData is FormData, axios automatically sets the correct Content-Type header

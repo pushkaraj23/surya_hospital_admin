@@ -1511,7 +1511,7 @@ export default function DepartmentManagement() {
 
         {/* Stats Summary */}
         {departments.length > 0 && (
-          <div className="my-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="my-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Total Departments */}
             <div className="bg-white rounded-lg border border-gray-200 p-4">
               <div className="text-sm text-gray-600">Total Departments</div>
@@ -1537,7 +1537,7 @@ export default function DepartmentManagement() {
             </div>
 
             {/* Average Success Rate */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
+            {/* <div className="bg-white rounded-lg border border-gray-200 p-4">
               <div className="text-sm text-gray-600">Avg. Success Rate</div>
               <div className="text-2xl font-bold text-purple-600">
                 {(() => {
@@ -1547,7 +1547,7 @@ export default function DepartmentManagement() {
                   return `${Math.round(avg)}%`;
                 })()}
               </div>
-            </div>
+            </div> */}
           </div>
         )}
 
@@ -2018,10 +2018,10 @@ export default function DepartmentManagement() {
 
                     {/* Additional Info */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="bg-amber-50 rounded-lg p-4">
+                      {/* <div className="bg-amber-50 rounded-lg p-4">
                         <h6 className="font-semibold text-amber-800 mb-2">Department ID</h6>
                         <p className="text-amber-600 font-mono">{selectedDepartment.id}</p>
-                      </div>
+                      </div> */}
                       <div className="bg-green-50 rounded-lg p-4">
                         <h6 className="font-semibold text-green-800 mb-2">Status</h6>
                         <p className={`font-semibold ${selectedDepartment.isactive ? 'text-green-600' : 'text-red-600'}`}>
