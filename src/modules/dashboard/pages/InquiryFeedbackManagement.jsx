@@ -89,7 +89,7 @@ const InquiryFeedbackManagement = () => {
     );
 
   return (
-    <div className="min-h-screen bg-white text-gray-800 py-2 space-y-8">
+    <div className="min-h-screen bg-gray-50 text-gray-800 py-2 space-y-8">
       {/* Header */}
       <div className="bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] shadow-md rounded-xl p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
         <div>

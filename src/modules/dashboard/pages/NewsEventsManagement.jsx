@@ -16,6 +16,7 @@ import {
     updateNewsEvent,
     deleteNewsEvent,
     toggleNewsEventStatus
+    ,uploadSingleFile
 } from "../../../api/userApi";
 
 const NewsEventsManagement = () => {
@@ -180,6 +181,29 @@ const NewsEventsManagement = () => {
             day: 'numeric'
         });
     };
+    const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            const fd = new FormData();
+            fd.append("file", file);
+            const res = await uploadSingleFile(fd);
+            const BASE_URL = "http://localhost:8654";
+            // final image URL
+            const imgURL = BASE_URL + (res.filePath.startsWith("/") ? res.filePath : `/${res.filePath}`);
+
+            setFormData((prev) => ({
+                ...prev,
+                image: imgURL,
+            }));
+        } catch (err) {
+            console.error(err);
+            setError("Failed to upload image. Please try again.");
+        }
+    };
+
+
 
     if (loading) {
         return (
@@ -296,49 +320,23 @@ const NewsEventsManagement = () => {
 
                                     {/* Image Upload */}
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Image URL
-                                        </label>
-                                        {formData.image ? (
-                                            <div className="relative">
-                                                <img
-                                                    src={formData.image}
-                                                    alt="Preview"
-                                                    className="w-full h-48 object-cover rounded-md"
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={removeImage}
-                                                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
-                                                >
-                                                    <X size={16} />
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <div>
-                                                <input
-                                                    type="text"
-                                                    name="image"
-                                                    value={formData.image}
-                                                    onChange={handleInputChange}
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
-                                                    placeholder="Enter image URL"
-                                                />
-                                                {/* <p className="text-sm text-gray-500 text-center">OR</p>
-                                                <label className="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:border-gray-400 mt-2">
-                                                    <div className="flex flex-col items-center justify-center pt-2 pb-3">
-                                                        <ImageIcon className="w-6 h-6 text-gray-400 mb-1" />
-                                                        <p className="text-sm text-gray-500">Upload image</p>
-                                                    </div>
-                                                    <input
-                                                        type="file"
-                                                        accept="image/*"
-                                                        onChange={handleImageUpload}
-                                                        className="hidden"
-                                                    />
-                                                </label> */}
-                                            </div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Upload Photo</label>
+
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleFileUpload}
+                                            className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white"
+                                        />
+
+                                        {formData.image && (
+                                            <img
+                                                src={formData.image}
+                                                alt="Preview"
+                                                className="mt-3 w-20 h-20 rounded-full object-cover border"
+                                            />
                                         )}
+
                                     </div>
                                 </div>
 

@@ -40,7 +40,7 @@
 //       try {
 //         setLoading(true);
 //         const data = await fetchAppointments();
-        
+
 //         // Transform API data to match your component structure
 //         const transformedData = data.map(appointment => ({
 //           id: appointment.id,
@@ -55,7 +55,7 @@
 //           status: appointment.status?.toLowerCase() || "scheduled",
 //           createdAt: appointment.createdat
 //         }));
-        
+
 //         setAppointments(transformedData);
 //         setFilteredAppointments(transformedData);
 //       } catch (error) {
@@ -127,14 +127,14 @@
 //   const handleStatusUpdate = async (id, newStatus) => {
 //     try {
 //       await updateAppointmentStatus(id, newStatus);
-      
+
 //       // Update local state
 //       setAppointments(prev => 
 //         prev.map(app => 
 //           app.id === id ? { ...app, status: newStatus.toLowerCase() } : app
 //         )
 //       );
-      
+
 //       console.log("✅ Status updated successfully");
 //     } catch (error) {
 //       console.error("❌ Failed to update status:", error);
@@ -147,10 +147,10 @@
 //     if (window.confirm("Are you sure you want to delete this appointment?")) {
 //       try {
 //         await deleteAppointment(id);
-        
+
 //         // Update local state
 //         setAppointments(prev => prev.filter((a) => a.id !== id));
-        
+
 //         console.log("✅ Appointment deleted successfully");
 //       } catch (error) {
 //         console.error("❌ Failed to delete appointment:", error);
@@ -428,24 +428,24 @@ const AppointmentsAdmin = () => {
 
   const getDepartmentName = (departmentId) => {
     if (!departmentId || departmentId === "null") return "Unknown";
-    
+
     const dept = departments.find((d) => {
       const deptId = getId(d);
       return deptId === String(departmentId);
     });
-    
+
     console.log("Looking for department:", departmentId, "Found:", dept);
     return dept ? getName(dept) : "Unknown";
   };
 
   const getDoctorName = (doctorId) => {
     if (!doctorId || doctorId === "null") return "Unknown";
-    
+
     const doc = doctors.find((d) => {
       const docId = getId(d);
       return docId === String(doctorId);
     });
-    
+
     console.log("Looking for doctor:", doctorId, "Found:", doc);
     return doc ? getName(doc) : "Unknown";
   };
@@ -617,12 +617,15 @@ const AppointmentsAdmin = () => {
   // MAIN UI
   // -------------------------------------
   return (
-    <div className="py-2 min-h-screen">
-      <div className="bg-blue-50 p-3 rounded-xl shadow border border-gray-200 mb-6">
+    <div className="py-2 min-h-screen bg-gray-50">
+      <div className=" bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] p-3 rounded-xl shadow border  mb-6">
         <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
           <CalendarToday className="text-blue-600" />
           Appointments Management
         </h1>
+        <p className="text-gray-600 mt-2">
+          Manage and analyze Appoinment
+        </p>
       </div>
 
       {/* Filters */}

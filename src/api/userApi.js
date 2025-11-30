@@ -87,362 +87,647 @@ export const fetchDepartmentById = async (id) => {
 
 // ==================== DOCTORS ====================
 
+// export const getDoctors = async () => {
+//   try {
+//     console.log("🔍 Fetching all doctors...");
+//     const response = await axiosInstance.get("/doctors");
+//     console.log("✅ Doctors fetched:", response.data);
+
+//     // Handle different response structures
+//     if (Array.isArray(response.data)) {
+//       return response.data;
+//     } else if (response.data && Array.isArray(response.data.data)) {
+//       return response.data.data;
+//     }
+
+//     console.warn("⚠️ Unexpected response structure:", response.data);
+//     return [];
+//   } catch (error) {
+//     console.error("❌ Error fetching doctors:", error.response?.data || error.message);
+//     throw new Error(error.response?.data?.message || "Failed to fetch doctors");
+//   }
+// };
+
+
+// export const getDoctorById = async (id) => {
+//   try {
+//     console.log("🔍 Fetching doctor by ID:", id);
+//     const response = await axiosInstance.get(`/doctors/${id}`);
+//     console.log("✅ Doctor fetched:", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("❌ Error fetching doctor by ID:", error.response?.data || error.message);
+
+//     if (error.response?.status === 404) {
+//       throw new Error(`Doctor with ID ${id} not found`);
+//     }
+//     throw new Error(error.response?.data?.message || "Failed to fetch doctor");
+//   }
+// };
+
+
+// export const addDoctor = async (doctorData) => {
+//   try {
+//     console.log("➕ Adding doctor:", doctorData);
+
+//     // Format data to match backend expectations
+//     const formattedData = {
+//       fullname: doctorData.fullname,
+//       qualification: doctorData.qualification,
+//       specialization: doctorData.specialization,
+//       experience_years: parseInt(doctorData.experience_years) || 0,
+//       departmentid: doctorData.departmentid || null,
+//       photo: doctorData.photo || "",
+//       bio: doctorData.bio || "",
+//       schedule: doctorData.schedule || {},
+//       isactive: doctorData.isactive !== undefined ? doctorData.isactive : true,
+//     };
+
+//     console.log("📤 Formatted data:", formattedData);
+
+//     const response = await axiosInstance.post("/doctors", formattedData);
+//     console.log("✅ Doctor added:", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("❌ Error adding doctor:", error.response?.data || error.message);
+
+//     if (error.response?.status === 400) {
+//       throw new Error(error.response?.data?.message || "Invalid doctor data");
+//     }
+//     throw new Error(error.response?.data?.message || "Failed to add doctor");
+//   }
+// };
+
+
+// export const updateDoctor = async (id, doctorData) => {
+//   try {
+//     console.log("🔄 Updating doctor:", { id, doctorData });
+
+//     // Format data to match backend expectations
+//     const formattedData = {
+//       fullname: doctorData.fullname,
+//       qualification: doctorData.qualification,
+//       specialization: doctorData.specialization,
+//       experience_years: parseInt(doctorData.experience_years) || 0,
+//       departmentid: doctorData.departmentid || null,
+//       photo: doctorData.photo || "",
+//       bio: doctorData.bio || "",
+//       schedule: doctorData.schedule || {},
+//       isactive: doctorData.isactive !== undefined ? doctorData.isactive : true,
+//     };
+
+//     console.log("📤 Formatted data:", formattedData);
+
+//     // Try PATCH first (more common for partial updates)
+//     const response = await axiosInstance.put(`/doctors/update/${id}`, formattedData);
+//     console.log("✅ Doctor updated:", response.data);
+//     return response.data;
+//   } catch (patchError) {
+//     // If PATCH fails, try PUT
+//     console.log("⚠️ PATCH failed, trying PUT...");
+//     try {
+//       const response = await axiosInstance.put(`/doctors/update${id}`, formattedData);
+//       console.log("✅ Doctor updated with PUT:", response.data);
+//       return response.data;
+//     } catch (putError) {
+//       console.error("❌ Error updating doctor:", putError.response?.data || putError.message);
+
+//       if (putError.response?.status === 404) {
+//         throw new Error(`Doctor with ID ${id} not found`);
+//       } else if (putError.response?.status === 400) {
+//         throw new Error(putError.response?.data?.message || "Invalid doctor data");
+//       }
+//       throw new Error(putError.response?.data?.message || "Failed to update doctor");
+//     }
+//   }
+// };
+
+
+// export const deleteDoctor = async (id) => {
+//   try {
+//     console.log("🗑️ Deleting doctor:", id);
+//     const response = await axiosInstance.delete(`/doctors/${id}`);
+//     console.log("✅ Doctor deleted:", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("❌ Error deleting doctor:", error.response?.data || error.message);
+
+//     if (error.response?.status === 404) {
+//       throw new Error(`Doctor with ID ${id} not found`);
+//     } else if (error.response?.status === 400) {
+//       throw new Error(error.response?.data?.message || "Cannot delete doctor");
+//     }
+//     throw new Error(error.response?.data?.message || "Failed to delete doctor");
+//   }
+// };
+
+
+// export const toggleDoctorStatus = async (id, isactive) => {
+//   try {
+//     console.log("🔄 Toggling doctor status:", { id, isactive });
+//     const response = await axiosInstance.put(`/doctors/update/${id}`, { isactive });
+//     console.log("✅ Doctor status toggled:", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("❌ Error toggling doctor status:", error.response?.data || error.message);
+
+//     if (error.response?.status === 404) {
+//       throw new Error(`Doctor with ID ${id} not found`);
+//     }
+//     throw new Error(error.response?.data?.message || "Failed to toggle doctor status");
+//   }
+// };
+
+// // ✅ Toggle expert mutation - Fixed version
+
+
+// export const getDoctorsByDepartment = async (departmentId) => {
+//   try {
+//     console.log("🔍 Fetching doctors by department:", departmentId);
+//     const response = await axiosInstance.get(`/doctors?departmentid=${departmentId}`);
+//     console.log("✅ Doctors fetched for department:", response.data);
+
+//     // Handle different response structures
+//     if (Array.isArray(response.data)) {
+//       return response.data;
+//     } else if (response.data && Array.isArray(response.data.data)) {
+//       return response.data.data;
+//     }
+
+//     return [];
+//   } catch (error) {
+//     console.error("❌ Error fetching doctors by department:", error.response?.data || error.message);
+//     throw new Error(error.response?.data?.message || "Failed to fetch doctors by department");
+//   }
+// };
+
+// export const getDoctorsBySpecialization = async (specialization) => {
+//   try {
+//     console.log("🔍 Fetching doctors by specialization:", specialization);
+//     const response = await axiosInstance.get(`/doctors?specialization=${specialization}`);
+//     console.log("✅ Doctors fetched for specialization:", response.data);
+
+//     // Handle different response structures
+//     if (Array.isArray(response.data)) {
+//       return response.data;
+//     } else if (response.data && Array.isArray(response.data.data)) {
+//       return response.data.data;
+//     }
+
+//     return [];
+//   } catch (error) {
+//     console.error("❌ Error fetching doctors by specialization:", error.response?.data || error.message);
+//     throw new Error(error.response?.data?.message || "Failed to fetch doctors by specialization");
+//   }
+// };
+
+// /**
+//  * Get active doctors only
+//  * @returns {Promise<Array>} Array of active doctors
+//  */
+// export const getActiveDoctors = async () => {
+//   try {
+//     console.log("🔍 Fetching active doctors...");
+//     const response = await axiosInstance.get("/doctors?isactive=true");
+//     console.log("✅ Active doctors fetched:", response.data);
+
+//     // Handle different response structures
+//     if (Array.isArray(response.data)) {
+//       return response.data;
+//     } else if (response.data && Array.isArray(response.data.data)) {
+//       return response.data.data;
+//     }
+
+//     return [];
+//   } catch (error) {
+//     console.error("❌ Error fetching active doctors:", error.response?.data || error.message);
+//     throw new Error(error.response?.data?.message || "Failed to fetch active doctors");
+//   }
+// };
+
+// /**
+//  * Search doctors by name or specialization
+//  * @param {string} searchTerm - Search term
+//  * @returns {Promise<Array>} Array of matching doctors
+//  */
+// export const searchDoctors = async (searchTerm) => {
+//   try {
+//     console.log("🔍 Searching doctors:", searchTerm);
+//     const response = await axiosInstance.get(`/doctors?search=${encodeURIComponent(searchTerm)}`);
+//     console.log("✅ Search results:", response.data);
+
+//     // Handle different response structures
+//     if (Array.isArray(response.data)) {
+//       return response.data;
+//     } else if (response.data && Array.isArray(response.data.data)) {
+//       return response.data.data;
+//     }
+
+//     return [];
+//   } catch (error) {
+//     console.error("❌ Error searching doctors:", error.response?.data || error.message);
+//     throw new Error(error.response?.data?.message || "Failed to search doctors");
+//   }
+// };
+
+// export const toggleDoctorExpert = async (id, isexpert, doctorData = null) => {
+//   try {
+//     console.log("⭐ Toggling doctor expert status:", { id, isexpert, doctorData });
+
+//     // If we have full doctor data, use PUT to update the entire record
+//     if (doctorData) {
+//       const response = await axiosInstance.put(`/doctors/update/${id}`, {
+//         ...doctorData,
+//         isexpert: isexpert
+//       });
+//       console.log("✅ Doctor expert status updated via PUT:", response.data);
+//       return response.data;
+//     }
+
+//     // Otherwise use PATCH for partial update
+//     const response = await axiosInstance.patch(`/doctors/${id}/expert`, {
+//       isexpert: isexpert
+//     });
+
+//     console.log("✅ Doctor expert status toggled:", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("❌ Error toggling doctor expert status:", error);
+
+//     // Fallback to PUT if PATCH is not supported
+//     try {
+//       console.log("🔄 Trying PUT as fallback...");
+//       const response = await axiosInstance.put(`/doctors/update/${id}`, {
+//         isexpert: isexpert
+//       });
+//       return response.data;
+//     } catch (putError) {
+//       console.error("❌ PUT also failed:", putError);
+//       throw new Error(putError.response?.data?.message || "Failed to update expert status");
+//     }
+//   }
+// };
+
+
+// export const updateDoctorSchedule = async (id, schedule) => {
+//   try {
+//     console.log("📅 Updating doctor schedule:", { id, schedule });
+//     const response = await axiosInstance.patch(`/doctors/${id}`, { schedule });
+//     console.log("✅ Doctor schedule updated:", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("❌ Error updating doctor schedule:", error.response?.data || error.message);
+
+//     if (error.response?.status === 404) {
+//       throw new Error(`Doctor with ID ${id} not found`);
+//     }
+//     throw new Error(error.response?.data?.message || "Failed to update doctor schedule");
+//   }
+// };
+
+
+// export const bulkUpdateDoctors = async (doctorsData) => {
+//   try {
+//     console.log("📦 Bulk updating doctors:", doctorsData);
+
+//     // Execute all updates in parallel
+//     const updatePromises = doctorsData.map(({ id, data }) =>
+//       updateDoctor(id, data)
+//     );
+
+//     const results = await Promise.allSettled(updatePromises);
+
+//     const successful = results.filter(r => r.status === 'fulfilled').map(r => r.value);
+//     const failed = results.filter(r => r.status === 'rejected');
+
+//     if (failed.length > 0) {
+//       console.warn("⚠️ Some updates failed:", failed);
+//     }
+
+//     console.log("✅ Bulk update completed:", { successful: successful.length, failed: failed.length });
+//     return successful;
+//   } catch (error) {
+//     console.error("❌ Error in bulk update:", error);
+//     throw new Error("Failed to bulk update doctors");
+//   }
+// };
+
+
+// export const getDoctorStats = async () => {
+//   try {
+//     console.log("📊 Fetching doctor statistics...");
+//     const doctors = await getDoctors();
+
+//     const stats = {
+//       total: doctors.length,
+//       active: doctors.filter(d => d.isactive).length,
+//       inactive: doctors.filter(d => !d.isactive).length,
+//       bySpecialization: {},
+//       byDepartment: {},
+//       averageExperience: 0,
+//     };
+
+//     // Count by specialization
+//     doctors.forEach(doctor => {
+//       if (doctor.specialization) {
+//         stats.bySpecialization[doctor.specialization] =
+//           (stats.bySpecialization[doctor.specialization] || 0) + 1;
+//       }
+
+//       if (doctor.departmentid) {
+//         stats.byDepartment[doctor.departmentid] =
+//           (stats.byDepartment[doctor.departmentid] || 0) + 1;
+//       }
+//     });
+
+//     // Calculate average experience
+//     const totalExperience = doctors.reduce((sum, d) => sum + (d.experience_years || 0), 0);
+//     stats.averageExperience = doctors.length > 0
+//       ? (totalExperience / doctors.length).toFixed(1)
+//       : 0;
+
+//     console.log("✅ Doctor statistics:", stats);
+//     return stats;
+//   } catch (error) {
+//     console.error("❌ Error fetching doctor statistics:", error);
+//     throw new Error("Failed to fetch doctor statistics");
+//   }
+// };
+// 
+
+
+/* ======================================================
+   🔥 DOCTORS CRUD API
+   ====================================================== */
+
+// 👉 GET all doctors
 export const getDoctors = async () => {
   try {
-    console.log("🔍 Fetching all doctors...");
     const response = await axiosInstance.get("/doctors");
-    console.log("✅ Doctors fetched:", response.data);
 
-    // Handle different response structures
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else if (response.data && Array.isArray(response.data.data)) {
-      return response.data.data;
-    }
+    if (Array.isArray(response.data)) return response.data;
+    if (response.data?.data) return response.data.data;
 
-    console.warn("⚠️ Unexpected response structure:", response.data);
     return [];
   } catch (error) {
-    console.error("❌ Error fetching doctors:", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Failed to fetch doctors");
   }
 };
 
-
+// 👉 GET doctor by ID
 export const getDoctorById = async (id) => {
   try {
-    console.log("🔍 Fetching doctor by ID:", id);
     const response = await axiosInstance.get(`/doctors/${id}`);
-    console.log("✅ Doctor fetched:", response.data);
     return response.data;
   } catch (error) {
-    console.error("❌ Error fetching doctor by ID:", error.response?.data || error.message);
-
-    if (error.response?.status === 404) {
+    if (error.response?.status === 404)
       throw new Error(`Doctor with ID ${id} not found`);
-    }
+
     throw new Error(error.response?.data?.message || "Failed to fetch doctor");
   }
 };
 
-
-export const addDoctor = async (doctorData) => {
+// 👉 CREATE doctor
+export const createDoctor = async (doctorData) => {
   try {
-    console.log("➕ Adding doctor:", doctorData);
-
-    // Format data to match backend expectations
     const formattedData = {
       fullname: doctorData.fullname,
       qualification: doctorData.qualification,
       specialization: doctorData.specialization,
-      experience_years: parseInt(doctorData.experience_years) || 0,
+      experience_years: Number(doctorData.experience_years) || 0,
       departmentid: doctorData.departmentid || null,
       photo: doctorData.photo || "",
       bio: doctorData.bio || "",
       schedule: doctorData.schedule || {},
-      isactive: doctorData.isactive !== undefined ? doctorData.isactive : true,
+      isactive:
+        doctorData.isactive !== undefined ? doctorData.isactive : true,
+      isexpert: doctorData.isexpert || false,
     };
 
-    console.log("📤 Formatted data:", formattedData);
-
     const response = await axiosInstance.post("/doctors", formattedData);
-    console.log("✅ Doctor added:", response.data);
     return response.data;
   } catch (error) {
-    console.error("❌ Error adding doctor:", error.response?.data || error.message);
-
-    if (error.response?.status === 400) {
-      throw new Error(error.response?.data?.message || "Invalid doctor data");
-    }
     throw new Error(error.response?.data?.message || "Failed to add doctor");
   }
 };
 
-
+// 👉 UPDATE doctor
 export const updateDoctor = async (id, doctorData) => {
   try {
-    console.log("🔄 Updating doctor:", { id, doctorData });
-
-    // Format data to match backend expectations
     const formattedData = {
       fullname: doctorData.fullname,
       qualification: doctorData.qualification,
       specialization: doctorData.specialization,
-      experience_years: parseInt(doctorData.experience_years) || 0,
+      experience_years: Number(doctorData.experience_years) || 0,
       departmentid: doctorData.departmentid || null,
       photo: doctorData.photo || "",
       bio: doctorData.bio || "",
       schedule: doctorData.schedule || {},
-      isactive: doctorData.isactive !== undefined ? doctorData.isactive : true,
+      isactive: doctorData.isactive,
+      isexpert: doctorData.isexpert,
     };
 
-    console.log("📤 Formatted data:", formattedData);
-
-    // Try PATCH first (more common for partial updates)
-    const response = await axiosInstance.put(`/doctors/update/${id}`, formattedData);
-    console.log("✅ Doctor updated:", response.data);
+    const response = await axiosInstance.put(
+      `/doctors/update/${id}`,
+      formattedData
+    );
     return response.data;
-  } catch (patchError) {
-    // If PATCH fails, try PUT
-    console.log("⚠️ PATCH failed, trying PUT...");
-    try {
-      const response = await axiosInstance.put(`/doctors/update${id}`, formattedData);
-      console.log("✅ Doctor updated with PUT:", response.data);
-      return response.data;
-    } catch (putError) {
-      console.error("❌ Error updating doctor:", putError.response?.data || putError.message);
-
-      if (putError.response?.status === 404) {
-        throw new Error(`Doctor with ID ${id} not found`);
-      } else if (putError.response?.status === 400) {
-        throw new Error(putError.response?.data?.message || "Invalid doctor data");
-      }
-      throw new Error(putError.response?.data?.message || "Failed to update doctor");
-    }
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to update doctor"
+    );
   }
 };
 
-
+// 👉 DELETE doctor
 export const deleteDoctor = async (id) => {
   try {
-    console.log("🗑️ Deleting doctor:", id);
     const response = await axiosInstance.delete(`/doctors/${id}`);
-    console.log("✅ Doctor deleted:", response.data);
     return response.data;
   } catch (error) {
-    console.error("❌ Error deleting doctor:", error.response?.data || error.message);
-
-    if (error.response?.status === 404) {
+    if (error.response?.status === 404)
       throw new Error(`Doctor with ID ${id} not found`);
-    } else if (error.response?.status === 400) {
-      throw new Error(error.response?.data?.message || "Cannot delete doctor");
-    }
+
     throw new Error(error.response?.data?.message || "Failed to delete doctor");
   }
 };
 
+/* ======================================================
+   🔥 TOGGLES (Active + Expert)
+   ====================================================== */
 
+// 👉 Toggle active status
 export const toggleDoctorStatus = async (id, isactive) => {
   try {
-    console.log("🔄 Toggling doctor status:", { id, isactive });
-    const response = await axiosInstance.put(`/doctors/update/${id}`, { isactive });
-    console.log("✅ Doctor status toggled:", response.data);
+    const response = await axiosInstance.put(`/doctors/update/${id}`, {
+      isactive,
+    });
     return response.data;
   } catch (error) {
-    console.error("❌ Error toggling doctor status:", error.response?.data || error.message);
-
-    if (error.response?.status === 404) {
-      throw new Error(`Doctor with ID ${id} not found`);
-    }
-    throw new Error(error.response?.data?.message || "Failed to toggle doctor status");
+    throw new Error(
+      error.response?.data?.message || "Failed to toggle doctor status"
+    );
   }
 };
 
-// ✅ Toggle expert mutation - Fixed version
-
-
-export const getDoctorsByDepartment = async (departmentId) => {
-  try {
-    console.log("🔍 Fetching doctors by department:", departmentId);
-    const response = await axiosInstance.get(`/doctors?departmentid=${departmentId}`);
-    console.log("✅ Doctors fetched for department:", response.data);
-
-    // Handle different response structures
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else if (response.data && Array.isArray(response.data.data)) {
-      return response.data.data;
-    }
-
-    return [];
-  } catch (error) {
-    console.error("❌ Error fetching doctors by department:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch doctors by department");
-  }
-};
-
-export const getDoctorsBySpecialization = async (specialization) => {
-  try {
-    console.log("🔍 Fetching doctors by specialization:", specialization);
-    const response = await axiosInstance.get(`/doctors?specialization=${specialization}`);
-    console.log("✅ Doctors fetched for specialization:", response.data);
-
-    // Handle different response structures
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else if (response.data && Array.isArray(response.data.data)) {
-      return response.data.data;
-    }
-
-    return [];
-  } catch (error) {
-    console.error("❌ Error fetching doctors by specialization:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch doctors by specialization");
-  }
-};
-
-/**
- * Get active doctors only
- * @returns {Promise<Array>} Array of active doctors
- */
-export const getActiveDoctors = async () => {
-  try {
-    console.log("🔍 Fetching active doctors...");
-    const response = await axiosInstance.get("/doctors?isactive=true");
-    console.log("✅ Active doctors fetched:", response.data);
-
-    // Handle different response structures
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else if (response.data && Array.isArray(response.data.data)) {
-      return response.data.data;
-    }
-
-    return [];
-  } catch (error) {
-    console.error("❌ Error fetching active doctors:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch active doctors");
-  }
-};
-
-/**
- * Search doctors by name or specialization
- * @param {string} searchTerm - Search term
- * @returns {Promise<Array>} Array of matching doctors
- */
-export const searchDoctors = async (searchTerm) => {
-  try {
-    console.log("🔍 Searching doctors:", searchTerm);
-    const response = await axiosInstance.get(`/doctors?search=${encodeURIComponent(searchTerm)}`);
-    console.log("✅ Search results:", response.data);
-
-    // Handle different response structures
-    if (Array.isArray(response.data)) {
-      return response.data;
-    } else if (response.data && Array.isArray(response.data.data)) {
-      return response.data.data;
-    }
-
-    return [];
-  } catch (error) {
-    console.error("❌ Error searching doctors:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to search doctors");
-  }
-};
-
+// 👉 Toggle expert doctor
 export const toggleDoctorExpert = async (id, isexpert) => {
   try {
-    console.log("⭐ Toggling doctor expert status:", { id, isexpert });
-
-    // Use PATCH for partial update if your backend supports it
-    const response = await axiosInstance.patch(`/doctors/${id}/expert`, {
-      isexpert: isexpert
+    const response = await axiosInstance.put(`/doctors/update/${id}`, {
+      isexpert,
     });
-
-    console.log("✅ Doctor expert status toggled:", response.data);
     return response.data;
   } catch (error) {
-    console.error("❌ Error toggling doctor expert status:", error);
-
-    // Fallback to PUT if PATCH is not supported
-    try {
-      console.log("🔄 Trying PUT as fallback...");
-      const response = await axiosInstance.put(`/doctors/update/${id}`, {
-        isexpert: isexpert
-      });
-      return response.data;
-    } catch (putError) {
-      console.error("❌ PUT also failed:", putError);
-      throw new Error(putError.response?.data?.message || "Failed to update expert status");
-    }
+    throw new Error(
+      error.response?.data?.message || "Failed to toggle expert status"
+    );
   }
 };
 
+/* ======================================================
+   🔥 FILTERS (By Dept, By Specialization, Active Only)
+   ====================================================== */
 
-export const updateDoctorSchedule = async (id, schedule) => {
+// 👉 Get doctors by department
+export const getDoctorsByDepartment = async (departmentId) => {
   try {
-    console.log("📅 Updating doctor schedule:", { id, schedule });
-    const response = await axiosInstance.patch(`/doctors/${id}`, { schedule });
-    console.log("✅ Doctor schedule updated:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("❌ Error updating doctor schedule:", error.response?.data || error.message);
-
-    if (error.response?.status === 404) {
-      throw new Error(`Doctor with ID ${id} not found`);
-    }
-    throw new Error(error.response?.data?.message || "Failed to update doctor schedule");
-  }
-};
-
-
-export const bulkUpdateDoctors = async (doctorsData) => {
-  try {
-    console.log("📦 Bulk updating doctors:", doctorsData);
-
-    // Execute all updates in parallel
-    const updatePromises = doctorsData.map(({ id, data }) =>
-      updateDoctor(id, data)
+    const response = await axiosInstance.get(
+      `/doctors?departmentid=${departmentId}`
     );
 
-    const results = await Promise.allSettled(updatePromises);
+    if (Array.isArray(response.data)) return response.data;
+    if (response.data?.data) return response.data.data;
 
-    const successful = results.filter(r => r.status === 'fulfilled').map(r => r.value);
-    const failed = results.filter(r => r.status === 'rejected');
-
-    if (failed.length > 0) {
-      console.warn("⚠️ Some updates failed:", failed);
-    }
-
-    console.log("✅ Bulk update completed:", { successful: successful.length, failed: failed.length });
-    return successful;
+    return [];
   } catch (error) {
-    console.error("❌ Error in bulk update:", error);
+    throw new Error(
+      error.response?.data?.message ||
+      "Failed to fetch doctors by department"
+    );
+  }
+};
+
+// 👉 Get doctors by specialization
+export const getDoctorsBySpecialization = async (specialization) => {
+  try {
+    const response = await axiosInstance.get(
+      `/doctors?specialization=${specialization}`
+    );
+
+    if (Array.isArray(response.data)) return response.data;
+    if (response.data?.data) return response.data.data;
+
+    return [];
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message ||
+      "Failed to fetch doctors by specialization"
+    );
+  }
+};
+
+// 👉 Active doctors only
+export const getActiveDoctors = async () => {
+  try {
+    const response = await axiosInstance.get("/doctors?isactive=true");
+
+    if (Array.isArray(response.data)) return response.data;
+    if (response.data?.data) return response.data.data;
+
+    return [];
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch active doctors"
+    );
+  }
+};
+
+// 👉 Search doctors
+export const searchDoctors = async (searchTerm) => {
+  try {
+    const response = await axiosInstance.get(
+      `/doctors?search=${encodeURIComponent(searchTerm)}`
+    );
+
+    if (Array.isArray(response.data)) return response.data;
+    if (response.data?.data) return response.data.data;
+
+    return [];
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to search doctors"
+    );
+  }
+};
+
+/* ======================================================
+   🔥 OTHER UTILITIES
+   ====================================================== */
+
+// 👉 Update schedule only
+export const updateDoctorSchedule = async (id, schedule) => {
+  try {
+    const response = await axiosInstance.patch(`/doctors/${id}`, { schedule });
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to update schedule"
+    );
+  }
+};
+
+// 👉 Bulk update (multiple doctors at once)
+export const bulkUpdateDoctors = async (doctorsData) => {
+  try {
+    const tasks = doctorsData.map(({ id, data }) =>
+      updateDoctor(id, data)
+    );
+    const results = await Promise.allSettled(tasks);
+
+    return results;
+  } catch (error) {
     throw new Error("Failed to bulk update doctors");
   }
 };
 
-
+// 👉 Doctor stats
 export const getDoctorStats = async () => {
   try {
-    console.log("📊 Fetching doctor statistics...");
     const doctors = await getDoctors();
 
     const stats = {
       total: doctors.length,
-      active: doctors.filter(d => d.isactive).length,
-      inactive: doctors.filter(d => !d.isactive).length,
+      active: doctors.filter((d) => d.isactive).length,
+      inactive: doctors.filter((d) => !d.isactive).length,
       bySpecialization: {},
       byDepartment: {},
       averageExperience: 0,
     };
 
-    // Count by specialization
-    doctors.forEach(doctor => {
-      if (doctor.specialization) {
-        stats.bySpecialization[doctor.specialization] =
-          (stats.bySpecialization[doctor.specialization] || 0) + 1;
-      }
+    doctors.forEach((d) => {
+      if (d.specialization)
+        stats.bySpecialization[d.specialization] =
+          (stats.bySpecialization[d.specialization] || 0) + 1;
 
-      if (doctor.departmentid) {
-        stats.byDepartment[doctor.departmentid] =
-          (stats.byDepartment[doctor.departmentid] || 0) + 1;
-      }
+      if (d.departmentid)
+        stats.byDepartment[d.departmentid] =
+          (stats.byDepartment[d.departmentid] || 0) + 1;
     });
 
-    // Calculate average experience
-    const totalExperience = doctors.reduce((sum, d) => sum + (d.experience_years || 0), 0);
-    stats.averageExperience = doctors.length > 0
-      ? (totalExperience / doctors.length).toFixed(1)
-      : 0;
+    const totalExp = doctors.reduce(
+      (sum, d) => sum + (d.experience_years || 0),
+      0
+    );
 
-    console.log("✅ Doctor statistics:", stats);
+    stats.averageExperience =
+      doctors.length > 0 ? (totalExp / doctors.length).toFixed(1) : 0;
+
     return stats;
   } catch (error) {
-    console.error("❌ Error fetching doctor statistics:", error);
     throw new Error("Failed to fetch doctor statistics");
   }
 };
+
 // ========================================
 
 
@@ -769,7 +1054,7 @@ export const getBlogById = async (id) => {
   try {
     const response = await axiosInstance.get(`/blogs/${id}`);
     console.log(`✅ getBlogById ${id} response:`, response.data);
-    
+
     // Handle different response structures
     if (response.data?.data) return response.data.data;
     if (response.data?.blog) return response.data.blog;
@@ -785,7 +1070,7 @@ export const getBlogBySlug = async (slug) => {
   try {
     const response = await axiosInstance.get(`/blogs/slug/${slug}`);
     console.log(`✅ getBlogBySlug ${slug} response:`, response.data);
-    
+
     // Handle different response structures
     if (response.data?.data) return response.data.data;
     if (response.data?.blog) return response.data.blog;
@@ -812,7 +1097,7 @@ export const addBlog = async (blogData) => {
     console.log("🔄 addBlog payload:", formattedData);
     const response = await axiosInstance.post("/blogs", formattedData);
     console.log("✅ addBlog success:", response.data);
-    
+
     // Return the created blog data
     if (response.data?.data) return response.data.data;
     if (response.data?.blog) return response.data.blog;
@@ -839,7 +1124,7 @@ export const updateBlog = async (id, blogData) => {
     console.log("🔄 updateBlog:", { id, formattedData });
     const response = await axiosInstance.put(`/blogs/update/${id}`, formattedData);
     console.log("✅ updateBlog success:", response.data);
-    
+
     // Return the updated blog data
     if (response.data?.data) return response.data.data;
     if (response.data?.blog) return response.data.blog;
@@ -871,7 +1156,7 @@ export const toggleBlogStatus = async (id, isActive) => {
       isactive: isActive
     });
     console.log("✅ toggleBlogStatus success:", response.data);
-    
+
     // Return the updated blog data
     if (response.data?.data) return response.data.data;
     if (response.data?.blog) return response.data.blog;
@@ -1540,65 +1825,65 @@ export const getDepartmentById = async (id) => {
 
 // ====================Facility====================
 
-// Facility functions
-export const getFacilities = async () => {
-  try {
-    const response = await axiosInstance.get('/facilities');
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching facilities:", error);
-    throw error;
-  }
-};
+// // Facility functions
+// export const getFacilities = async () => {
+//   try {
+//     const response = await axiosInstance.get('/facilities');
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching facilities:", error);
+//     throw error;
+//   }
+// };
 
-export const getFacilitiesByDept = async (deptId) => {
-  try {
-    const response = await axiosInstance.get(`/facilities/dept/${deptId}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching facilities for department ${deptId}:`, error);
-    throw error;
-  }
-};
+// export const getFacilitiesByDept = async (deptId) => {
+//   try {
+//     const response = await axiosInstance.get(`/facilities/dept/${deptId}`);
+//     return response.data;
+//   } catch (error) {
+//     console.error(`Error fetching facilities for department ${deptId}:`, error);
+//     throw error;
+//   }
+// };
 
-export const createFacility = async (facilityData) => {
-  try {
-    // When facilityData is FormData, axios automatically sets the correct Content-Type header
-    const response = await axiosInstance.post('/facilities', facilityData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error creating facility:", error);
-    throw error;
-  }
-};
+// export const createFacility = async (facilityData) => {
+//   try {
+//     // When facilityData is FormData, axios automatically sets the correct Content-Type header
+//     const response = await axiosInstance.post('/facilities', facilityData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data'
+//       }
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error creating facility:", error);
+//     throw error;
+//   }
+// };
 
-export const updateFacility = async (id, facilityData) => {
-  try {
-    const response = await axiosInstance.put(`/facilities/update/${id}`, facilityData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    return response.data;
-  } catch (error) {
-    console.error(`Error updating facility ${id}:`, error);
-    throw error;
-  }
-};
+// export const updateFacility = async (id, facilityData) => {
+//   try {
+//     const response = await axiosInstance.put(`/facilities/update/${id}`, facilityData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data'
+//       }
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error(`Error updating facility ${id}:`, error);
+//     throw error;
+//   }
+// };
 
-export const deleteFacility = async (id) => {
-  try {
-    const response = await axiosInstance.delete(`/facilities/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error deleting facility ${id}:`, error);
-    throw error;
-  }
-};
+// export const deleteFacility = async (id) => {
+//   try {
+//     const response = await axiosInstance.delete(`/facilities/${id}`);
+//     return response.data;
+//   } catch (error) {
+//     console.error(`Error deleting facility ${id}:`, error);
+//     throw error;
+//   }
+// };
 
 // Department functions
 export const getDepartments = async () => {
@@ -1611,23 +1896,93 @@ export const getDepartments = async () => {
   }
 };
 
-
-export const uploadSingleFile = async (file) => {
+// ===============================
+// 🚀 GET ALL FACILITIES
+// ===============================
+export const getFacilities = async () => {
   try {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const response = await axiosInstance.post('/single', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    return response.data; // { success, message, filePath }
+    const res = await axiosInstance.get("/facilities");
+    return res.data;
   } catch (error) {
-    console.error('Error uploading file:', error);
     throw error;
   }
 };
 
+// ===============================
+// 🚀 GET FACILITY BY ID
+// ===============================
+export const getFacilityById = async (id) => {
+  try {
+    const res = await axiosInstance.get(`/facilities/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
+// ===============================
+// 🚀 CREATE FACILITY (POST)
+// ===============================
+export const createFacility = async (data) => {
+  try {
+    const res = await axiosInstance.post("/facilities", data);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// ===============================
+// 🚀 UPDATE FACILITY (PUT)
+// ===============================
+export const updateFacility = async (id, data) => {
+  try {
+    const res = await axiosInstance.put(`/facilities/update/${id}`, data);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// ===============================
+// 🚀 DELETE FACILITY (DELETE)
+// ===============================
+export const deleteFacility = async (id) => {
+  try {
+    const res = await axiosInstance.delete(`/facilities/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const toggleFacilityStatus = async (id, isactive) => {
+  try {
+    const res = await axiosInstance.put(`/facilities/update/${id}`, {
+      isactive,
+    });
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getFacilitiesByDept = async (deptId) => {
+  try {
+    const res = await axiosInstance.get(`/facilities/dept/${deptId}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const uploadSingleFile = async (fileData) => {
+  try {
+    const res = await axiosInstance.post("/uploads/single", fileData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;   // { filePath: "/uploads/xxx.jpg" }
+  } catch (err) {
+    throw new Error(err.response?.data?.message || "File upload failed");
+  }
+};

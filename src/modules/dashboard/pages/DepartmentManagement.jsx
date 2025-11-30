@@ -1205,6 +1205,7 @@ import {
   createDepartment,
   updateDepartment,
   deleteDepartment,
+  uploadSingleFile
 } from "../../../api/userApi";
 import { Plus, Edit2, Trash2, Save, X, Power, RefreshCw, Eye } from "lucide-react";
 import { CalendarToday } from "@mui/icons-material";
@@ -1457,6 +1458,54 @@ export default function DepartmentManagement() {
     return services.split(',').map(s => s.trim()).filter(s => s);
   };
 
+  // const handleFileUpload = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   try {
+  //     const fd = new FormData();
+  //     fd.append("file", file);
+
+  //     const res = await uploadSingleFile(fd);
+
+  //     const BASE_URL = "http://localhost:8654";
+
+  //     // final image URL
+  //     const imgURL = BASE_URL + (res.filePath.startsWith("/") ? res.filePath : `/${res.filePath}`);
+
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       bannerimage: imgURL,
+  //     }));
+
+      
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await uploadSingleFile(fd);
+      const BASE_URL = "http://localhost:8654";
+      // final image URL
+      const imgURL = BASE_URL + (res.filePath.startsWith("/") ? res.filePath : `/${res.filePath}`);
+
+      setFormData((prev) => ({
+        ...prev,
+        bannerimage: imgURL,
+      }));
+    } catch (err) {
+      console.error(err);
+      setError("Failed to upload image. Please try again.");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -1469,7 +1518,7 @@ export default function DepartmentManagement() {
   }
 
   return (
-    <div className="py-2 min-h-screen">
+    <div className="py-2 min-h-screen bg-gray-50">
       <div className="mx-auto">
         <div className="bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] shadow-md rounded-xl p-3 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
           <div>
@@ -1579,17 +1628,25 @@ export default function DepartmentManagement() {
                 />
               </div>
 
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Banner Image URL
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Upload Photo</label>
+
                 <input
-                  type="text"
-                  placeholder="https://example.com/image.jpg"
-                  value={formData.bannerimage}
-                  onChange={(e) => setFormData({ ...formData, bannerimage: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white"
                 />
+
+                {formData.bannerimage && (
+                  <img
+                    src={formData.bannerimage}
+                    alt="Preview"
+                    className="mt-3 w-20 h-20 rounded-full object-cover border"
+                  />
+                )}
+
               </div>
 
               <div>

@@ -684,6 +684,8 @@ import {
     updateBlog,
     deleteBlog,
     toggleBlogStatus,
+    uploadSingleFile
+
 } from "../../../api/userApi";
 
 const BlogAdmin = () => {
@@ -807,6 +809,9 @@ const BlogAdmin = () => {
         }
     };
 
+
+
+
     const exportToCSV = () => {
         const headers = ["Title", "Category", "Author", "Status", "Created Date"];
         const csvData = filteredBlogs.map((blog) => [
@@ -840,10 +845,10 @@ const BlogAdmin = () => {
     }
 
     return (
-        <div className="py-4 min-h-screen">
+        <div className="py-2 min-h-screen bg-gray-50">
             {/* Error Message */}
             {error && (
-                <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg">
                     {error}
                 </div>
             )}
@@ -1002,6 +1007,7 @@ const BlogAdmin = () => {
 
 // Blog Card Component
 const BlogCard = ({ blog, onEdit, onDelete, onToggleStatus }) => {
+
     return (
         <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-300">
             {/* Image */}
@@ -1110,7 +1116,27 @@ const BlogModal = ({ blog, categories, onSave, onClose }) => {
         author: "",
         isactive: true,
     });
+    const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
+        try {
+            const fd = new FormData();
+            fd.append("file", file);
+            const res = await uploadSingleFile(fd);
+            const BASE_URL = "http://localhost:8654";
+            // final image URL
+            const imgURL = BASE_URL + (res.filePath.startsWith("/") ? res.filePath : `/${res.filePath}`);
+
+            setFormData((prev) => ({
+                ...prev,
+                image: imgURL,
+            }));
+        } catch (err) {
+            console.error(err);
+            setError("Failed to upload image. Please try again.");
+        }
+    };
     useEffect(() => {
         if (blog) {
             setFormData({
@@ -1243,29 +1269,25 @@ const BlogModal = ({ blog, categories, onSave, onClose }) => {
                     </div>
 
                     {/* Image Upload Section */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Image
-                        </label>
 
-                        <div className="mt-3">
-                            <label className="block text-sm text-gray-500 mb-1">
-                                Paste image URL:
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="https://example.com/image.jpg"
-                                value={formData.image?.startsWith("blob:") ? "" : formData.image}
-                                onChange={(e) =>
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        image: e.target.value,
-                                        imageFile: null,
-                                    }))
-                                }
-                                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500"
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Upload Photo</label>
+
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileUpload}
+                            className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white"
+                        />
+
+                        {formData.image && (
+                            <img
+                                src={formData.image}
+                                alt="Preview"
+                                className="mt-3 w-20 h-20 rounded-full object-cover border"
                             />
-                        </div>
+                        )}
+
                     </div>
 
                     <div>

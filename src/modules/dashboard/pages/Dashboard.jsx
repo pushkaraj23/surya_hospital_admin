@@ -204,7 +204,7 @@ const Dashboard = () => {
   return (
     <div className="font-primary min-h-screen bg-gray-50 text-gray-800 py-2 space-y-8">
       {/* Header */}
-      <div className="bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] p-6 rounded-xl shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between border border-gray-100">
+      <div className=" bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] p-6 rounded-xl shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between border ">
         <h2 className="text-2xl font-semibold flex items-center gap-2">
           ✨ Dashboard Overview
         </h2>
