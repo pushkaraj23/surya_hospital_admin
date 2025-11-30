@@ -658,10 +658,15 @@
 
 // export default FacilitiesComponent;
 
-
-
 import React, { useState, useEffect } from 'react';
-import { getDepartments, getFacilities, getFacilitiesByDept, createFacility, updateFacility, deleteFacility } from '../../../api/userApi';
+import { 
+  getDepartments, 
+  getFacilities, 
+  getFacilitiesByDept, 
+  createFacility, 
+  updateFacility, 
+  deleteFacility 
+} from '../../../api/userApi';
 
 const FacilitiesComponent = () => {
   const [departments, setDepartments] = useState([]);
@@ -674,7 +679,7 @@ const FacilitiesComponent = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState('all');
 
-  // Form state - photos now stores File objects and preview URLs
+  // Form state
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -682,9 +687,10 @@ const FacilitiesComponent = () => {
     isactive: true,
     departmentId: ''
   });
-  
-  const [photoFiles, setPhotoFiles] = useState([]); // Array of File objects
-  const [photoPreviews, setPhotoPreviews] = useState([]); // Array of preview URLs
+
+  // Photo state - using URLs
+  const [photoUrl, setPhotoUrl] = useState('');
+  const [photoUrls, setPhotoUrls] = useState([]);
 
   useEffect(() => {
     fetchDepartments();
@@ -749,41 +755,27 @@ const FacilitiesComponent = () => {
     }));
   };
 
-  // Handle file selection
-  const handlePhotoChange = (e) => {
-    const files = Array.from(e.target.files);
+  // Add photo URL
+  const addPhotoUrl = () => {
+    if (!photoUrl.trim()) return;
     
-    // Validate file types
-    const validFiles = files.filter(file => {
-      const isValid = file.type.startsWith('image/');
-      if (!isValid) {
-        setError(`${file.name} is not a valid image file`);
-      }
-      return isValid;
-    });
-
-    if (validFiles.length === 0) return;
-
-    // Create preview URLs
-    const newPreviews = validFiles.map(file => URL.createObjectURL(file));
-    
-    setPhotoFiles(prev => [...prev, ...validFiles]);
-    setPhotoPreviews(prev => [...prev, ...newPreviews]);
+    // Basic URL validation
+    try {
+      new URL(photoUrl);
+      setPhotoUrls(prev => [...prev, photoUrl]);
+      setPhotoUrl('');
+      setError('');
+    } catch (e) {
+      setError('Please enter a valid URL');
+    }
   };
 
-  // Remove a photo
-  const removePhoto = (index) => {
-    // Revoke the preview URL to free memory
-    URL.revokeObjectURL(photoPreviews[index]);
-    
-    setPhotoFiles(prev => prev.filter((_, i) => i !== index));
-    setPhotoPreviews(prev => prev.filter((_, i) => i !== index));
+  // Remove photo URL
+  const removeUrl = (index) => {
+    setPhotoUrls(prev => prev.filter((_, i) => i !== index));
   };
 
   const resetForm = () => {
-    // Clean up preview URLs
-    photoPreviews.forEach(url => URL.revokeObjectURL(url));
-    
     setFormData({
       name: '',
       category: '',
@@ -791,8 +783,8 @@ const FacilitiesComponent = () => {
       isactive: true,
       departmentId: ''
     });
-    setPhotoFiles([]);
-    setPhotoPreviews([]);
+    setPhotoUrl('');
+    setPhotoUrls([]);
     setEditingFacility(null);
     setShowForm(false);
     setError('');
@@ -805,7 +797,7 @@ const FacilitiesComponent = () => {
   };
 
   const handleSubmit = async () => {
-    if (!formData.name || !formData.category || !formData.description || !formData.departmentId) {
+    if (!formData.name || !formData.category || !formData.description) {
       setError('Please fill in all required fields');
       return;
     }
@@ -823,34 +815,34 @@ const FacilitiesComponent = () => {
     setSuccess('');
 
     try {
-      // Create FormData for file upload
-      const formDataToSend = new FormData();
-      
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('category', formData.category);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('isactive', formData.isactive);
-      formDataToSend.append('departmentId', parseInt(formData.departmentId));
-      formDataToSend.append('createdat', new Date().toISOString());
-      
-      // Append all photo files
-      photoFiles.forEach((file, index) => {
-        formDataToSend.append('photos', file);
-      });
+      // Create JSON payload matching your API format
+      const facilityData = {
+        name: formData.name,
+        category: formData.category,
+        description: formData.description,
+        photos: photoUrls, // Array of URLs
+        isactive: formData.isactive,
+        createdat: new Date().toISOString()
+      };
 
-      console.log('Submitting facility with photos:', photoFiles.length);
-      
-      const response = await createFacility(formDataToSend);
+      // Only add departmentId if it's selected
+      if (formData.departmentId) {
+        facilityData.departmentid = parseInt(formData.departmentId);
+      }
+
+      console.log('Creating facility with data:', facilityData);
+
+      const response = await createFacility(facilityData);
       console.log('Create facility response:', response);
-      
+
       setSuccess('Facility created successfully!');
-      
+
       if (selectedDepartment === 'all') {
         await fetchFacilities();
       } else {
         await fetchFacilitiesByDept(selectedDepartment);
       }
-      
+
       resetForm();
     } catch (err) {
       console.error('Create facility error:', err);
@@ -867,35 +859,33 @@ const FacilitiesComponent = () => {
     setSuccess('');
 
     try {
-      // Create FormData for file upload
-      const formDataToSend = new FormData();
-      
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('category', formData.category);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('isactive', formData.isactive);
-      formDataToSend.append('departmentId', parseInt(formData.departmentId));
-      
-      // Append new photo files if any
-      if (photoFiles.length > 0) {
-        photoFiles.forEach((file) => {
-          formDataToSend.append('photos', file);
-        });
+      // Create JSON payload matching your API format
+      const facilityData = {
+        name: formData.name,
+        category: formData.category,
+        description: formData.description,
+        photos: photoUrls, // Array of URLs
+        isactive: formData.isactive
+      };
+
+      // Only add departmentId if it's selected
+      if (formData.departmentId) {
+        facilityData.departmentid = parseInt(formData.departmentId);
       }
 
-      console.log('Updating facility:', editingFacility.id);
-      
-      const response = await updateFacility(editingFacility.id, formDataToSend);
+      console.log('Updating facility:', editingFacility.id, facilityData);
+
+      const response = await updateFacility(editingFacility.id, facilityData);
       console.log('Update facility response:', response);
-      
+
       setSuccess('Facility updated successfully!');
-      
+
       if (selectedDepartment === 'all') {
         await fetchFacilities();
       } else {
         await fetchFacilitiesByDept(selectedDepartment);
       }
-      
+
       resetForm();
     } catch (err) {
       console.error('Update facility error:', err);
@@ -918,7 +908,7 @@ const FacilitiesComponent = () => {
     try {
       await deleteFacility(id);
       setSuccess('Facility deleted successfully!');
-      
+
       if (selectedDepartment === 'all') {
         await fetchFacilities();
       } else {
@@ -934,7 +924,7 @@ const FacilitiesComponent = () => {
   const startEdit = (facility) => {
     setEditingFacility(facility);
     const deptId = facility.departmentId || facility.departmentid;
-    
+
     setFormData({
       name: facility.name,
       category: facility.category,
@@ -942,13 +932,12 @@ const FacilitiesComponent = () => {
       isactive: facility.isactive,
       departmentId: deptId ? deptId.toString() : ''
     });
-    
-    // For editing, we show existing photos as previews (URLs from server)
-    // but don't set photoFiles (user can add new photos)
+
+    // Load existing photos
     const existingPhotos = normalizePhotos(facility.photos);
-    setPhotoPreviews(existingPhotos);
-    setPhotoFiles([]);
-    
+    setPhotoUrls(existingPhotos);
+    setPhotoUrl('');
+
     setShowForm(true);
   };
 
@@ -1014,7 +1003,7 @@ const FacilitiesComponent = () => {
                   {/* Department Selection */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Department *
+                      Department (Optional)
                     </label>
                     <select
                       name="departmentId"
@@ -1046,6 +1035,7 @@ const FacilitiesComponent = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       disabled={loading}
+                      placeholder="e.g., Advanced ICU"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
                     />
                   </div>
@@ -1061,6 +1051,7 @@ const FacilitiesComponent = () => {
                       value={formData.category}
                       onChange={handleInputChange}
                       disabled={loading}
+                      placeholder="e.g., Medical, Diagnostic, Healthcare"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
                     />
                   </div>
@@ -1076,60 +1067,77 @@ const FacilitiesComponent = () => {
                       onChange={handleInputChange}
                       rows="4"
                       disabled={loading}
+                      placeholder="Enter facility description..."
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
                     />
                   </div>
 
-                  {/* Photo Upload */}
+                  {/* Photo URLs */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Photos
+                      Photo URLs
                     </label>
-                    
-                    {/* File Input */}
-                    <div className="mb-4">
-                      <label className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition-colors">
-                        <div className="text-center">
-                          <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                          <p className="mt-2 text-sm text-gray-600">
-                            <span className="font-semibold text-blue-600">Click to upload</span> or drag and drop
-                          </p>
-                          <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                        </div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          multiple
-                          onChange={handlePhotoChange}
-                          disabled={loading}
-                          className="hidden"
-                        />
-                      </label>
+
+                    {/* URL Input */}
+                    <div className="flex gap-2 mb-4">
+                      <input
+                        type="text"
+                        placeholder="Enter image URL (https://example.com/image.jpg)"
+                        value={photoUrl}
+                        onChange={(e) => setPhotoUrl(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            addPhotoUrl();
+                          }
+                        }}
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        disabled={loading}
+                      />
+
+                      <button
+                        type="button"
+                        onClick={addPhotoUrl}
+                        disabled={loading || !photoUrl.trim()}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Add
+                      </button>
                     </div>
 
                     {/* Photo Previews */}
-                    {photoPreviews.length > 0 && (
+                    {photoUrls.length > 0 && (
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        {photoPreviews.map((preview, index) => (
+                        {photoUrls.map((url, index) => (
                           <div key={index} className="relative group">
                             <img
-                              src={preview}
-                              alt={`Preview ${index + 1}`}
-                              className="w-full h-32 object-cover rounded-lg border border-gray-300"
+                              src={url}
+                              alt={`Photo ${index + 1}`}
+                              className="w-full h-32 object-cover rounded-lg border border-gray-200"
+                              onError={(e) => {
+                                e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23f3f4f6" width="100" height="100"/%3E%3Ctext fill="%239ca3af" x="50%25" y="50%25" text-anchor="middle" dy=".3em" font-size="12"%3EInvalid URL%3C/text%3E%3C/svg%3E';
+                              }}
                             />
+
+                            {/* Remove Button */}
                             <button
                               type="button"
-                              onClick={() => removePhoto(index)}
-                              disabled={loading}
-                              className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50"
+                              onClick={() => removeUrl(index)}
+                              className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                              title="Remove photo"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
                               </svg>
                             </button>
-                            {editingFacility && index < normalizePhotos(editingFacility.photos).length && (
+
+                            {/* Existing Photo Tag */}
+                            {editingFacility && index < (normalizePhotos(editingFacility.photos).length) && (
                               <span className="absolute bottom-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
                                 Existing
                               </span>
@@ -1138,6 +1146,10 @@ const FacilitiesComponent = () => {
                         ))}
                       </div>
                     )}
+
+                    {photoUrls.length === 0 && (
+                      <p className="text-sm text-gray-500 mt-2">No photos added yet. Add image URLs above.</p>
+                    )}
                   </div>
 
                   {/* Active Status */}
@@ -1145,12 +1157,13 @@ const FacilitiesComponent = () => {
                     <input
                       type="checkbox"
                       name="isactive"
+                      id="isactive"
                       checked={formData.isactive}
                       onChange={handleInputChange}
                       disabled={loading}
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <label className="ml-2 block text-sm text-gray-700">
+                    <label htmlFor="isactive" className="ml-2 block text-sm text-gray-700">
                       Active Facility
                     </label>
                   </div>
@@ -1238,17 +1251,17 @@ const FacilitiesComponent = () => {
                     {/* Facility Info */}
                     <div className="p-4">
                       <div className="flex items-start justify-between mb-3">
-                        <h4 className="text-lg font-semibold text-gray-900 truncate">{facility.name}</h4>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        <h4 className="text-lg font-semibold text-gray-900 truncate flex-1">{facility.name}</h4>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ml-2 ${
                           facility.isactive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                         }`}>
                           {facility.isactive ? 'Active' : 'Inactive'}
                         </span>
                       </div>
-                      
+
                       <p className="text-sm text-blue-600 font-medium mb-2">{facility.category}</p>
                       <p className="text-sm text-gray-600 line-clamp-2 mb-2">{facility.description}</p>
-                      
+
                       {/* Department Info */}
                       <div className="mb-4">
                         <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800">
@@ -1258,7 +1271,7 @@ const FacilitiesComponent = () => {
                           {getDepartmentName(facility)}
                         </span>
                       </div>
-                      
+
                       <div className="flex items-center justify-between text-xs text-gray-500">
                         <span>ID: {facility.id}</span>
                         <span>Created: {new Date(facility.createdat).toLocaleDateString()}</span>

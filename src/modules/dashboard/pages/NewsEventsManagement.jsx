@@ -324,7 +324,7 @@ const NewsEventsManagement = () => {
                                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
                                                     placeholder="Enter image URL"
                                                 />
-                                                <p className="text-sm text-gray-500 text-center">OR</p>
+                                                {/* <p className="text-sm text-gray-500 text-center">OR</p>
                                                 <label className="flex flex-col items-center justify-center w-full h-20 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:border-gray-400 mt-2">
                                                     <div className="flex flex-col items-center justify-center pt-2 pb-3">
                                                         <ImageIcon className="w-6 h-6 text-gray-400 mb-1" />
@@ -336,7 +336,7 @@ const NewsEventsManagement = () => {
                                                         onChange={handleImageUpload}
                                                         className="hidden"
                                                     />
-                                                </label>
+                                                </label> */}
                                             </div>
                                         )}
                                     </div>
@@ -447,12 +447,15 @@ const NewsEventsManagement = () => {
                                         Add New
                                     </button>
                                     <div className="flex items-center space-x-2">
-                                        <span className="text-sm text-gray-600">Filter:</span>
+                                        {/* <span className="text-sm text-gray-600">Filter:</span>
                                         <select className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                             <option value="all">All</option>
                                             <option value="news">News</option>
                                             <option value="event">Events</option>
-                                        </select>
+                                        </select> */}
+                                        <div className='text-xl font-semibold'>
+                                            News & Events
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="text-sm text-gray-600">

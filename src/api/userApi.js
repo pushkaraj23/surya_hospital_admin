@@ -769,6 +769,10 @@ export const getBlogById = async (id) => {
   try {
     const response = await axiosInstance.get(`/blogs/${id}`);
     console.log(`✅ getBlogById ${id} response:`, response.data);
+    
+    // Handle different response structures
+    if (response.data?.data) return response.data.data;
+    if (response.data?.blog) return response.data.blog;
     return response.data;
   } catch (error) {
     console.error(`❌ Error fetching blog with ID ${id}:`, error.response?.data || error.message);
@@ -781,6 +785,10 @@ export const getBlogBySlug = async (slug) => {
   try {
     const response = await axiosInstance.get(`/blogs/slug/${slug}`);
     console.log(`✅ getBlogBySlug ${slug} response:`, response.data);
+    
+    // Handle different response structures
+    if (response.data?.data) return response.data.data;
+    if (response.data?.blog) return response.data.blog;
     return response.data;
   } catch (error) {
     console.error(`❌ Error fetching blog with slug ${slug}:`, error.response?.data || error.message);
@@ -804,6 +812,10 @@ export const addBlog = async (blogData) => {
     console.log("🔄 addBlog payload:", formattedData);
     const response = await axiosInstance.post("/blogs", formattedData);
     console.log("✅ addBlog success:", response.data);
+    
+    // Return the created blog data
+    if (response.data?.data) return response.data.data;
+    if (response.data?.blog) return response.data.blog;
     return response.data;
   } catch (error) {
     console.error("❌ Error adding blog:", error.response?.data || error.message);
@@ -827,6 +839,10 @@ export const updateBlog = async (id, blogData) => {
     console.log("🔄 updateBlog:", { id, formattedData });
     const response = await axiosInstance.put(`/blogs/update/${id}`, formattedData);
     console.log("✅ updateBlog success:", response.data);
+    
+    // Return the updated blog data
+    if (response.data?.data) return response.data.data;
+    if (response.data?.blog) return response.data.blog;
     return response.data;
   } catch (error) {
     console.error(`❌ Error updating blog with ID ${id}:`, error.response?.data || error.message);
@@ -855,6 +871,10 @@ export const toggleBlogStatus = async (id, isActive) => {
       isactive: isActive
     });
     console.log("✅ toggleBlogStatus success:", response.data);
+    
+    // Return the updated blog data
+    if (response.data?.data) return response.data.data;
+    if (response.data?.blog) return response.data.blog;
     return response.data;
   } catch (error) {
     console.error(`❌ Error toggling status for ID ${id}:`, error.response?.data || error.message);
@@ -1609,3 +1629,5 @@ export const uploadSingleFile = async (file) => {
     throw error;
   }
 };
+
+
