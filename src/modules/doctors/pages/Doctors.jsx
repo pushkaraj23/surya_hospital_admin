@@ -1677,6 +1677,9 @@
 
 // export default Doctors;
 
+
+
+
 import { useEffect, useState } from "react";
 import {
   getDoctors,
@@ -1706,6 +1709,8 @@ import {
   School,
   Schedule,
 } from "@mui/icons-material";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
 const DoctorsComponent = () => {
   const [doctors, setDoctors] = useState([]);
@@ -1715,8 +1720,7 @@ const DoctorsComponent = () => {
   const [showModal, setShowModal] = useState(false);
   const [filterDept, setFilterDept] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  // const [uploading, setUploading] = useState(false);
-
+  
   const [formData, setFormData] = useState({
     fullname: "",
     qualification: "",
@@ -1729,6 +1733,76 @@ const DoctorsComponent = () => {
     isactive: true,
     isexpert: false,
   });
+  
+  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+  // Add custom styles for Quill and bio content
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .quill-editor-wrapper .ql-container {
+        min-height: 180px;
+        font-size: 14px;
+      }
+      .quill-editor-wrapper .ql-editor {
+        min-height: 180px;
+      }
+      .bio-content p {
+        margin: 0.25rem 0;
+      }
+      .bio-content strong {
+        font-weight: 600;
+        color: #1f2937;
+      }
+      .bio-content em {
+        font-style: italic;
+      }
+      .bio-content u {
+        text-decoration: underline;
+      }
+      .bio-content s {
+        text-decoration: line-through;
+      }
+      .bio-content ul {
+        list-style-type: disc;
+        margin-left: 1.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .bio-content ol {
+        list-style-type: decimal;
+        margin-left: 1.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .bio-content li {
+        margin: 0.25rem 0;
+      }
+      .bio-content blockquote {
+        border-left: 3px solid #3b82f6;
+        padding-left: 1rem;
+        margin-left: 0;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: #4b5563;
+        font-style: italic;
+      }
+      .bio-content a {
+        color: #3b82f6;
+        text-decoration: underline;
+      }
+      .bio-content a:hover {
+        color: #2563eb;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      if (document.head.contains(style)) {
+        document.head.removeChild(style);
+      }
+    };
+  }, []);
 
   /* ======================================================
       LOAD DOCTORS + DEPARTMENTS
@@ -1762,11 +1836,30 @@ const DoctorsComponent = () => {
     }));
   };
 
+  /* Schedule Handle Change - New Method */
+  const handleScheduleChange = (day, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      schedule: {
+        ...prev.schedule,
+        [day]: {
+          ...prev.schedule[day],
+          [field]: value
+        }
+      }
+    }));
+  };
+
   /* ======================================================
       ADD NEW DOCTOR
     ====================================================== */
   const handleAdd = () => {
     setSelectedDoctor(null);
+    const emptySchedule = {};
+    daysOfWeek.forEach(day => {
+      emptySchedule[day] = { start: "", end: "" };
+    });
+    
     setFormData({
       fullname: "",
       qualification: "",
@@ -1775,7 +1868,7 @@ const DoctorsComponent = () => {
       departmentid: "",
       photo: "",
       bio: "",
-      schedule: {},
+      schedule: emptySchedule,
       isactive: true,
       isexpert: false,
     });
@@ -1787,6 +1880,26 @@ const DoctorsComponent = () => {
     ====================================================== */
   const handleEdit = async (doctor) => {
     const fullDoc = await getDoctorById(doctor.id);
+    
+    // Initialize schedule structure for form
+    const scheduleStructure = {};
+    daysOfWeek.forEach(day => {
+      scheduleStructure[day] = { start: "", end: "" };
+    });
+    
+    // Merge existing schedule data
+    const mergedSchedule = { ...scheduleStructure };
+    if (fullDoc.schedule) {
+      daysOfWeek.forEach(day => {
+        if (fullDoc.schedule[day]) {
+          mergedSchedule[day] = { 
+            ...scheduleStructure[day], 
+            ...fullDoc.schedule[day] 
+          };
+        }
+      });
+    }
+    
     setSelectedDoctor(fullDoc);
     setFormData({
       fullname: fullDoc.fullname,
@@ -1796,7 +1909,7 @@ const DoctorsComponent = () => {
       departmentid: fullDoc.departmentid || "",
       photo: fullDoc.photo || "",
       bio: fullDoc.bio || "",
-      schedule: fullDoc.schedule || {},
+      schedule: mergedSchedule,
       isactive: fullDoc.isactive,
       isexpert: fullDoc.isexpert,
     });
@@ -1808,11 +1921,26 @@ const DoctorsComponent = () => {
     ====================================================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Transform schedule for backend format
+    const scheduleForSubmission = {};
+    daysOfWeek.forEach(day => {
+      const dayData = formData.schedule[day];
+      if (dayData.start && dayData.end) {
+        scheduleForSubmission[day] = `${dayData.start}-${dayData.end}`;
+      }
+    });
+    
+    const submissionData = {
+      ...formData,
+      schedule: scheduleForSubmission
+    };
+    
     try {
       if (selectedDoctor) {
-        await updateDoctor(selectedDoctor.id, formData);
+        await updateDoctor(selectedDoctor.id, submissionData);
       } else {
-        await createDoctor(formData);
+        await createDoctor(submissionData);
       }
       setShowModal(false);
       loadData();
@@ -1863,32 +1991,56 @@ const DoctorsComponent = () => {
     return dept ? dept.name : "Not Assigned";
   };
 
-
+  // File upload handler
   const handleFileUpload = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+    const file = e.target.files[0];
+    if (!file) return;
 
-  try {
-    const fd = new FormData();
-    fd.append("file", file);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
 
-    const res = await uploadSingleFile(fd);
+      const res = await uploadSingleFile(fd);
 
-    const BASE_URL = "http://localhost:8654";
+      const BASE_URL = "http://localhost:8654";
 
-    // final image URL
-    const imgURL = BASE_URL + (res.filePath.startsWith("/") ? res.filePath : `/${res.filePath}`);
+      // final image URL
+      const imgURL = BASE_URL + (res.filePath.startsWith("/") ? res.filePath : `/${res.filePath}`);
 
-    setFormData((prev) => ({
-      ...prev,
-      photo: imgURL,
-    }));
+      setFormData((prev) => ({
+        ...prev,
+        photo: imgURL,
+      }));
 
-  } catch (err) {
-    console.error(err);
-  }
-};
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
+  // Check if bio has actual content (not just empty HTML tags)
+  const hasValidBio = (bio) => {
+    if (!bio) return false;
+    const textContent = bio.replace(/<[^>]*>/g, '').trim();
+    return textContent.length > 0;
+  };
+
+  // Quill modules and formats for bio editor
+  const modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['link'],
+      ['clean']
+    ],
+  };
+
+  const formats = [
+    'bold', 'italic', 'underline', 'strike',
+    'blockquote',
+    'list', 'bullet',
+    'link'
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -2086,21 +2238,38 @@ const DoctorsComponent = () => {
                           <span className="text-purple-600">{getDepartmentName(doctor.departmentid)}</span>
                         </div>
 
-                        {doctor.bio && (
-                          <div className="text-sm text-gray-500 line-clamp-2">
-                            {doctor.bio}
+                        {/* Bio Display - Fixed */}
+                        {hasValidBio(doctor.bio) && (
+                          <div className="mt-3 pt-3 border-t border-gray-100">
+                            <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                              <Person className="w-4 h-4 text-indigo-500" />
+                              <span className="font-medium text-gray-700">Bio:</span>
+                            </div>
+                            <div 
+                              className="text-sm text-gray-600 bio-content line-clamp-3"
+                              dangerouslySetInnerHTML={{ __html: doctor.bio }} 
+                            />
                           </div>
                         )}
 
+                        {/* Schedule Display */}
                         {doctor.schedule && Object.keys(doctor.schedule).length > 0 && (
-                          <div className="flex items-start gap-2 text-sm text-gray-600">
-                            <Schedule className="w-4 h-4 text-orange-500 mt-0.5" />
-                            <div>
-                              <span className="font-medium text-gray-700">Schedule: </span>
-                              <span className="text-orange-600">
-                                {Object.keys(doctor.schedule).slice(0, 2).join(", ")}
-                                {Object.keys(doctor.schedule).length > 2 && "..."}
-                              </span>
+                          <div className="mt-3 pt-3 border-t border-gray-100">
+                            <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                              <Schedule className="w-4 h-4 text-orange-500" />
+                              <span className="font-medium text-gray-700">Schedule:</span>
+                            </div>
+                            <div className="bg-gray-50 rounded-lg p-3 space-y-1">
+                              {Object.entries(doctor.schedule).map(([day, time]) => (
+                                time && (
+                                  <div key={day} className="flex justify-between text-xs">
+                                    <span className="font-medium text-gray-700">{day}:</span>
+                                    <span className="text-orange-600">
+                                      {time}
+                                    </span>
+                                  </div>
+                                )
+                              ))}
                             </div>
                           </div>
                         )}
@@ -2171,11 +2340,11 @@ const DoctorsComponent = () => {
           )}
         </div>
 
-        {/* Modal (Same as before) */}
+        {/* Modal */}
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+            <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white z-10 flex items-center justify-between p-6 border-b border-gray-200">
                 <h2 className="text-xl font-semibold text-gray-900">
                   {selectedDoctor ? "Edit Doctor" : "Add New Doctor"}
                 </h2>
@@ -2259,97 +2428,118 @@ const DoctorsComponent = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Upload Photo</label>
-
                     <input
                       type="file"
                       accept="image/*"
                       onChange={handleFileUpload}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white"
+                      className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                     />
-
                     {formData.photo && (
-                      <img
-                        src={formData.photo}
-                        alt="Preview"
-                        className="mt-3 w-20 h-20 rounded-full object-cover border"
-                      />
+                      <div className="mt-3 flex items-center gap-3">
+                        <img
+                          src={formData.photo}
+                          alt="Preview"
+                          className="w-16 h-16 rounded-full object-cover border-2 border-blue-200"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setFormData(prev => ({ ...prev, photo: "" }))}
+                          className="text-sm text-red-600 hover:text-red-700"
+                        >
+                          Remove
+                        </button>
+                      </div>
                     )}
-                  </div>
-
-
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
-                    <textarea
-                      name="bio"
-                      placeholder="Brief bio about the doctor..."
-                      rows="3"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      value={formData.bio}
-                      onChange={handleChange}
-                    ></textarea>
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Schedule (JSON)</label>
-                    <textarea
-                      name="schedule"
-                      placeholder='{"monday": "09:00-17:00", "tuesday": "10:00-18:00"}'
-                      rows="3"
-                      className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-                      value={JSON.stringify(formData.schedule, null, 2)}
-                      onChange={(e) => {
-                        try {
-                          setFormData({
-                            ...formData,
-                            schedule: JSON.parse(e.target.value),
-                          });
-                        } catch {
-                          // Keep current schedule if invalid JSON
-                        }
-                      }}
-                    ></textarea>
-                    <p className="text-xs text-gray-500 mt-1">Enter schedule as JSON object</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6">
-                  <label className="flex items-center gap-2">
+                {/* Bio Editor - Fixed */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Professional Bio</label>
+                  <div className="quill-editor-wrapper mb-16">
+                    <ReactQuill 
+                      value={formData.bio} 
+                      onChange={(content) => setFormData(prev => ({ ...prev, bio: content }))}
+                      modules={modules}
+                      formats={formats}
+                      className="bg-white rounded-lg"
+                      theme="snow"
+                      placeholder="Write a professional bio for the doctor..."
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">Use rich text formatting for professional bio (bold, italic, lists, etc.)</p>
+                </div>
+
+                {/* Schedule Editor */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">Weekly Schedule</label>
+                  <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {daysOfWeek.map(day => (
+                      <div key={day} className="flex flex-col sm:flex-row sm:items-center gap-3 bg-white p-3 rounded-lg border border-gray-200">
+                        <span className="w-full sm:w-24 font-medium text-gray-700 text-sm">{day}:</span>
+                        <div className="flex items-center gap-2 flex-1">
+                          <input
+                            type="time"
+                            value={formData.schedule[day]?.start || ''}
+                            onChange={(e) => handleScheduleChange(day, 'start', e.target.value)}
+                            className="flex-1 border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Start"
+                          />
+                          <span className="text-gray-400">-</span>
+                          <input
+                            type="time"
+                            value={formData.schedule[day]?.end || ''}
+                            onChange={(e) => handleScheduleChange(day, 'end', e.target.value)}
+                            className="flex-1 border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="End"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">Set availability times for each day (24-hour format). Leave blank for days off.</p>
+                </div>
+
+                {/* Checkboxes */}
+                <div className="flex items-center gap-6 pt-4 border-t border-gray-200">
+                  <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       name="isactive"
                       checked={formData.isactive}
                       onChange={handleChange}
-                      className="rounded focus:ring-blue-500"
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
-                    <span className="text-sm text-gray-700">Active Doctor</span>
+                    <span className="text-sm font-medium text-gray-700">Active Doctor</span>
                   </label>
 
-                  <label className="flex items-center gap-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       name="isexpert"
                       checked={formData.isexpert}
                       onChange={handleChange}
-                      className="rounded focus:ring-yellow-500"
+                      className="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
                     />
-                    <span className="text-sm text-gray-700 flex items-center gap-1">
+                    <span className="text-sm font-medium text-gray-700 flex items-center gap-1">
                       <Star className="text-yellow-500 w-4 h-4" />
                       Expert Doctor
                     </span>
                   </label>
                 </div>
 
-                <div className="flex gap-3 pt-4">
+                {/* Form Actions */}
+                <div className="flex gap-3 pt-4 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={() => setShowModal(false)}
-                    className="flex-1 px-4 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
+                    className="flex-1 px-4 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200 font-medium"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+                    className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
                   >
                     {selectedDoctor ? "Update Doctor" : "Add Doctor"}
                   </button>

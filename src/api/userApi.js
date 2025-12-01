@@ -1986,3 +1986,59 @@ export const uploadSingleFile = async (fileData) => {
     throw new Error(err.response?.data?.message || "File upload failed");
   }
 };
+
+// ----------------------------------------------
+// 🔹 GET Monthly Appointments
+// ----------------------------------------------
+export const getMonthlyAppointments = async (year) => {
+  try {
+    const res = await axiosInstance.get(
+      `/analytics/dashboard/monthly-appointments`,
+      { params: { year } }
+    );
+
+    return res.data.body; // { months: [], totals: [] }
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch monthly appointments"
+    );
+  }
+};
+
+
+// ----------------------------------------------
+// 🔹 GET Monthly Inquiries
+// ----------------------------------------------
+export const getMonthlyInquiries = async (year) => {
+  try {
+    const res = await axiosInstance.get(
+      `/analytics/dashboard/monthly-inquiries`,
+      { params: { year } }
+    );
+
+    return res.data.body; // { months: [], totals: [] }
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch monthly inquiries"
+    );
+  }
+};
+
+
+// ----------------------------------------------
+// 🔹 GET Dashboard Count
+// ----------------------------------------------
+export const getDashboardCounts = async (year) => {
+  try {
+    const res = await axiosInstance.get(
+      `/analytics/dashboard/counts`,
+      { params: { year } }
+    );
+
+    return res.data.body; // { totaldoctors, totalappointments, ... }
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch dashboard counts"
+    );
+  }
+};
