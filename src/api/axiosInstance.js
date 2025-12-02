@@ -1,7 +1,7 @@
 import axios from "axios";
-
+import { BASE_URL } from "./apiConfig";
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8654/api/", 
+  baseURL: BASE_URL + "/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -10,7 +10,9 @@ const axiosInstance = axios.create({
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    console.log(`🚀 Making ${config.method?.toUpperCase()} request to: ${config.url}`);
+    console.log(
+      `🚀 Making ${config.method?.toUpperCase()} request to: ${config.url}`
+    );
     return config;
   },
   (error) => {
@@ -30,9 +32,9 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       // Server responded with error status
       console.error("❌ API Error Response:", {
-        status: error.response.status, 
-        data: error.response.data, 
-        url: error.config?.url
+        status: error.response.status,
+        data: error.response.data,
+        url: error.config?.url,
       });
     } else if (error.request) {
       // Request made but no response received
@@ -42,7 +44,7 @@ axiosInstance.interceptors.response.use(
       // Something else happened
       console.error("❌ Request Error:", error.message);
     }
-    
+
     return Promise.reject(error);
   }
 );
