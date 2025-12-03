@@ -2042,3 +2042,13 @@ export const getDashboardCounts = async (year) => {
     );
   }
 };
+
+// api/authService.js or services/authService.js
+
+export const loginAdmin = async (email, password) => {
+  const payload = { email, password };
+
+  const response = await axiosInstance.post("auth/login", payload);
+
+  return response.data; // returns { code, body: { token }, message }
+};
