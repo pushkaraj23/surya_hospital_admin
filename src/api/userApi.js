@@ -1,3 +1,4 @@
+import { BASE_URL } from "./apiConfig";
 import axiosInstance from "./axiosInstance";
 
 // ✅ Fetch all departments
@@ -2051,4 +2052,469 @@ export const loginAdmin = async (email, password) => {
   const response = await axiosInstance.post("auth/login", payload);
 
   return response.data; // returns { code, body: { token }, message }
+};
+
+
+
+
+
+// Create Hero Section
+export const createHeroSection = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/hero_section", payload);
+    return response.data;
+  } catch (error) {
+    console.error("Create Hero Error: ", error);
+    throw error;
+  }
+};
+
+// Get All Hero Sections
+export const fetchHeroSections = async () => {
+  try {
+    const response = await axiosInstance.get("/hero_section");
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Heroes Error: ", error);
+    throw error;
+  }
+};
+
+// Get Single Hero Section by ID
+export const fetchHeroSectionById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/hero_section/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Hero By ID Error: ", error);
+    throw error;
+  }
+};
+
+// Update Hero Section
+export const updateHeroSection = async (id, payload) => {
+  try {
+    const response = await axiosInstance.put(`/hero_section/update/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Update Hero Error: ", error);
+    throw error;
+  }
+};
+
+// Delete Hero Section
+export const deleteHeroSection = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/hero_section/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete Hero Error: ", error);
+    throw error;
+  }
+};
+
+
+// Upload Multiple Files
+export const uploadMultipleFiles = async (files) => {
+  try {
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    const response = await axiosInstance.post("/uploads/multiple", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error("Upload Multiple Files Error: ", error);
+    throw error;
+  }
+};
+
+
+// Create AboutUs Section
+export const createAboutUs = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/aboutus", payload);
+    return response.data;
+  } catch (error) {
+    console.error("Create AboutUs Error: ", error);
+    throw error;
+  }
+};
+
+// Get All AboutUs Sections
+export const fetchAboutUs = async () => {
+  try {
+    const response = await axiosInstance.get("/aboutus");
+    return response.data;
+  } catch (error) {
+    console.error("Fetch AboutUs Error: ", error);
+    throw error;
+  }
+};
+
+// Get Single AboutUs by ID
+export const fetchAboutUsById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/aboutus/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetch AboutUs By ID Error: ", error);
+    throw error;
+  }
+};
+
+// Update AboutUs Section
+export const updateAboutUs = async (id, payload) => {
+  try {
+    const response = await axiosInstance.put(`/aboutus/update/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Update AboutUs Error: ", error);
+    throw error;
+  }
+};
+
+// Delete AboutUs Section
+export const deleteAboutUs = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/aboutus/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete AboutUs Error: ", error);
+    throw error;
+  }
+};
+
+// Upload Image for AboutUs (using existing function)
+export const uploadAboutUsImage = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    const result = await uploadSingleFile(formData);
+    
+    // Construct full URL with base URL
+    let imageUrl = result.filePath;
+    
+    // If filePath doesn't start with http, prepend BASE_URL
+    if (!imageUrl.startsWith('http')) {
+      // Remove leading slash if present
+      imageUrl = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+      imageUrl = `${BASE_URL}/${imageUrl}`;
+    }
+    
+    return imageUrl;
+  } catch (error) {
+    console.error("Upload AboutUs Image Error: ", error);
+    throw error;
+  }
+};
+
+
+// Create Core Value
+export const createCoreValue = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/corevalues", payload);
+    return response.data;
+  } catch (error) {
+    console.error("Create Core Value Error: ", error);
+    throw error;
+  }
+};
+
+// Get All Core Values
+export const fetchCoreValues = async () => {
+  try {
+    const response = await axiosInstance.get("/corevalues");
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Core Values Error: ", error);
+    throw error;
+  }
+};
+
+// Get Single Core Value by ID
+export const fetchCoreValueById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/corevalues/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Core Value By ID Error: ", error);
+    throw error;
+  }
+};
+
+// Update Core Value
+export const updateCoreValue = async (id, payload) => {
+  try {
+    const response = await axiosInstance.put(`/corevalues/update/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Update Core Value Error: ", error);
+    throw error;
+  }
+};
+
+// Delete Core Value
+export const deleteCoreValue = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/corevalues/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete Core Value Error: ", error);
+    throw error;
+  }
+};
+
+// Upload Image for Core Values
+export const uploadCoreValueImage = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    const result = await uploadSingleFile(formData);
+    
+    // Construct full URL with base URL
+    let imageUrl = result.filePath;
+    
+    // If filePath doesn't start with http, prepend BASE_URL
+    if (!imageUrl.startsWith('http')) {
+      // Remove leading slash if present
+      imageUrl = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+      imageUrl = `${BASE_URL}/${imageUrl}`;
+    }
+    
+    return imageUrl;
+  } catch (error) {
+    console.error("Upload Core Value Image Error: ", error);
+    throw error;
+  }
+};
+
+
+// Create Contact Details
+export const createContactDetails = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/contactdetails", payload);
+    return response.data;
+  } catch (error) {
+    console.error("Create Contact Details Error: ", error);
+    throw error;
+  }
+};
+
+// Get All Contact Details
+export const fetchContactDetails = async () => {
+  try {
+    const response = await axiosInstance.get("/contactdetails");
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Contact Details Error: ", error);
+    throw error;
+  }
+};
+
+// Get Single Contact Details by ID
+export const fetchContactDetailsById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/contactdetails/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Contact Details By ID Error: ", error);
+    throw error;
+  }
+};
+
+// Update Contact Details
+export const updateContactDetails = async (id, payload) => {
+  try {
+    const response = await axiosInstance.put(`/contactdetails/update/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Update Contact Details Error: ", error);
+    throw error;
+  }
+};
+
+// Delete Contact Details
+export const deleteContactDetails = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/contactdetails/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete Contact Details Error: ", error);
+    throw error;
+  }
+};
+
+
+// Create Journey Entry
+export const createJourney = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/journey", payload);
+    return response.data;
+  } catch (error) {
+    console.error("Create Journey Error: ", error);
+    throw error;
+  }
+};
+
+// Get All Journey Entries
+export const fetchJourney = async () => {
+  try {
+    const response = await axiosInstance.get("/journey");
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Journey Error: ", error);
+    throw error;
+  }
+};
+
+// Get Single Journey Entry by ID
+export const fetchJourneyById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/journey/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Journey By ID Error: ", error);
+    throw error;
+  }
+};
+
+// Update Journey Entry
+export const updateJourney = async (id, payload) => {
+  try {
+    const response = await axiosInstance.put(`/journey/update/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Update Journey Error: ", error);
+    throw error;
+  }
+};
+
+// Delete Journey Entry
+export const deleteJourney = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/journey/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete Journey Error: ", error);
+    throw error;
+  }
+};
+
+
+// Create Infrastructure Entry
+export const createInfra = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/infra", payload);
+    return response.data;
+  } catch (error) {
+    console.error("Create Infrastructure Error: ", error);
+    throw error;
+  }
+};
+
+// Get All Infrastructure Entries
+export const fetchInfra = async () => {
+  try {
+    const response = await axiosInstance.get("/infra");
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Infrastructure Error: ", error);
+    throw error;
+  }
+};
+
+// Get Single Infrastructure Entry by ID
+export const fetchInfraById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/infra/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Infrastructure By ID Error: ", error);
+    throw error;
+  }
+};
+
+// Update Infrastructure Entry
+export const updateInfra = async (id, payload) => {
+  try {
+    const response = await axiosInstance.put(`/infra/update/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Update Infrastructure Error: ", error);
+    throw error;
+  }
+};
+
+// Delete Infrastructure Entry
+export const deleteInfra = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/infra/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete Infrastructure Error: ", error);
+    throw error;
+  }
+};
+
+
+// Create Policy
+export const createPolicy = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/policies", payload);
+    return response.data;
+  } catch (error) {
+    console.error("Create Policy Error: ", error);
+    throw error;
+  }
+};
+
+// Get All Policies
+export const fetchPolicies = async () => {
+  try {
+    const response = await axiosInstance.get("/policies");
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Policies Error: ", error);
+    throw error;
+  }
+};
+
+// Get Single Policy by ID
+export const fetchPolicyById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/policies/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetch Policy By ID Error: ", error);
+    throw error;
+  }
+};
+
+// Update Policy
+export const updatePolicy = async (id, payload) => {
+  try {
+    const response = await axiosInstance.put(`/policies/update/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Update Policy Error: ", error);
+    throw error;
+  }
+};
+
+// Delete Policy
+export const deletePolicy = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/policies/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete Policy Error: ", error);
+    throw error;
+  }
 };

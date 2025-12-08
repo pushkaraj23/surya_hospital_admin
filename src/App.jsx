@@ -54,6 +54,8 @@ import Feedback from "./modules/dashboard/pages/Feedback";
 import Contact from "./modules/doctors/pages/Contact";
 import FacilitiesComponent from "./modules/dashboard/pages/FacilitiesComponent";
 import LoginPage from "./modules/layout/LoginPage";
+import HomePage from "./modules/dashboard/pages/HomePage";
+import AboutUs from "./modules/dashboard/pages/AboutUs/AboutUs";
 
 function PrivateRoute({ children }) {
   const isLoggedIn = localStorage.getItem("adminToken");
@@ -75,6 +77,8 @@ export default function App() {
         }
       >
         <Route index element={<Dashboard />} />
+        <Route path="Hero" element={<HomePage />} />
+        <Route path="aboutUs" element={<AboutUs />} />
         <Route path="doctors" element={<Doctors />} />
         <Route path="department" element={<DepartmentManagement />} />
         <Route path="appointment" element={<AppointmentsAdmin />} />
@@ -85,6 +89,7 @@ export default function App() {
         <Route path="news" element={<NewsEventsManagement />} />
         <Route path="contact" element={<Contact />} />
         <Route path="facilities" element={<FacilitiesComponent />} />
+
       </Route>
 
     </Routes>
