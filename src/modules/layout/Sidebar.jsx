@@ -18,6 +18,8 @@ const Sidebar = () => {
 
   const navItems = [
     { path: "/", label: "Dashboard", icon: DashboardIcon },
+    { path: "/Hero", label: "Home", icon: People },
+    { path: "/aboutUs", label: "AboutUs", icon: People },
     { path: "/doctors", label: "Doctors", icon: People },
     { path: "/department", label: "Department", icon: Article },
 

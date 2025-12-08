@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { 
-  createAboutUs, 
-  fetchAboutUs, 
-  fetchAboutUsById, 
-  updateAboutUs, 
+import {
+  createAboutUs,
+  fetchAboutUs,
+  fetchAboutUsById,
+  updateAboutUs,
   deleteAboutUs,
-  uploadAboutUsImage 
+  uploadAboutUsImage
 } from "../../../../api/userApi";
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Eye, 
-  Save, 
-  X, 
-  Upload, 
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  Save,
+  X,
+  Upload,
   Image as ImageIcon,
   Building2,
   Target,
@@ -51,7 +51,7 @@ const AboutUsMV = () => {
     directorimage: "",
     directormessage: ""
   });
-  
+
   // Image upload states
   const [uploadingImage, setUploadingImage] = useState({
     image1: false,
@@ -91,7 +91,7 @@ const AboutUsMV = () => {
       ...prev,
       [name]: value
     }));
-    
+
     // Clear error for this field
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
@@ -140,17 +140,17 @@ const AboutUsMV = () => {
   // Image Upload Functions
   const handleImageUpload = async (field, file) => {
     if (!file) return;
-    
+
     setUploadingImage(prev => ({ ...prev, [field]: true }));
-    
+
     try {
       const imageUrl = await uploadAboutUsImage(file);
-      
+
       setFormData(prev => ({
         ...prev,
         [field]: imageUrl
       }));
-      
+
       alert("Image uploaded successfully!");
     } catch (error) {
       alert("Error uploading image: " + error.message);
@@ -174,31 +174,31 @@ const AboutUsMV = () => {
   // Validation
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.introduction.trim()) {
       newErrors.introduction = "Introduction is required";
     }
-    
+
     if (!formData.history.trim()) {
       newErrors.history = "History is required";
     }
-    
+
     if (!formData.mission.trim()) {
       newErrors.mission = "Mission is required";
     }
-    
+
     if (!formData.vision.trim()) {
       newErrors.vision = "Vision is required";
     }
-    
+
     if (!formData.directorname.trim()) {
       newErrors.directorname = "Director name is required";
     }
-    
+
     if (!formData.directormessage.trim()) {
       newErrors.directormessage = "Director message is required";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -217,7 +217,7 @@ const AboutUsMV = () => {
   // CRUD Operations
   const handleCreate = async () => {
     if (!validateForm()) return;
-    
+
     setLoading(true);
     try {
       await createAboutUs(formData);
@@ -235,7 +235,7 @@ const AboutUsMV = () => {
   const handleUpdate = async () => {
     if (!currentAboutUs) return;
     if (!validateForm()) return;
-    
+
     setLoading(true);
     try {
       await updateAboutUs(currentAboutUs.id, formData);
@@ -346,7 +346,7 @@ const AboutUsMV = () => {
           onChange={(e) => handleImageSelect(field, e)}
           className="hidden"
         />
-        
+
         {imageUrl ? (
           <div className="relative">
             <img
@@ -371,7 +371,7 @@ const AboutUsMV = () => {
             </div>
           </label>
         )}
-        
+
         {uploadingImage[field] && (
           <div className="mt-2 flex items-center justify-center gap-2">
             <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
@@ -478,7 +478,7 @@ const AboutUsMV = () => {
                       <Building2 className="w-5 h-5 text-blue-600" />
                       <h3 className="font-semibold text-gray-800">About Us Section</h3>
                     </div>
-                 
+
                   </div>
                   <div className="flex items-center gap-2">
                     <button
@@ -549,33 +549,7 @@ const AboutUsMV = () => {
                   </div>
                 )}
 
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-3 pt-3 border-t">
-                  <div className="text-center">
-                    <div className="text-sm font-medium text-blue-600">
-                      {aboutUs.missiontags?.length || 0}
-                    </div>
-                    <div className="text-xs text-gray-500">Mission Tags</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-sm font-medium text-purple-600">
-                      {aboutUs.visiontags?.length || 0}
-                    </div>
-                    <div className="text-xs text-gray-500">Vision Tags</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-sm font-medium text-gray-600">
-                      {[
-                        aboutUs.image1,
-                        aboutUs.image2,
-                        aboutUs.missionimage,
-                        aboutUs.visionimage,
-                        aboutUs.directorimage
-                      ].filter(Boolean).length}
-                    </div>
-                    <div className="text-xs text-gray-500">Images</div>
-                  </div>
-                </div>
+                
               </div>
             </div>
           ))}
@@ -632,10 +606,9 @@ const AboutUsMV = () => {
                   name="introduction"
                   value={formData.introduction}
                   onChange={handleTextareaChange}
-                  rows="4"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.introduction ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  rows="9"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.introduction ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   placeholder="Enter organization introduction..."
                 />
                 {errors.introduction && (
@@ -651,10 +624,9 @@ const AboutUsMV = () => {
                   name="history"
                   value={formData.history}
                   onChange={handleTextareaChange}
-                  rows="4"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.history ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  rows="9"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.history ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   placeholder="Enter organization history..."
                 />
                 {errors.history && (
@@ -665,16 +637,16 @@ const AboutUsMV = () => {
 
             {/* Images Section */}
             <div className="space-y-4">
-              <ImageUploadSection 
-                title="Image 1" 
-                field="image1" 
-                imageUrl={formData.image1} 
+              <ImageUploadSection
+                title="Image 1"
+                field="image1"
+                imageUrl={formData.image1}
               />
-              
-              <ImageUploadSection 
-                title="Image 2" 
-                field="image2" 
-                imageUrl={formData.image2} 
+
+              <ImageUploadSection
+                title="Image 2"
+                field="image2"
+                imageUrl={formData.image2}
               />
             </div>
           </div>
@@ -690,10 +662,9 @@ const AboutUsMV = () => {
                   name="mission"
                   value={formData.mission}
                   onChange={handleTextareaChange}
-                  rows="3"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.mission ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  rows="9"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.mission ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   placeholder="Enter organization mission..."
                 />
                 {errors.mission && (
@@ -701,18 +672,18 @@ const AboutUsMV = () => {
                 )}
               </div>
 
-              <TagInputSection 
+              {/* <TagInputSection 
                 type="mission"
                 title="Mission Tags"
                 tags={formData.missiontags}
-              />
+              /> */}
             </div>
 
             <div>
-              <ImageUploadSection 
-                title="Mission Image" 
-                field="missionimage" 
-                imageUrl={formData.missionimage} 
+              <ImageUploadSection
+                title="Mission Image"
+                field="missionimage"
+                imageUrl={formData.missionimage}
               />
             </div>
           </div>
@@ -728,10 +699,9 @@ const AboutUsMV = () => {
                   name="vision"
                   value={formData.vision}
                   onChange={handleTextareaChange}
-                  rows="3"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.vision ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  rows="9"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.vision ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   placeholder="Enter organization vision..."
                 />
                 {errors.vision && (
@@ -739,18 +709,18 @@ const AboutUsMV = () => {
                 )}
               </div>
 
-              <TagInputSection 
+              {/* <TagInputSection 
                 type="vision"
                 title="Vision Tags"
                 tags={formData.visiontags}
-              />
+              /> */}
             </div>
 
             <div>
-              <ImageUploadSection 
-                title="Vision Image" 
-                field="visionimage" 
-                imageUrl={formData.visionimage} 
+              <ImageUploadSection
+                title="Vision Image"
+                field="visionimage"
+                imageUrl={formData.visionimage}
               />
             </div>
           </div>
@@ -767,9 +737,8 @@ const AboutUsMV = () => {
                   name="directorname"
                   value={formData.directorname}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.directorname ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.directorname ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   placeholder="Enter director name..."
                 />
                 {errors.directorname && (
@@ -785,10 +754,9 @@ const AboutUsMV = () => {
                   name="directormessage"
                   value={formData.directormessage}
                   onChange={handleTextareaChange}
-                  rows="3"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.directormessage ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  rows="5"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.directormessage ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   placeholder="Enter director message..."
                 />
                 {errors.directormessage && (
@@ -798,10 +766,10 @@ const AboutUsMV = () => {
             </div>
 
             <div>
-              <ImageUploadSection 
-                title="Director Image" 
-                field="directorimage" 
-                imageUrl={formData.directorimage} 
+              <ImageUploadSection
+                title="Director Image"
+                field="directorimage"
+                imageUrl={formData.directorimage}
               />
             </div>
           </div>
@@ -867,7 +835,7 @@ const AboutUsMV = () => {
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">About Us Section</h1>
                 <div className="flex items-center gap-4 mt-1">
-                
+
                   {currentAboutUs?.created_at && (
                     <span className="flex items-center gap-1 text-sm text-gray-600">
                       <Calendar className="w-4 h-4" />
@@ -949,10 +917,10 @@ const AboutUsMV = () => {
                 <Target className="w-6 h-6 text-green-600" />
                 <h2 className="text-xl font-bold text-gray-800">Our Mission</h2>
               </div>
-              
+
               <div className="bg-green-50 p-6 rounded-xl">
                 <p className="text-gray-700 mb-4">{formData.mission}</p>
-                
+
                 {formData.missionimage && (
                   <div className="mt-4">
                     <img
@@ -962,8 +930,8 @@ const AboutUsMV = () => {
                     />
                   </div>
                 )}
-                
-                {formData.missiontags && formData.missiontags.length > 0 && (
+
+                {/* {formData.missiontags && formData.missiontags.length > 0 && (
                   <div className="mt-4">
                     <h3 className="text-sm font-medium text-gray-700 mb-2">Mission Tags:</h3>
                     <div className="flex flex-wrap gap-2">
@@ -978,7 +946,7 @@ const AboutUsMV = () => {
                       ))}
                     </div>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
 
@@ -988,10 +956,10 @@ const AboutUsMV = () => {
                 <EyeIcon className="w-6 h-6 text-purple-600" />
                 <h2 className="text-xl font-bold text-gray-800">Our Vision</h2>
               </div>
-              
+
               <div className="bg-purple-50 p-6 rounded-xl">
                 <p className="text-gray-700 mb-4">{formData.vision}</p>
-                
+
                 {formData.visionimage && (
                   <div className="mt-4">
                     <img
@@ -1001,8 +969,8 @@ const AboutUsMV = () => {
                     />
                   </div>
                 )}
-                
-                {formData.visiontags && formData.visiontags.length > 0 && (
+
+                {/* {formData.visiontags && formData.visiontags.length > 0 && (
                   <div className="mt-4">
                     <h3 className="text-sm font-medium text-gray-700 mb-2">Vision Tags:</h3>
                     <div className="flex flex-wrap gap-2">
@@ -1017,7 +985,7 @@ const AboutUsMV = () => {
                       ))}
                     </div>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -1028,7 +996,7 @@ const AboutUsMV = () => {
               <Users className="w-6 h-6 text-orange-600" />
               <h2 className="text-xl font-bold text-gray-800">Director's Message</h2>
             </div>
-            
+
             <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-6 rounded-xl">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Director Image */}
@@ -1051,7 +1019,7 @@ const AboutUsMV = () => {
                     </div>
                   )}
                 </div>
-                
+
                 {/* Director Message */}
                 <div className="lg:col-span-2">
                   <div className="bg-white/80 p-6 rounded-lg">
