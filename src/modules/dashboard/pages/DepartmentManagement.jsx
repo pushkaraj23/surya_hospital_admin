@@ -187,46 +187,49 @@ export default function DepartmentManagement() {
     toggleStatusMutation.isLoading;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4 py-6 lg:py-8 space-y-6">
+    <div className="min-h-screen bg-gray-50 py-2">
+      <div className=" ">
         {/* Top Header / Hero */}
-        <div className="bg-gradient-to-r from-amber-500 via-amber-400 to-indigo-500 rounded-2xl p-[1px] shadow-lg">
-          <div className="bg-white/95 rounded-2xl p-5 sm:p-6 lg:p-7 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 flex items-center gap-2">
-                Department Management
-                <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800 border border-amber-200">
-                  Hospital Admin
-                </span>
-              </h1>
-              <p className="mt-2 text-sm sm:text-base text-slate-600 max-w-xl">
-                Create, update, and manage all hospital departments, their
-                services, and key performance stats from a single, clean panel.
-              </p>
-            </div>
+        <div className="flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100  p-3 rounded-xl shadow-sm mb-6 border border-gray-200">
 
-            <div className="flex flex-wrap gap-3 justify-start lg:justify-end">
-              <button
-                onClick={() => {
-                  resetForm();
-                  setShowFormModal(true);
-                }}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-              >
-                <Plus size={16} />
-                <span>Add Department</span>
-              </button>
+          {/* LEFT SIDE: Title + Description */}
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                            <span className="text-indigo-500 text-lg font-semibold">👥</span>
 
-              <button
-                onClick={() => refetch()}
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-              >
-                <RefreshCw size={16} className="text-slate-500" />
-                <span>Refresh</span>
-              </button>
-            </div>
+              Department Management
+            </h1>
+
+            <p className="text-sm sm:text-base text-slate-600 max-w-xl">
+              Create, update, and manage all hospital departments.
+            </p>
           </div>
+
+          {/* RIGHT SIDE: Buttons */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => {
+                resetForm();
+                setShowFormModal(true);
+              }}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-md  text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <Plus size={16} />
+              <span>Add Department</span>
+            </button>
+
+            <button
+              onClick={() => refetch()}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-md font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <RefreshCw size={16} className="text-slate-500" />
+              <span>Refresh</span>
+            </button>
+          </div>
+
         </div>
+
+
 
         {/* Stats Row */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -240,7 +243,7 @@ export default function DepartmentManagement() {
               </p>
             </div>
             <div className="h-10 w-10 rounded-full bg-amber-50 flex items-center justify-center">
-              <span className="text-amber-500 text-lg font-semibold">D</span>
+              <span className="text-blue-500 text-lg font-semibold">D</span>
             </div>
           </div>
 

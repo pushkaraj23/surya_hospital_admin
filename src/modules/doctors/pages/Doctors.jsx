@@ -377,13 +377,13 @@ const DoctorsComponent = () => {
   ];
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-2">
+      <div >
         {/* Header */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+        <div className="bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 p-3 rounded-xl shadow-sm mb-6 border border-gray-200">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+              <h1 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-3">
                 <LocalHospital className="text-blue-600" />
                 Doctors Management
               </h1>
@@ -392,19 +392,20 @@ const DoctorsComponent = () => {
               </p>
             </div>
             <div className="flex gap-3">
-              <button
-                onClick={loadData}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors duration-200"
-              >
-                <Refresh fontSize="small" />
-                Refresh
-              </button>
+
               <button
                 onClick={handleAdd}
                 className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
               >
                 <Add fontSize="small" />
                 Add Doctor
+              </button>
+              <button
+                onClick={loadData}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors duration-200"
+              >
+                <Refresh fontSize="small" />
+                Refresh
               </button>
             </div>
           </div>
@@ -549,9 +550,8 @@ const DoctorsComponent = () => {
                               />
                             ) : null}
                             <div
-                              className={`flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-600 font-semibold ${
-                                doctor.photo ? "hidden" : "flex"
-                              }`}
+                              className={`flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-600 font-semibold ${doctor.photo ? "hidden" : "flex"
+                                }`}
                             >
                               {doctor.fullname?.charAt(0)?.toUpperCase() || "D"}
                             </div>
@@ -566,11 +566,10 @@ const DoctorsComponent = () => {
                           </div>
                           <div className="flex flex-col items-end gap-1">
                             <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                doctor.isactive
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-red-100 text-red-800"
-                              }`}
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${doctor.isactive
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                                }`}
                             >
                               {doctor.isactive ? "Active" : "Inactive"}
                             </span>
@@ -667,11 +666,10 @@ const DoctorsComponent = () => {
                         <div className="flex flex-wrap gap-2">
                           <button
                             onClick={() => handleToggleExpert(doctor)}
-                            className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                              doctor.isexpert
-                                ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border border-yellow-200"
-                                : "bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200"
-                            }`}
+                            className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${doctor.isexpert
+                              ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border border-yellow-200"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200"
+                              }`}
                           >
                             {doctor.isexpert ? (
                               <Star className="w-4 h-4" />
@@ -683,11 +681,10 @@ const DoctorsComponent = () => {
 
                           <button
                             onClick={() => handleToggleActive(doctor)}
-                            className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                              doctor.isactive
-                                ? "bg-red-100 text-red-700 hover:bg-red-200 border border-red-200"
-                                : "bg-green-100 text-green-700 hover:bg-green-200 border border-green-200"
-                            }`}
+                            className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${doctor.isactive
+                              ? "bg-red-100 text-red-700 hover:bg-red-200 border border-red-200"
+                              : "bg-green-100 text-green-700 hover:bg-green-200 border border-green-200"
+                              }`}
                           >
                             {doctor.isactive ? "Deactivate" : "Activate"}
                           </button>

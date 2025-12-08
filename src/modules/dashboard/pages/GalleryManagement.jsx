@@ -331,10 +331,10 @@ const GalleryManagement = () => {
             </p>
           </div>
           <button
-            className="mt-4 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+            className="mt-4 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-3 py-3 rounded-lg  transition-colors duration-200"
             onClick={() => setShowCreateAlbum(true)}
           >
-            + Create New Album
+             <Add fontSize="small" /> Create New Album
           </button>
         </div>
 

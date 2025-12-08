@@ -28,7 +28,8 @@ const Sidebar = () => {
     // { path: "/inquiries", label: "Inquiries", icon: QuestionAnswer },
     { path: "/feedback", label: "Feedbacks", icon: QuestionAnswer },
     { path: "/contact", label: "Contact", icon: Contacts },
-     { path: "/facilities", label: "Facilities", icon: Newspaper },
+    { path: "/facilities", label: "Facilities", icon: Newspaper },
+     { path: "/users", label: "Users", icon: Newspaper },
   ];
 
   return (

@@ -421,31 +421,36 @@ const BlogAdmin = () => {
       )}
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 p-4 rounded-xl shadow-sm mb-6 border border-gray-200">
-        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <Edit className="text-blue-600" />
-          Blog & Article Management
-        </h1>
-        <p className="text-gray-500 mt-1">Create, edit and manage blog posts</p>
-      </div>
+      <div className="bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 p-4 rounded-xl shadow-sm mb-6 border border-gray-200 flex flex-wrap items-center justify-between gap-4">
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-3 mb-6">
-        <button
-          onClick={() => {
-            setEditingBlog(null);
-            setShowBlogModal(true);
-          }}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-        >
-          <Add fontSize="small" /> New Blog Post
-        </button>
-        <button
-          onClick={exportToCSV}
-          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-        >
-          <Download fontSize="small" /> Export CSV
-        </button>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <Edit className="text-blue-600" />
+            Blog & Article Management
+          </h1>
+          <p className="text-gray-500 mt-1">Create, edit and manage blog posts</p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => {
+              setEditingBlog(null);
+              setShowBlogModal(true);
+            }}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+          >
+            <Add fontSize="small" /> New Blog Post
+          </button>
+
+          <button
+            onClick={exportToCSV}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+          >
+            <Download fontSize="small" /> Export CSV
+          </button>
+        </div>
+
       </div>
 
       {/* Filters */}
@@ -611,11 +616,10 @@ const BlogCard = ({ blog, onEdit, onDelete, onToggleStatus }) => {
         {/* Status Badge */}
         <div className="absolute top-3 right-3">
           <span
-            className={`px-3 py-1 rounded-full text-xs font-semibold ${
-              blog.isactive
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${blog.isactive
                 ? "bg-green-100 text-green-700"
                 : "bg-gray-100 text-gray-600"
-            }`}
+              }`}
           >
             {blog.isactive ? "Active" : "Inactive"}
           </span>
@@ -672,11 +676,10 @@ const BlogCard = ({ blog, onEdit, onDelete, onToggleStatus }) => {
         <div className="flex gap-2 pt-3 border-t border-gray-100">
           <button
             onClick={onToggleStatus}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium flex items-center justify-center gap-1 transition-colors ${
-              blog.isactive
+            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium flex items-center justify-center gap-1 transition-colors ${blog.isactive
                 ? "bg-orange-50 text-orange-600 hover:bg-orange-100"
                 : "bg-green-50 text-green-600 hover:bg-green-100"
-            }`}
+              }`}
           >
             {blog.isactive ? "Deactivate" : "Activate"}
           </button>
