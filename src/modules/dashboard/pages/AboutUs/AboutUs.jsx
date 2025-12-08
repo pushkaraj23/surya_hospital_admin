@@ -26,9 +26,7 @@ import React, { useState } from "react";
 import AboutUsMV from "./AboutUsMV";
 import CoreValuesManager from "./CoreValuesManager";
 import ContactDetailsManager from "./ContactDetailsManager";
-import JourneyManager from "./JourneyManager";
-import InfraManager from "./InfraManager";
-import PoliciesManager from "./Policiesmanager";
+
 import {
     Building2,
     Target,
