@@ -5,7 +5,7 @@ import {
   fetchCoreValueById,
   updateCoreValue,
   deleteCoreValue,
-  uploadCoreValueImage
+  uploadCoreValueImage,
 } from "../../../../api/userApi";
 import {
   Plus,
@@ -30,7 +30,7 @@ import {
   AlertCircle,
   Copy,
   GripVertical,
-  TrendingUp
+  TrendingUp,
 } from "lucide-react";
 
 const CoreValuesManager = () => {
@@ -42,9 +42,9 @@ const CoreValuesManager = () => {
   const [formData, setFormData] = useState({
     title: "",
     subtitle: "",
-    image: ""
+    image: "",
   });
-  
+
   // Image upload states
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imagePreview, setImagePreview] = useState("");
@@ -74,50 +74,49 @@ const CoreValuesManager = () => {
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Clear error for this field
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   // Handle textarea changes
   const handleTextareaChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   // Image Upload Functions
   const handleImageUpload = async (file) => {
     if (!file) return;
-    
+
     setUploadingImage(true);
-    
+
     try {
       // Create local preview
       const previewUrl = URL.createObjectURL(file);
       setImagePreview(previewUrl);
-      
+
       // Upload image
       const imageUrl = await uploadCoreValueImage(file);
-      
+
       // Update form data with full URL
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        image: imageUrl
+        image: imageUrl,
       }));
-      
+
       // Clean up preview
       URL.revokeObjectURL(previewUrl);
       setImagePreview("");
-      
     } catch (error) {
       alert("Error uploading image: " + error.message);
     } finally {
@@ -146,9 +145,9 @@ const CoreValuesManager = () => {
   const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false);
-    
+
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith("image/")) {
       handleImageUpload(file);
     } else {
       alert("Please drop an image file");
@@ -156,13 +155,14 @@ const CoreValuesManager = () => {
   };
 
   const removeImage = () => {
-    setFormData(prev => ({ ...prev, image: "" }));
+    setFormData((prev) => ({ ...prev, image: "" }));
     setImagePreview("");
   };
 
   // Copy image URL to clipboard
   const copyImageUrl = (url) => {
-    navigator.clipboard.writeText(url)
+    navigator.clipboard
+      .writeText(url)
       .then(() => alert("Image URL copied to clipboard!"))
       .catch(() => alert("Failed to copy URL"));
   };
@@ -170,15 +170,15 @@ const CoreValuesManager = () => {
   // Validation
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.title.trim()) {
       newErrors.title = "Title is required";
     }
-    
+
     if (!formData.subtitle.trim()) {
       newErrors.subtitle = "Subtitle is required";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -187,37 +187,44 @@ const CoreValuesManager = () => {
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   // Get value icon based on title
   const getValueIcon = (title) => {
     const titleLower = title.toLowerCase();
-    if (titleLower.includes('integrity') || titleLower.includes('honesty')) return <Shield className="w-5 h-5" />;
-    if (titleLower.includes('quality') || titleLower.includes('excellence')) return <Star className="w-5 h-5" />;
-    if (titleLower.includes('innovation') || titleLower.includes('creative')) return <Lightbulb className="w-5 h-5" />;
-    if (titleLower.includes('team') || titleLower.includes('collaboration')) return <Users className="w-5 h-5" />;
-    if (titleLower.includes('customer') || titleLower.includes('client')) return <Heart className="w-5 h-5" />;
-    if (titleLower.includes('growth') || titleLower.includes('progress')) return <TrendingUp className="w-5 h-5" />;
-    if (titleLower.includes('achievement') || titleLower.includes('success')) return <Award className="w-5 h-5" />;
+    if (titleLower.includes("integrity") || titleLower.includes("honesty"))
+      return <Shield className="w-5 h-5" />;
+    if (titleLower.includes("quality") || titleLower.includes("excellence"))
+      return <Star className="w-5 h-5" />;
+    if (titleLower.includes("innovation") || titleLower.includes("creative"))
+      return <Lightbulb className="w-5 h-5" />;
+    if (titleLower.includes("team") || titleLower.includes("collaboration"))
+      return <Users className="w-5 h-5" />;
+    if (titleLower.includes("customer") || titleLower.includes("client"))
+      return <Heart className="w-5 h-5" />;
+    if (titleLower.includes("growth") || titleLower.includes("progress"))
+      return <TrendingUp className="w-5 h-5" />;
+    if (titleLower.includes("achievement") || titleLower.includes("success"))
+      return <Award className="w-5 h-5" />;
     return <Target className="w-5 h-5" />;
   };
 
   // Get value color based on index
   const getValueColor = (index) => {
     const colors = [
-      'bg-blue-50 text-blue-600 border-blue-200',
-      'bg-green-50 text-green-600 border-green-200',
-      'bg-purple-50 text-purple-600 border-purple-200',
-      'bg-amber-50 text-amber-600 border-amber-200',
-      'bg-rose-50 text-rose-600 border-rose-200',
-      'bg-indigo-50 text-indigo-600 border-indigo-200',
-      'bg-emerald-50 text-emerald-600 border-emerald-200',
-      'bg-violet-50 text-violet-600 border-violet-200'
+      "bg-blue-50 text-blue-600 border-blue-200",
+      "bg-green-50 text-green-600 border-green-200",
+      "bg-purple-50 text-purple-600 border-purple-200",
+      "bg-amber-50 text-amber-600 border-amber-200",
+      "bg-rose-50 text-rose-600 border-rose-200",
+      "bg-indigo-50 text-indigo-600 border-indigo-200",
+      "bg-emerald-50 text-emerald-600 border-emerald-200",
+      "bg-violet-50 text-violet-600 border-violet-200",
     ];
     return colors[index % colors.length];
   };
@@ -225,7 +232,7 @@ const CoreValuesManager = () => {
   // CRUD Operations
   const handleCreate = async () => {
     if (!validateForm()) return;
-    
+
     setLoading(true);
     try {
       await createCoreValue(formData);
@@ -243,7 +250,7 @@ const CoreValuesManager = () => {
   const handleUpdate = async () => {
     if (!currentValue) return;
     if (!validateForm()) return;
-    
+
     setLoading(true);
     try {
       await updateCoreValue(currentValue.id, formData);
@@ -259,7 +266,8 @@ const CoreValuesManager = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this core value?")) return;
+    if (!window.confirm("Are you sure you want to delete this core value?"))
+      return;
 
     setLoading(true);
     try {
@@ -281,7 +289,7 @@ const CoreValuesManager = () => {
       setFormData({
         title: value.title || "",
         subtitle: value.subtitle || "",
-        image: value.image || ""
+        image: value.image || "",
       });
       setMode("view");
     } catch (error) {
@@ -296,7 +304,7 @@ const CoreValuesManager = () => {
     setFormData({
       title: value.title || "",
       subtitle: value.subtitle || "",
-      image: value.image || ""
+      image: value.image || "",
     });
     setMode("edit");
   };
@@ -305,7 +313,7 @@ const CoreValuesManager = () => {
     setFormData({
       title: "",
       subtitle: "",
-      image: ""
+      image: "",
     });
     setErrors({});
     setCurrentValue(null);
@@ -324,12 +332,12 @@ const CoreValuesManager = () => {
   const handleDropReorder = (e, dropIndex) => {
     e.preventDefault();
     if (dragIndex === null || dragIndex === dropIndex) return;
-    
+
     const newCoreValues = [...coreValues];
     const draggedItem = newCoreValues[dragIndex];
     newCoreValues.splice(dragIndex, 1);
     newCoreValues.splice(dropIndex, 0, draggedItem);
-    
+
     setCoreValues(newCoreValues);
     setDragIndex(null);
     // Here you would typically save the new order to backend
@@ -354,7 +362,9 @@ const CoreValuesManager = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Core Values</h1>
-          <p className="text-gray-600 mt-1">Manage your organization's core values</p>
+          <p className="text-gray-600 mt-1">
+            Manage your organization's core values
+          </p>
         </div>
         <button
           onClick={() => {
@@ -375,8 +385,12 @@ const CoreValuesManager = () => {
       ) : coreValues.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-xl">
           <Target className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-600">No Core Values Found</h3>
-          <p className="text-gray-500 mt-1">Create your first core value to get started</p>
+          <h3 className="text-lg font-medium text-gray-600">
+            No Core Values Found
+          </h3>
+          <p className="text-gray-500 mt-1">
+            Create your first core value to get started
+          </p>
         </div>
       ) : (
         <>
@@ -388,12 +402,14 @@ const CoreValuesManager = () => {
                   <Target className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-800">{coreValues.length}</p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {coreValues.length}
+                  </p>
                   <p className="text-sm text-gray-600">Total Values</p>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white p-4 rounded-lg border shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-100 rounded-lg">
@@ -401,20 +417,22 @@ const CoreValuesManager = () => {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-800">
-                    {coreValues.filter(v => v.image).length}
+                    {coreValues.filter((v) => v.image).length}
                   </p>
                   <p className="text-sm text-gray-600">With Images</p>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white p-4 rounded-lg border shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-purple-100 rounded-lg">
                   <TrendingUp className="w-6 h-6 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-800">{coreValues.length}</p>
+                  <p className="text-2xl font-bold text-gray-800">
+                    {coreValues.length}
+                  </p>
                   <p className="text-sm text-gray-600">Active</p>
                 </div>
               </div>
@@ -424,8 +442,8 @@ const CoreValuesManager = () => {
           {/* Core Values Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {coreValues.map((value, index) => (
-              <div 
-                key={value.id} 
+              <div
+                key={value.id}
                 className="bg-white rounded-xl border shadow-sm overflow-hidden hover:shadow-md transition-shadow relative group"
                 draggable={reordering}
                 onDragStart={() => handleDragStart(index)}
@@ -438,10 +456,14 @@ const CoreValuesManager = () => {
                     <GripVertical className="w-4 h-4 text-gray-500" />
                   </div>
                 )}
-                
+
                 {/* Value Icon Badge */}
                 <div className="absolute top-3 right-3">
-                  <div className={`p-2 rounded-lg ${getValueColor(index).split(' ')[0]}`}>
+                  <div
+                    className={`p-2 rounded-lg ${
+                      getValueColor(index).split(" ")[0]
+                    }`}
+                  >
                     {getValueIcon(value.title)}
                   </div>
                 </div>
@@ -455,7 +477,9 @@ const CoreValuesManager = () => {
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = `https://placehold.co/600x400/cccccc/666666?text=${encodeURIComponent(value.title)}`;
+                        e.target.src = `https://placehold.co/600x400/cccccc/666666?text=${encodeURIComponent(
+                          value.title
+                        )}`;
                       }}
                     />
                   ) : (
@@ -471,12 +495,14 @@ const CoreValuesManager = () => {
                 {/* Value Content */}
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-bold text-gray-800 text-lg">{value.title}</h3>
+                    <h3 className="font-bold text-gray-800 text-lg">
+                      {value.title}
+                    </h3>
                     <div className="inline-block bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-medium">
                       #{index + 1}
                     </div>
                   </div>
-                  
+
                   <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                     {value.subtitle}
                   </p>
@@ -490,7 +516,7 @@ const CoreValuesManager = () => {
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleView(value.id)}
@@ -528,13 +554,13 @@ const CoreValuesManager = () => {
             <button
               onClick={() => setReordering(!reordering)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                reordering 
-                  ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' 
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                reordering
+                  ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
               <GripVertical className="w-4 h-4" />
-              {reordering ? 'Done Reordering' : 'Reorder Values'}
+              {reordering ? "Done Reordering" : "Reorder Values"}
             </button>
           </div>
         </>
@@ -557,7 +583,9 @@ const CoreValuesManager = () => {
           Back to List
         </button>
         <h1 className="text-2xl font-bold text-gray-800">
-          {mode === "edit" ? `Edit Core Value #${currentValue?.id}` : "Create Core Value"}
+          {mode === "edit"
+            ? `Edit Core Value #${currentValue?.id}`
+            : "Create Core Value"}
         </h1>
         <div className="w-20"></div>
       </div>
@@ -569,7 +597,9 @@ const CoreValuesManager = () => {
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <AlertCircle className="w-5 h-5 text-red-500" />
-                <h3 className="font-medium text-red-800">Please fix the following errors:</h3>
+                <h3 className="font-medium text-red-800">
+                  Please fix the following errors:
+                </h3>
               </div>
               <ul className="text-red-600 text-sm list-disc pl-5 space-y-1">
                 {Object.values(errors).map((error, index) => (
@@ -593,7 +623,7 @@ const CoreValuesManager = () => {
                   value={formData.title}
                   onChange={handleInputChange}
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.title ? 'border-red-500' : 'border-gray-300'
+                    errors.title ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter core value title (e.g., Integrity, Excellence)"
                 />
@@ -612,7 +642,7 @@ const CoreValuesManager = () => {
                   onChange={handleTextareaChange}
                   rows="4"
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.subtitle ? 'border-red-500' : 'border-gray-300'
+                    errors.subtitle ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Describe this core value..."
                 />
@@ -628,15 +658,15 @@ const CoreValuesManager = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Value Image
                 </label>
-                
+
                 {/* Drag & Drop Area */}
                 <div
                   className={`border-2 border-dashed rounded-lg p-6 text-center transition-all ${
-                    dragging 
-                      ? 'border-blue-400 bg-blue-50' 
-                      : uploadingImage 
-                        ? 'border-blue-300 bg-blue-50' 
-                        : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50'
+                    dragging
+                      ? "border-blue-400 bg-blue-50"
+                      : uploadingImage
+                      ? "border-blue-300 bg-blue-50"
+                      : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
                   }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -650,8 +680,8 @@ const CoreValuesManager = () => {
                     className="hidden"
                     disabled={uploadingImage}
                   />
-                  
-                  {(imagePreview || formData.image) ? (
+
+                  {imagePreview || formData.image ? (
                     <div className="relative group">
                       <img
                         src={imagePreview || formData.image}
@@ -659,10 +689,12 @@ const CoreValuesManager = () => {
                         className="w-full h-64 object-cover rounded-lg"
                         onError={(e) => {
                           e.target.onerror = null;
-                          e.target.src = `https://placehold.co/600x400/cccccc/666666?text=${encodeURIComponent(formData.title || 'Core Value')}`;
+                          e.target.src = `https://placehold.co/600x400/cccccc/666666?text=${encodeURIComponent(
+                            formData.title || "Core Value"
+                          )}`;
                         }}
                       />
-                      
+
                       {/* Image Overlay Actions */}
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
                         <label htmlFor="imageUpload" className="cursor-pointer">
@@ -685,7 +717,7 @@ const CoreValuesManager = () => {
                           <Copy className="w-5 h-5" />
                         </button>
                       </div>
-                      
+
                       {/* Uploading Indicator */}
                       {uploadingImage && (
                         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
@@ -697,32 +729,51 @@ const CoreValuesManager = () => {
                       )}
                     </div>
                   ) : (
-                    <label htmlFor="imageUpload" className={`cursor-pointer block ${uploadingImage ? 'opacity-50' : ''}`}>
+                    <label
+                      htmlFor="imageUpload"
+                      className={`cursor-pointer block ${
+                        uploadingImage ? "opacity-50" : ""
+                      }`}
+                    >
                       <div className="py-8">
                         {uploadingImage ? (
                           <div className="flex flex-col items-center gap-3">
                             <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
-                            <p className="text-sm text-blue-600">Uploading image...</p>
+                            <p className="text-sm text-blue-600">
+                              Uploading image...
+                            </p>
                           </div>
                         ) : (
                           <>
                             <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                            <p className="text-sm text-gray-600">Click to upload or drag & drop</p>
-                            <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 5MB</p>
-                            <p className="text-xs text-blue-400 mt-2">Optional</p>
+                            <p className="text-sm text-gray-600">
+                              Click to upload or drag & drop
+                            </p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              PNG, JPG, GIF up to 5MB
+                            </p>
+                            <p className="text-xs text-blue-400 mt-2">
+                              Optional
+                            </p>
                           </>
                         )}
                       </div>
                     </label>
                   )}
                 </div>
-                
+
                 {/* Image URL Display */}
                 {formData.image && !uploadingImage && (
                   <div className="mt-3">
                     <div className="flex items-center justify-between">
-                      <p className="text-xs text-gray-500 truncate" title={formData.image}>
-                        URL: {formData.image.length > 40 ? `${formData.image.substring(0, 40)}...` : formData.image}
+                      <p
+                        className="text-xs text-gray-500 truncate"
+                        title={formData.image}
+                      >
+                        URL:{" "}
+                        {formData.image.length > 40
+                          ? `${formData.image.substring(0, 40)}...`
+                          : formData.image}
                       </p>
                       <button
                         type="button"
@@ -736,24 +787,30 @@ const CoreValuesManager = () => {
                   </div>
                 )}
               </div>
-              
+
               {/* Preview Card */}
               {(formData.title || formData.subtitle) && (
                 <div className="border rounded-lg p-4 bg-gray-50">
-                  <h3 className="text-sm font-medium text-gray-700 mb-3">Preview</h3>
+                  <h3 className="text-sm font-medium text-gray-700 mb-3">
+                    Preview
+                  </h3>
                   <div className="bg-white p-4 rounded border">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="p-2 bg-blue-100 rounded-lg">
                         <Target className="w-5 h-5 text-blue-600" />
                       </div>
-                      <h4 className="font-semibold text-gray-800">{formData.title || "Title"}</h4>
+                      <h4 className="font-semibold text-gray-800">
+                        {formData.title || "Title"}
+                      </h4>
                     </div>
                     <p className="text-sm text-gray-600">
                       {formData.subtitle || "Subtitle will appear here..."}
                     </p>
                     {formData.image && (
                       <div className="mt-3">
-                        <div className="text-xs text-gray-500 mb-1">Image Preview:</div>
+                        <div className="text-xs text-gray-500 mb-1">
+                          Image Preview:
+                        </div>
                         <img
                           src={formData.image}
                           alt="Preview"
@@ -828,7 +885,9 @@ const CoreValuesManager = () => {
                 <Target className="w-8 h-8 text-blue-600" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{formData.title}</h1>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  {formData.title}
+                </h1>
                 <div className="flex items-center gap-4 mt-1">
                   <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                     ID: {currentValue?.id}
@@ -861,24 +920,30 @@ const CoreValuesManager = () => {
                       Title
                     </label>
                     <div className="bg-gray-50 p-3 rounded-lg border">
-                      <p className="text-gray-800 font-medium">{formData.title}</p>
+                      <p className="text-gray-800 font-medium">
+                        {formData.title}
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-500 mb-1">
                       Description
                     </label>
                     <div className="bg-gray-50 p-4 rounded-lg border">
-                      <p className="text-gray-700 leading-relaxed">{formData.subtitle}</p>
+                      <p className="text-gray-700 leading-relaxed">
+                        {formData.subtitle}
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               {/* Actions */}
               <div className="pt-4 border-t">
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Quick Actions</h3>
+                <h3 className="text-sm font-medium text-gray-700 mb-3">
+                  Quick Actions
+                </h3>
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={() => setMode("edit")}
@@ -915,7 +980,9 @@ const CoreValuesManager = () => {
                         className="w-full h-64 object-cover"
                         onError={(e) => {
                           e.target.onerror = null;
-                          e.target.src = `https://placehold.co/600x400/cccccc/666666?text=${encodeURIComponent(formData.title)}`;
+                          e.target.src = `https://placehold.co/600x400/cccccc/666666?text=${encodeURIComponent(
+                            formData.title
+                          )}`;
                         }}
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
@@ -937,7 +1004,7 @@ const CoreValuesManager = () => {
                     </div>
                   )}
                 </div>
-                
+
                 {/* Image URL */}
                 {formData.image && (
                   <div className="mt-3">
@@ -962,11 +1029,13 @@ const CoreValuesManager = () => {
                   </div>
                 )}
               </div>
-              
+
               {/* Timestamps */}
               {currentValue && (
                 <div className="pt-4 border-t">
-                  <h3 className="text-sm font-medium text-gray-700 mb-3">Timestamps</h3>
+                  <h3 className="text-sm font-medium text-gray-700 mb-3">
+                    Timestamps
+                  </h3>
                   <div className="grid grid-cols-2 gap-4">
                     {currentValue.created_at && (
                       <div className="bg-gray-50 p-3 rounded-lg">
@@ -979,7 +1048,7 @@ const CoreValuesManager = () => {
                         </p>
                       </div>
                     )}
-                    
+
                     {currentValue.updated_at && (
                       <div className="bg-gray-50 p-3 rounded-lg">
                         <div className="flex items-center gap-2 text-gray-500 mb-1">
@@ -1002,7 +1071,7 @@ const CoreValuesManager = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen">
       {renderContent()}
     </div>
   );

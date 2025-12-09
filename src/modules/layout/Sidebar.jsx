@@ -1,15 +1,25 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+
+// MUI Icons
 import {
-  People,
-  CalendarToday,
-  QuestionAnswer,
   Dashboard as DashboardIcon,
-  Menu as MenuIcon,
+  Home as HomeIcon,
+  Info as InfoIcon,
+  MedicalServices,
+  Business,
   Article,
   PhotoLibrary,
-  Contacts,
+  EventAvailable,
+  RateReview,
+  ContactMail,
+  LocalHospital,
+  Group,
+  Menu as MenuIcon,
+  Gavel, // <-- Added for Policies
 } from "@mui/icons-material";
+
+// Lucide Icon
 import { Newspaper } from "lucide-react";
 
 const Sidebar = () => {
@@ -18,26 +28,28 @@ const Sidebar = () => {
 
   const navItems = [
     { path: "/", label: "Dashboard", icon: DashboardIcon },
-    { path: "/Hero", label: "Home", icon: People },
-    { path: "/aboutUs", label: "AboutUs", icon: People },
-    { path: "/doctors", label: "Doctors", icon: People },
-    { path: "/department", label: "Department", icon: Article },
-
+    { path: "/Hero", label: "Home", icon: HomeIcon },
+    { path: "/aboutUs", label: "About Us", icon: InfoIcon },
+    { path: "/doctors", label: "Doctors", icon: MedicalServices },
+    { path: "/department", label: "Department", icon: Business },
     { path: "/blog", label: "Blog", icon: Article },
     { path: "/gallery", label: "Gallery", icon: PhotoLibrary },
     { path: "/news", label: "News", icon: Newspaper },
-    { path: "/appointment", label: "Appointments", icon: CalendarToday },
-    // { path: "/inquiries", label: "Inquiries", icon: QuestionAnswer },
-    { path: "/feedback", label: "Feedbacks", icon: QuestionAnswer },
-    { path: "/contact", label: "Contact", icon: Contacts },
-    { path: "/facilities", label: "Facilities", icon: Newspaper },
-     { path: "/users", label: "Users", icon: Newspaper },
+    { path: "/appointment", label: "Appointments", icon: EventAvailable },
+    { path: "/feedback", label: "Feedbacks", icon: RateReview },
+    { path: "/contact", label: "Contact", icon: ContactMail },
+    { path: "/facilities", label: "Facilities", icon: LocalHospital },
+    { path: "/users", label: "Users", icon: Group },
+
+    // ⭐ NEW POLICIES TAB
+    { path: "/policies", label: "Policies", icon: Gavel },
   ];
 
   return (
     <aside
-      className={`${collapsed ? "w-20" : "w-64"
-        } h-screen bg-primary text-white shadow-xl transition-all duration-300 flex flex-col`}
+      className={`${
+        collapsed ? "w-20" : "w-64"
+      } h-screen bg-primary text-white shadow-xl transition-all duration-300 flex flex-col`}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-5 border-b border-white/10">
@@ -48,39 +60,45 @@ const Sidebar = () => {
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className={`text-white hover:text-accent ${collapsed ? "mx-auto" : ""
-            } transition-colors`}
+          className={`text-white hover:text-accent ${
+            collapsed ? "mx-auto" : ""
+          } transition-colors`}
         >
           <MenuIcon className="text-[22px]" />
         </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 mt-6">
-        <ul className="flex flex-col gap-1">
+      <nav className="flex-1 mt-6 overflow-y-auto custom-scrollbar">
+        <ul className="flex flex-col gap-1 pb-10">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
+
             return (
               <li key={item.path}>
                 <Link
                   to={item.path}
                   className={`group flex items-center gap-3 mx-3 px-4 py-3 rounded-md font-medium transition-all duration-200
-                    ${isActive
-                      ? "bg-secondary text-white shadow-md"
-                      : "text-gray-100 hover:bg-primary-dark hover:text-accent"
+                    ${
+                      isActive
+                        ? "bg-secondary text-white shadow-md"
+                        : "text-gray-100 hover:bg-primary-dark hover:text-accent"
                     }`}
                 >
                   <Icon
-                    className={`text-[22px] ${isActive
-                      ? "text-white"
-                      : "text-accent group-hover:text-accent"
-                      }`}
+                    className={`text-[22px] ${
+                      isActive
+                        ? "text-white"
+                        : "text-accent group-hover:text-accent"
+                    }`}
                   />
+
                   {!collapsed && (
                     <span
-                      className={`text-sm ${isActive ? "text-white" : "text-gray-100"
-                        }`}
+                      className={`text-sm ${
+                        isActive ? "text-white" : "text-gray-100"
+                      }`}
                     >
                       {item.label}
                     </span>

@@ -412,7 +412,7 @@ const BlogAdmin = () => {
   }
 
   return (
-    <div className="py-2 min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Error Message */}
       {error && (
         <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg">

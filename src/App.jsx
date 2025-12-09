@@ -56,24 +56,24 @@ import FacilitiesComponent from "./modules/dashboard/pages/FacilitiesComponent";
 import LoginPage from "./modules/layout/LoginPage";
 import HomePage from "./modules/dashboard/pages/HomePage";
 import AboutUs from "./modules/dashboard/pages/AboutUs/AboutUs";
+import PolicyPage from "./modules/dashboard/pages/PolicyPage";
 
-function PrivateRoute({ children }) {
-  const isLoggedIn = localStorage.getItem("adminToken");
-  return isLoggedIn ? children : <Navigate to="/login" replace />;
-}
+// function PrivateRoute({ children }) {
+//   const isLoggedIn = localStorage.getItem("adminToken");
+//   return isLoggedIn ? children : <Navigate to="/login" replace />;
+// }
 
 export default function App() {
   return (
     <Routes>
-
-      <Route path="/login" element={<LoginPage />} />
+      {/* <Route path="/login" element={<LoginPage />} /> */}
 
       <Route
         path="/"
         element={
-          <PrivateRoute>
-            <MainLayout />
-          </PrivateRoute>
+          // <PrivateRoute>
+          <MainLayout />
+          // </PrivateRoute>
         }
       >
         <Route index element={<Dashboard />} />
@@ -89,10 +89,8 @@ export default function App() {
         <Route path="news" element={<NewsEventsManagement />} />
         <Route path="contact" element={<Contact />} />
         <Route path="facilities" element={<FacilitiesComponent />} />
-
+        <Route path="/policies" element={<PolicyPage />} />
       </Route>
-
     </Routes>
   );
 }
-

@@ -187,16 +187,14 @@ export default function DepartmentManagement() {
     toggleStatusMutation.isLoading;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-2">
+    <div className="min-h-screen">
       <div className=" ">
         {/* Top Header / Hero */}
         <div className="flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100  p-3 rounded-xl shadow-sm mb-6 border border-gray-200">
-
           {/* LEFT SIDE: Title + Description */}
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                            <span className="text-indigo-500 text-lg font-semibold">👥</span>
-
+              <span className="text-indigo-500 text-lg font-semibold">👥</span>
               Department Management
             </h1>
 
@@ -226,10 +224,7 @@ export default function DepartmentManagement() {
               <span>Refresh</span>
             </button>
           </div>
-
         </div>
-
-
 
         {/* Stats Row */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -294,7 +289,7 @@ export default function DepartmentManagement() {
         )}
 
         {/* Table */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm border mt-5 border-slate-100 overflow-hidden">
           <DepartmentTable
             departments={departments}
             isLoading={isLoading}

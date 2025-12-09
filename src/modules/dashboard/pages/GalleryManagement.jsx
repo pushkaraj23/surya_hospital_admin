@@ -278,7 +278,7 @@ const GalleryManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-2 md:py-2">
+    <div className="min-h-screen">
       <div className="mx-auto">
         {/* Error Message */}
         {error && (

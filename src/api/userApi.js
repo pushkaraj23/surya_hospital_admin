@@ -19,8 +19,13 @@ export const fetchDepartments = async () => {
     console.warn("⚠️ Unexpected response structure:", res.data);
     return [];
   } catch (error) {
-    console.error("❌ fetchDepartments error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch departments");
+    console.error(
+      "❌ fetchDepartments error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch departments"
+    );
   }
 };
 
@@ -34,8 +39,13 @@ export const createDepartment = async (payload) => {
     }
     throw new Error(`Request failed with status ${res.status}`);
   } catch (error) {
-    console.error("❌ createDepartment error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to create department");
+    console.error(
+      "❌ createDepartment error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to create department"
+    );
   }
 };
 
@@ -49,8 +59,13 @@ export const updateDepartment = async ({ id, payload }) => {
     }
     throw new Error(`Request failed with status ${res.status}`);
   } catch (error) {
-    console.error("❌ updateDepartment error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to update department");
+    console.error(
+      "❌ updateDepartment error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to update department"
+    );
   }
 };
 
@@ -64,8 +79,13 @@ export const deleteDepartment = async (id) => {
     }
     throw new Error(`Request failed with status ${res.status}`);
   } catch (error) {
-    console.error("❌ deleteDepartment error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to delete department");
+    console.error(
+      "❌ deleteDepartment error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to delete department"
+    );
   }
 };
 
@@ -79,383 +99,15 @@ export const fetchDepartmentById = async (id) => {
     }
     throw new Error(`Request failed with status ${res.status}`);
   } catch (error) {
-    console.error("❌ fetchDepartmentById error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch department");
+    console.error(
+      "❌ fetchDepartmentById error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch department"
+    );
   }
 };
-
-
-
-// ==================== DOCTORS ====================
-
-// export const getDoctors = async () => {
-//   try {
-//     console.log("🔍 Fetching all doctors...");
-//     const response = await axiosInstance.get("/doctors");
-//     console.log("✅ Doctors fetched:", response.data);
-
-//     // Handle different response structures
-//     if (Array.isArray(response.data)) {
-//       return response.data;
-//     } else if (response.data && Array.isArray(response.data.data)) {
-//       return response.data.data;
-//     }
-
-//     console.warn("⚠️ Unexpected response structure:", response.data);
-//     return [];
-//   } catch (error) {
-//     console.error("❌ Error fetching doctors:", error.response?.data || error.message);
-//     throw new Error(error.response?.data?.message || "Failed to fetch doctors");
-//   }
-// };
-
-
-// export const getDoctorById = async (id) => {
-//   try {
-//     console.log("🔍 Fetching doctor by ID:", id);
-//     const response = await axiosInstance.get(`/doctors/${id}`);
-//     console.log("✅ Doctor fetched:", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error("❌ Error fetching doctor by ID:", error.response?.data || error.message);
-
-//     if (error.response?.status === 404) {
-//       throw new Error(`Doctor with ID ${id} not found`);
-//     }
-//     throw new Error(error.response?.data?.message || "Failed to fetch doctor");
-//   }
-// };
-
-
-// export const addDoctor = async (doctorData) => {
-//   try {
-//     console.log("➕ Adding doctor:", doctorData);
-
-//     // Format data to match backend expectations
-//     const formattedData = {
-//       fullname: doctorData.fullname,
-//       qualification: doctorData.qualification,
-//       specialization: doctorData.specialization,
-//       experience_years: parseInt(doctorData.experience_years) || 0,
-//       departmentid: doctorData.departmentid || null,
-//       photo: doctorData.photo || "",
-//       bio: doctorData.bio || "",
-//       schedule: doctorData.schedule || {},
-//       isactive: doctorData.isactive !== undefined ? doctorData.isactive : true,
-//     };
-
-//     console.log("📤 Formatted data:", formattedData);
-
-//     const response = await axiosInstance.post("/doctors", formattedData);
-//     console.log("✅ Doctor added:", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error("❌ Error adding doctor:", error.response?.data || error.message);
-
-//     if (error.response?.status === 400) {
-//       throw new Error(error.response?.data?.message || "Invalid doctor data");
-//     }
-//     throw new Error(error.response?.data?.message || "Failed to add doctor");
-//   }
-// };
-
-
-// export const updateDoctor = async (id, doctorData) => {
-//   try {
-//     console.log("🔄 Updating doctor:", { id, doctorData });
-
-//     // Format data to match backend expectations
-//     const formattedData = {
-//       fullname: doctorData.fullname,
-//       qualification: doctorData.qualification,
-//       specialization: doctorData.specialization,
-//       experience_years: parseInt(doctorData.experience_years) || 0,
-//       departmentid: doctorData.departmentid || null,
-//       photo: doctorData.photo || "",
-//       bio: doctorData.bio || "",
-//       schedule: doctorData.schedule || {},
-//       isactive: doctorData.isactive !== undefined ? doctorData.isactive : true,
-//     };
-
-//     console.log("📤 Formatted data:", formattedData);
-
-//     // Try PATCH first (more common for partial updates)
-//     const response = await axiosInstance.put(`/doctors/update/${id}`, formattedData);
-//     console.log("✅ Doctor updated:", response.data);
-//     return response.data;
-//   } catch (patchError) {
-//     // If PATCH fails, try PUT
-//     console.log("⚠️ PATCH failed, trying PUT...");
-//     try {
-//       const response = await axiosInstance.put(`/doctors/update${id}`, formattedData);
-//       console.log("✅ Doctor updated with PUT:", response.data);
-//       return response.data;
-//     } catch (putError) {
-//       console.error("❌ Error updating doctor:", putError.response?.data || putError.message);
-
-//       if (putError.response?.status === 404) {
-//         throw new Error(`Doctor with ID ${id} not found`);
-//       } else if (putError.response?.status === 400) {
-//         throw new Error(putError.response?.data?.message || "Invalid doctor data");
-//       }
-//       throw new Error(putError.response?.data?.message || "Failed to update doctor");
-//     }
-//   }
-// };
-
-
-// export const deleteDoctor = async (id) => {
-//   try {
-//     console.log("🗑️ Deleting doctor:", id);
-//     const response = await axiosInstance.delete(`/doctors/${id}`);
-//     console.log("✅ Doctor deleted:", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error("❌ Error deleting doctor:", error.response?.data || error.message);
-
-//     if (error.response?.status === 404) {
-//       throw new Error(`Doctor with ID ${id} not found`);
-//     } else if (error.response?.status === 400) {
-//       throw new Error(error.response?.data?.message || "Cannot delete doctor");
-//     }
-//     throw new Error(error.response?.data?.message || "Failed to delete doctor");
-//   }
-// };
-
-
-// export const toggleDoctorStatus = async (id, isactive) => {
-//   try {
-//     console.log("🔄 Toggling doctor status:", { id, isactive });
-//     const response = await axiosInstance.put(`/doctors/update/${id}`, { isactive });
-//     console.log("✅ Doctor status toggled:", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error("❌ Error toggling doctor status:", error.response?.data || error.message);
-
-//     if (error.response?.status === 404) {
-//       throw new Error(`Doctor with ID ${id} not found`);
-//     }
-//     throw new Error(error.response?.data?.message || "Failed to toggle doctor status");
-//   }
-// };
-
-// // ✅ Toggle expert mutation - Fixed version
-
-
-// export const getDoctorsByDepartment = async (departmentId) => {
-//   try {
-//     console.log("🔍 Fetching doctors by department:", departmentId);
-//     const response = await axiosInstance.get(`/doctors?departmentid=${departmentId}`);
-//     console.log("✅ Doctors fetched for department:", response.data);
-
-//     // Handle different response structures
-//     if (Array.isArray(response.data)) {
-//       return response.data;
-//     } else if (response.data && Array.isArray(response.data.data)) {
-//       return response.data.data;
-//     }
-
-//     return [];
-//   } catch (error) {
-//     console.error("❌ Error fetching doctors by department:", error.response?.data || error.message);
-//     throw new Error(error.response?.data?.message || "Failed to fetch doctors by department");
-//   }
-// };
-
-// export const getDoctorsBySpecialization = async (specialization) => {
-//   try {
-//     console.log("🔍 Fetching doctors by specialization:", specialization);
-//     const response = await axiosInstance.get(`/doctors?specialization=${specialization}`);
-//     console.log("✅ Doctors fetched for specialization:", response.data);
-
-//     // Handle different response structures
-//     if (Array.isArray(response.data)) {
-//       return response.data;
-//     } else if (response.data && Array.isArray(response.data.data)) {
-//       return response.data.data;
-//     }
-
-//     return [];
-//   } catch (error) {
-//     console.error("❌ Error fetching doctors by specialization:", error.response?.data || error.message);
-//     throw new Error(error.response?.data?.message || "Failed to fetch doctors by specialization");
-//   }
-// };
-
-// /**
-//  * Get active doctors only
-//  * @returns {Promise<Array>} Array of active doctors
-//  */
-// export const getActiveDoctors = async () => {
-//   try {
-//     console.log("🔍 Fetching active doctors...");
-//     const response = await axiosInstance.get("/doctors?isactive=true");
-//     console.log("✅ Active doctors fetched:", response.data);
-
-//     // Handle different response structures
-//     if (Array.isArray(response.data)) {
-//       return response.data;
-//     } else if (response.data && Array.isArray(response.data.data)) {
-//       return response.data.data;
-//     }
-
-//     return [];
-//   } catch (error) {
-//     console.error("❌ Error fetching active doctors:", error.response?.data || error.message);
-//     throw new Error(error.response?.data?.message || "Failed to fetch active doctors");
-//   }
-// };
-
-// /**
-//  * Search doctors by name or specialization
-//  * @param {string} searchTerm - Search term
-//  * @returns {Promise<Array>} Array of matching doctors
-//  */
-// export const searchDoctors = async (searchTerm) => {
-//   try {
-//     console.log("🔍 Searching doctors:", searchTerm);
-//     const response = await axiosInstance.get(`/doctors?search=${encodeURIComponent(searchTerm)}`);
-//     console.log("✅ Search results:", response.data);
-
-//     // Handle different response structures
-//     if (Array.isArray(response.data)) {
-//       return response.data;
-//     } else if (response.data && Array.isArray(response.data.data)) {
-//       return response.data.data;
-//     }
-
-//     return [];
-//   } catch (error) {
-//     console.error("❌ Error searching doctors:", error.response?.data || error.message);
-//     throw new Error(error.response?.data?.message || "Failed to search doctors");
-//   }
-// };
-
-// export const toggleDoctorExpert = async (id, isexpert, doctorData = null) => {
-//   try {
-//     console.log("⭐ Toggling doctor expert status:", { id, isexpert, doctorData });
-
-//     // If we have full doctor data, use PUT to update the entire record
-//     if (doctorData) {
-//       const response = await axiosInstance.put(`/doctors/update/${id}`, {
-//         ...doctorData,
-//         isexpert: isexpert
-//       });
-//       console.log("✅ Doctor expert status updated via PUT:", response.data);
-//       return response.data;
-//     }
-
-//     // Otherwise use PATCH for partial update
-//     const response = await axiosInstance.patch(`/doctors/${id}/expert`, {
-//       isexpert: isexpert
-//     });
-
-//     console.log("✅ Doctor expert status toggled:", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error("❌ Error toggling doctor expert status:", error);
-
-//     // Fallback to PUT if PATCH is not supported
-//     try {
-//       console.log("🔄 Trying PUT as fallback...");
-//       const response = await axiosInstance.put(`/doctors/update/${id}`, {
-//         isexpert: isexpert
-//       });
-//       return response.data;
-//     } catch (putError) {
-//       console.error("❌ PUT also failed:", putError);
-//       throw new Error(putError.response?.data?.message || "Failed to update expert status");
-//     }
-//   }
-// };
-
-
-// export const updateDoctorSchedule = async (id, schedule) => {
-//   try {
-//     console.log("📅 Updating doctor schedule:", { id, schedule });
-//     const response = await axiosInstance.patch(`/doctors/${id}`, { schedule });
-//     console.log("✅ Doctor schedule updated:", response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error("❌ Error updating doctor schedule:", error.response?.data || error.message);
-
-//     if (error.response?.status === 404) {
-//       throw new Error(`Doctor with ID ${id} not found`);
-//     }
-//     throw new Error(error.response?.data?.message || "Failed to update doctor schedule");
-//   }
-// };
-
-
-// export const bulkUpdateDoctors = async (doctorsData) => {
-//   try {
-//     console.log("📦 Bulk updating doctors:", doctorsData);
-
-//     // Execute all updates in parallel
-//     const updatePromises = doctorsData.map(({ id, data }) =>
-//       updateDoctor(id, data)
-//     );
-
-//     const results = await Promise.allSettled(updatePromises);
-
-//     const successful = results.filter(r => r.status === 'fulfilled').map(r => r.value);
-//     const failed = results.filter(r => r.status === 'rejected');
-
-//     if (failed.length > 0) {
-//       console.warn("⚠️ Some updates failed:", failed);
-//     }
-
-//     console.log("✅ Bulk update completed:", { successful: successful.length, failed: failed.length });
-//     return successful;
-//   } catch (error) {
-//     console.error("❌ Error in bulk update:", error);
-//     throw new Error("Failed to bulk update doctors");
-//   }
-// };
-
-
-// export const getDoctorStats = async () => {
-//   try {
-//     console.log("📊 Fetching doctor statistics...");
-//     const doctors = await getDoctors();
-
-//     const stats = {
-//       total: doctors.length,
-//       active: doctors.filter(d => d.isactive).length,
-//       inactive: doctors.filter(d => !d.isactive).length,
-//       bySpecialization: {},
-//       byDepartment: {},
-//       averageExperience: 0,
-//     };
-
-//     // Count by specialization
-//     doctors.forEach(doctor => {
-//       if (doctor.specialization) {
-//         stats.bySpecialization[doctor.specialization] =
-//           (stats.bySpecialization[doctor.specialization] || 0) + 1;
-//       }
-
-//       if (doctor.departmentid) {
-//         stats.byDepartment[doctor.departmentid] =
-//           (stats.byDepartment[doctor.departmentid] || 0) + 1;
-//       }
-//     });
-
-//     // Calculate average experience
-//     const totalExperience = doctors.reduce((sum, d) => sum + (d.experience_years || 0), 0);
-//     stats.averageExperience = doctors.length > 0
-//       ? (totalExperience / doctors.length).toFixed(1)
-//       : 0;
-
-//     console.log("✅ Doctor statistics:", stats);
-//     return stats;
-//   } catch (error) {
-//     console.error("❌ Error fetching doctor statistics:", error);
-//     throw new Error("Failed to fetch doctor statistics");
-//   }
-// };
-// 
-
 
 /* ======================================================
    🔥 DOCTORS CRUD API
@@ -500,8 +152,7 @@ export const createDoctor = async (doctorData) => {
       photo: doctorData.photo || "",
       bio: doctorData.bio || "",
       schedule: doctorData.schedule || {},
-      isactive:
-        doctorData.isactive !== undefined ? doctorData.isactive : true,
+      isactive: doctorData.isactive !== undefined ? doctorData.isactive : true,
       isexpert: doctorData.isexpert || false,
     };
 
@@ -534,9 +185,7 @@ export const updateDoctor = async (id, doctorData) => {
     );
     return response.data;
   } catch (error) {
-    throw new Error(
-      error.response?.data?.message || "Failed to update doctor"
-    );
+    throw new Error(error.response?.data?.message || "Failed to update doctor");
   }
 };
 
@@ -602,8 +251,7 @@ export const getDoctorsByDepartment = async (departmentId) => {
     return [];
   } catch (error) {
     throw new Error(
-      error.response?.data?.message ||
-      "Failed to fetch doctors by department"
+      error.response?.data?.message || "Failed to fetch doctors by department"
     );
   }
 };
@@ -622,7 +270,7 @@ export const getDoctorsBySpecialization = async (specialization) => {
   } catch (error) {
     throw new Error(
       error.response?.data?.message ||
-      "Failed to fetch doctors by specialization"
+        "Failed to fetch doctors by specialization"
     );
   }
 };
@@ -680,9 +328,7 @@ export const updateDoctorSchedule = async (id, schedule) => {
 // 👉 Bulk update (multiple doctors at once)
 export const bulkUpdateDoctors = async (doctorsData) => {
   try {
-    const tasks = doctorsData.map(({ id, data }) =>
-      updateDoctor(id, data)
-    );
+    const tasks = doctorsData.map(({ id, data }) => updateDoctor(id, data));
     const results = await Promise.allSettled(tasks);
 
     return results;
@@ -731,8 +377,6 @@ export const getDoctorStats = async () => {
 
 // ========================================
 
-
-
 // ====================Appointments====================
 
 // ✅ Fetch all appointments
@@ -749,8 +393,13 @@ export const fetchAppointments = async () => {
     console.warn("Unexpected response structure:", res.data);
     return [];
   } catch (error) {
-    console.error("❌ fetchAppointments error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch appointments");
+    console.error(
+      "❌ fetchAppointments error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch appointments"
+    );
   }
 };
 
@@ -766,8 +415,13 @@ export const createAppointment = async (payload) => {
     }
     throw new Error(`Request failed with status ${res.status}`);
   } catch (error) {
-    console.error("❌ createAppointment error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to create appointment");
+    console.error(
+      "❌ createAppointment error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to create appointment"
+    );
   }
 };
 
@@ -784,9 +438,11 @@ export const updateAppointment = async ({ id, payload }) => {
     console.error("❌ updateAppointment error:", {
       status: error.response?.status,
       data: error.response?.data,
-      message: error.message
+      message: error.message,
     });
-    throw new Error(error.response?.data?.message || "Failed to update appointment");
+    throw new Error(
+      error.response?.data?.message || "Failed to update appointment"
+    );
   }
 };
 
@@ -800,8 +456,13 @@ export const updateAppointmentAlt = async (id, payload) => {
     console.log("✅ updateAppointmentAlt success:", res.data);
     return res.data;
   } catch (error) {
-    console.error("❌ updateAppointmentAlt error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to update appointment");
+    console.error(
+      "❌ updateAppointmentAlt error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to update appointment"
+    );
   }
 };
 
@@ -817,8 +478,13 @@ export const deleteAppointment = async (id) => {
     }
     throw new Error(`Request failed with status ${res.status}`);
   } catch (error) {
-    console.error("❌ deleteAppointment error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to delete appointment");
+    console.error(
+      "❌ deleteAppointment error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to delete appointment"
+    );
   }
 };
 
@@ -834,8 +500,13 @@ export const fetchAppointmentById = async (id) => {
     }
     throw new Error(`Request failed with status ${res.status}`);
   } catch (error) {
-    console.error("❌ fetchAppointmentById error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch appointment");
+    console.error(
+      "❌ fetchAppointmentById error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch appointment"
+    );
   }
 };
 
@@ -844,24 +515,47 @@ export const updateAppointmentStatus = async (id, status) => {
   try {
     console.log("🔄 updateAppointmentStatus called:", { id, status });
 
-    const res = await axiosInstance.put(`/appointments/update/${id}`, { status });
+    const res = await axiosInstance.put(`/appointments/update/${id}`, {
+      status,
+    });
 
     console.log("✅ updateAppointmentStatus success:", res.data);
     return res.data;
   } catch (error) {
-    console.error("❌ updateAppointmentStatus error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to update appointment status");
+    console.error(
+      "❌ updateAppointmentStatus error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to update appointment status"
+    );
   }
 };
 
 // ✅ Test all appointment endpoints
 export const testAppointmentEndpoints = async () => {
   const tests = [
-    { method: 'GET', url: '/appointments', description: 'Fetch all appointments' },
-    { method: 'POST', url: '/appointments', description: 'Create appointment' },
-    { method: 'PUT', url: '/appointments/update/1', description: 'Update appointment' },
-    { method: 'DELETE', url: '/appointments/1', description: 'Delete appointment' },
-    { method: 'GET', url: '/appointments/1', description: 'Get appointment by ID' },
+    {
+      method: "GET",
+      url: "/appointments",
+      description: "Fetch all appointments",
+    },
+    { method: "POST", url: "/appointments", description: "Create appointment" },
+    {
+      method: "PUT",
+      url: "/appointments/update/1",
+      description: "Update appointment",
+    },
+    {
+      method: "DELETE",
+      url: "/appointments/1",
+      description: "Delete appointment",
+    },
+    {
+      method: "GET",
+      url: "/appointments/1",
+      description: "Get appointment by ID",
+    },
   ];
 
   console.log("🧪 Testing Appointment Endpoints...");
@@ -872,21 +566,27 @@ export const testAppointmentEndpoints = async () => {
       const response = await axiosInstance({
         method: test.method,
         url: test.url,
-        data: test.method !== 'GET' ? {
-          fullname: "Test User",
-          mobilenumber: "1234567890",
-          email: "test@example.com",
-          status: "Pending"
-        } : undefined
+        data:
+          test.method !== "GET"
+            ? {
+                fullname: "Test User",
+                mobilenumber: "1234567890",
+                email: "test@example.com",
+                status: "Pending",
+              }
+            : undefined,
       });
       console.log(`✅ ${test.description}: SUCCESS`, response.status);
     } catch (error) {
-      console.log(`❌ ${test.description}: FAILED`, error.response?.status, error.response?.data);
+      console.log(
+        `❌ ${test.description}: FAILED`,
+        error.response?.status,
+        error.response?.data
+      );
     }
   }
 };
 // ========================================
-
 
 // ==================== NEWS & EVENTS API FUNCTIONS ====================
 
@@ -899,13 +599,19 @@ export const getNewsEvents = async () => {
     // Handle different response structures
     if (Array.isArray(response.data)) return response.data;
     if (Array.isArray(response.data?.data)) return response.data.data;
-    if (Array.isArray(response.data?.news_events)) return response.data.news_events;
+    if (Array.isArray(response.data?.news_events))
+      return response.data.news_events;
 
     console.warn("Unexpected response structure:", response.data);
     return [];
   } catch (error) {
-    console.error("❌ Error fetching news/events:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch news and events");
+    console.error(
+      "❌ Error fetching news/events:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch news and events"
+    );
   }
 };
 
@@ -916,8 +622,13 @@ export const getNewsEventById = async (id) => {
     console.log(`✅ getNewsEventById ${id} response:`, response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Error fetching news/event with ID ${id}:`, error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch news/event");
+    console.error(
+      `❌ Error fetching news/event with ID ${id}:`,
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch news/event"
+    );
   }
 };
 
@@ -930,7 +641,8 @@ export const addNewsEvent = async (newsEventData) => {
       description: newsEventData.description,
       eventdate: newsEventData.eventdate,
       image: newsEventData.image || "",
-      isactive: newsEventData.isactive !== undefined ? newsEventData.isactive : true,
+      isactive:
+        newsEventData.isactive !== undefined ? newsEventData.isactive : true,
     };
 
     console.log("🔄 addNewsEvent payload:", formattedData);
@@ -938,8 +650,13 @@ export const addNewsEvent = async (newsEventData) => {
     console.log("✅ addNewsEvent success:", response.data);
     return response.data;
   } catch (error) {
-    console.error("❌ Error adding news/event:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to add news/event");
+    console.error(
+      "❌ Error adding news/event:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to add news/event"
+    );
   }
 };
 
@@ -952,16 +669,25 @@ export const updateNewsEvent = async (id, newsEventData) => {
       description: newsEventData.description,
       eventdate: newsEventData.eventdate,
       image: newsEventData.image || "",
-      isactive: newsEventData.isactive !== undefined ? newsEventData.isactive : true,
+      isactive:
+        newsEventData.isactive !== undefined ? newsEventData.isactive : true,
     };
 
     console.log("🔄 updateNewsEvent:", { id, formattedData });
-    const response = await axiosInstance.put(`/news_events/update/${id}`, formattedData);
+    const response = await axiosInstance.put(
+      `/news_events/update/${id}`,
+      formattedData
+    );
     console.log("✅ updateNewsEvent success:", response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Error updating news/event with ID ${id}:`, error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to update news/event");
+    console.error(
+      `❌ Error updating news/event with ID ${id}:`,
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to update news/event"
+    );
   }
 };
 
@@ -973,8 +699,13 @@ export const deleteNewsEvent = async (id) => {
     console.log("✅ deleteNewsEvent success");
     return response.data;
   } catch (error) {
-    console.error(`❌ Error deleting news/event with ID ${id}:`, error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to delete news/event");
+    console.error(
+      `❌ Error deleting news/event with ID ${id}:`,
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to delete news/event"
+    );
   }
 };
 
@@ -983,12 +714,15 @@ export const toggleNewsEventStatus = async (id, isActive) => {
   try {
     console.log("🔄 toggleNewsEventStatus:", { id, isActive });
     const response = await axiosInstance.put(`/news_events/update/${id}`, {
-      isactive: isActive
+      isactive: isActive,
     });
     console.log("✅ toggleNewsEventStatus success:", response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Error toggling status for ID ${id}:`, error.response?.data || error.message);
+    console.error(
+      `❌ Error toggling status for ID ${id}:`,
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to update status");
   }
 };
@@ -997,7 +731,7 @@ export const toggleNewsEventStatus = async (id, isActive) => {
 export const getNews = async () => {
   try {
     const allItems = await getNewsEvents();
-    return allItems.filter(item => item.type === 'news');
+    return allItems.filter((item) => item.type === "news");
   } catch (error) {
     console.error("❌ Error fetching news:", error);
     throw error;
@@ -1008,7 +742,7 @@ export const getNews = async () => {
 export const getEvents = async () => {
   try {
     const allItems = await getNewsEvents();
-    return allItems.filter(item => item.type === 'event');
+    return allItems.filter((item) => item.type === "event");
   } catch (error) {
     console.error("❌ Error fetching events:", error);
     throw error;
@@ -1019,15 +753,13 @@ export const getEvents = async () => {
 export const getActiveNewsEvents = async () => {
   try {
     const allItems = await getNewsEvents();
-    return allItems.filter(item => item.isactive === true);
+    return allItems.filter((item) => item.isactive === true);
   } catch (error) {
     console.error("❌ Error fetching active news/events:", error);
     throw error;
   }
 };
 // ========================================
-
-
 
 // ==================== BLOGS API FUNCTIONS ====================
 
@@ -1045,7 +777,10 @@ export const getBlogs = async () => {
     console.warn("Unexpected response structure:", response.data);
     return [];
   } catch (error) {
-    console.error("❌ Error fetching blogs:", error.response?.data || error.message);
+    console.error(
+      "❌ Error fetching blogs:",
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to fetch blogs");
   }
 };
@@ -1061,7 +796,10 @@ export const getBlogById = async (id) => {
     if (response.data?.blog) return response.data.blog;
     return response.data;
   } catch (error) {
-    console.error(`❌ Error fetching blog with ID ${id}:`, error.response?.data || error.message);
+    console.error(
+      `❌ Error fetching blog with ID ${id}:`,
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to fetch blog");
   }
 };
@@ -1077,7 +815,10 @@ export const getBlogBySlug = async (slug) => {
     if (response.data?.blog) return response.data.blog;
     return response.data;
   } catch (error) {
-    console.error(`❌ Error fetching blog with slug ${slug}:`, error.response?.data || error.message);
+    console.error(
+      `❌ Error fetching blog with slug ${slug}:`,
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to fetch blog");
   }
 };
@@ -1104,7 +845,10 @@ export const addBlog = async (blogData) => {
     if (response.data?.blog) return response.data.blog;
     return response.data;
   } catch (error) {
-    console.error("❌ Error adding blog:", error.response?.data || error.message);
+    console.error(
+      "❌ Error adding blog:",
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to add blog");
   }
 };
@@ -1123,7 +867,10 @@ export const updateBlog = async (id, blogData) => {
     };
 
     console.log("🔄 updateBlog:", { id, formattedData });
-    const response = await axiosInstance.put(`/blogs/update/${id}`, formattedData);
+    const response = await axiosInstance.put(
+      `/blogs/update/${id}`,
+      formattedData
+    );
     console.log("✅ updateBlog success:", response.data);
 
     // Return the updated blog data
@@ -1131,7 +878,10 @@ export const updateBlog = async (id, blogData) => {
     if (response.data?.blog) return response.data.blog;
     return response.data;
   } catch (error) {
-    console.error(`❌ Error updating blog with ID ${id}:`, error.response?.data || error.message);
+    console.error(
+      `❌ Error updating blog with ID ${id}:`,
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to update blog");
   }
 };
@@ -1144,7 +894,10 @@ export const deleteBlog = async (id) => {
     console.log("✅ deleteBlog success");
     return response.data;
   } catch (error) {
-    console.error(`❌ Error deleting blog with ID ${id}:`, error.response?.data || error.message);
+    console.error(
+      `❌ Error deleting blog with ID ${id}:`,
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to delete blog");
   }
 };
@@ -1154,7 +907,7 @@ export const toggleBlogStatus = async (id, isActive) => {
   try {
     console.log("🔄 toggleBlogStatus:", { id, isActive });
     const response = await axiosInstance.put(`/blogs/update/${id}`, {
-      isactive: isActive
+      isactive: isActive,
     });
     console.log("✅ toggleBlogStatus success:", response.data);
 
@@ -1163,8 +916,13 @@ export const toggleBlogStatus = async (id, isActive) => {
     if (response.data?.blog) return response.data.blog;
     return response.data;
   } catch (error) {
-    console.error(`❌ Error toggling status for ID ${id}:`, error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to update blog status");
+    console.error(
+      `❌ Error toggling status for ID ${id}:`,
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to update blog status"
+    );
   }
 };
 
@@ -1172,7 +930,7 @@ export const toggleBlogStatus = async (id, isActive) => {
 export const getActiveBlogs = async () => {
   try {
     const allBlogs = await getBlogs();
-    return allBlogs.filter(blog => blog.isactive === true);
+    return allBlogs.filter((blog) => blog.isactive === true);
   } catch (error) {
     console.error("❌ Error fetching active blogs:", error);
     throw error;
@@ -1183,8 +941,10 @@ export const getActiveBlogs = async () => {
 export const getBlogsByCategory = async (category) => {
   try {
     const allBlogs = await getBlogs();
-    return allBlogs.filter(blog =>
-      blog.category?.toLowerCase() === category.toLowerCase() && blog.isactive === true
+    return allBlogs.filter(
+      (blog) =>
+        blog.category?.toLowerCase() === category.toLowerCase() &&
+        blog.isactive === true
     );
   } catch (error) {
     console.error(`❌ Error fetching blogs by category ${category}:`, error);
@@ -1196,7 +956,9 @@ export const getBlogsByCategory = async (category) => {
 export const getBlogCategories = async () => {
   try {
     const blogs = await getBlogs();
-    const categories = [...new Set(blogs.map(blog => blog.category).filter(Boolean))];
+    const categories = [
+      ...new Set(blogs.map((blog) => blog.category).filter(Boolean)),
+    ];
     return categories;
   } catch (error) {
     console.error("❌ Error fetching blog categories:", error);
@@ -1209,11 +971,12 @@ export const searchBlogs = async (query) => {
   try {
     const blogs = await getBlogs();
     const searchTerm = query.toLowerCase();
-    return blogs.filter(blog =>
-      blog.title?.toLowerCase().includes(searchTerm) ||
-      blog.content?.toLowerCase().includes(searchTerm) ||
-      blog.author?.toLowerCase().includes(searchTerm) ||
-      blog.category?.toLowerCase().includes(searchTerm)
+    return blogs.filter(
+      (blog) =>
+        blog.title?.toLowerCase().includes(searchTerm) ||
+        blog.content?.toLowerCase().includes(searchTerm) ||
+        blog.author?.toLowerCase().includes(searchTerm) ||
+        blog.category?.toLowerCase().includes(searchTerm)
     );
   } catch (error) {
     console.error(`❌ Error searching blogs with query ${query}:`, error);
@@ -1226,29 +989,26 @@ const generateSlug = (title) => {
   return title
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 };
 // ========================================
 
-
-
-
 // ==================== GALLERY API FUNCTIONS ====================
 
-// ✅ Upload gallery file 
+// ✅ Upload gallery file
 export const uploadGalleryFile = async (file) => {
   try {
     console.log("🔄 uploadGalleryFile:", file.name);
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
 
     // Using the correct upload endpoint
-    const response = await axiosInstance.post('/uploads/single', formData, {
+    const response = await axiosInstance.post("/uploads/single", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
 
@@ -1261,7 +1021,10 @@ export const uploadGalleryFile = async (file) => {
 
     throw new Error(response.data.message || "Upload failed");
   } catch (error) {
-    console.error("❌ Error uploading gallery file:", error.response?.data || error.message);
+    console.error(
+      "❌ Error uploading gallery file:",
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to upload file");
   }
 };
@@ -1280,8 +1043,13 @@ export const getGallery = async () => {
     console.warn("Unexpected response structure:", response.data);
     return [];
   } catch (error) {
-    console.error("❌ Error fetching gallery:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch gallery items");
+    console.error(
+      "❌ Error fetching gallery:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch gallery items"
+    );
   }
 };
 
@@ -1292,8 +1060,13 @@ export const getGalleryById = async (id) => {
     console.log(`✅ getGalleryById ${id} response:`, response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Error fetching gallery item with ID ${id}:`, error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch gallery item");
+    console.error(
+      `❌ Error fetching gallery item with ID ${id}:`,
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch gallery item"
+    );
   }
 };
 
@@ -1305,7 +1078,8 @@ export const addGalleryItem = async (galleryData) => {
       type: galleryData.type || "photo", // "photo" or "video"
       filepath: galleryData.filepath || "",
       category: galleryData.category || "General",
-      isactive: galleryData.isactive !== undefined ? galleryData.isactive : true,
+      isactive:
+        galleryData.isactive !== undefined ? galleryData.isactive : true,
     };
 
     console.log("🔄 addGalleryItem payload:", formattedData);
@@ -1313,8 +1087,13 @@ export const addGalleryItem = async (galleryData) => {
     console.log("✅ addGalleryItem success:", response.data);
     return response.data;
   } catch (error) {
-    console.error("❌ Error adding gallery item:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to add gallery item");
+    console.error(
+      "❌ Error adding gallery item:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to add gallery item"
+    );
   }
 };
 
@@ -1326,16 +1105,25 @@ export const updateGalleryItem = async (id, galleryData) => {
       type: galleryData.type,
       filepath: galleryData.filepath,
       category: galleryData.category,
-      isactive: galleryData.isactive !== undefined ? galleryData.isactive : true,
+      isactive:
+        galleryData.isactive !== undefined ? galleryData.isactive : true,
     };
 
     console.log("🔄 updateGalleryItem:", { id, formattedData });
-    const response = await axiosInstance.put(`/gallery/update/${id}`, formattedData);
+    const response = await axiosInstance.put(
+      `/gallery/update/${id}`,
+      formattedData
+    );
     console.log("✅ updateGalleryItem success:", response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Error updating gallery item with ID ${id}:`, error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to update gallery item");
+    console.error(
+      `❌ Error updating gallery item with ID ${id}:`,
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to update gallery item"
+    );
   }
 };
 
@@ -1347,8 +1135,13 @@ export const deleteGalleryItem = async (id) => {
     console.log("✅ deleteGalleryItem success");
     return response.data;
   } catch (error) {
-    console.error(`❌ Error deleting gallery item with ID ${id}:`, error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to delete gallery item");
+    console.error(
+      `❌ Error deleting gallery item with ID ${id}:`,
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to delete gallery item"
+    );
   }
 };
 
@@ -1357,13 +1150,18 @@ export const toggleGalleryStatus = async (id, isActive) => {
   try {
     console.log("🔄 toggleGalleryStatus:", { id, isActive });
     const response = await axiosInstance.put(`/gallery/update/${id}`, {
-      isactive: isActive
+      isactive: isActive,
     });
     console.log("✅ toggleGalleryStatus success:", response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Error toggling status for ID ${id}:`, error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to update gallery status");
+    console.error(
+      `❌ Error toggling status for ID ${id}:`,
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to update gallery status"
+    );
   }
 };
 
@@ -1371,7 +1169,7 @@ export const toggleGalleryStatus = async (id, isActive) => {
 export const getActiveGallery = async () => {
   try {
     const allItems = await getGallery();
-    return allItems.filter(item => item.isactive === true);
+    return allItems.filter((item) => item.isactive === true);
   } catch (error) {
     console.error("❌ Error fetching active gallery items:", error);
     throw error;
@@ -1382,8 +1180,10 @@ export const getActiveGallery = async () => {
 export const getGalleryByCategory = async (category) => {
   try {
     const allItems = await getGallery();
-    return allItems.filter(item =>
-      item.category?.toLowerCase() === category.toLowerCase() && item.isactive === true
+    return allItems.filter(
+      (item) =>
+        item.category?.toLowerCase() === category.toLowerCase() &&
+        item.isactive === true
     );
   } catch (error) {
     console.error(`❌ Error fetching gallery by category ${category}:`, error);
@@ -1395,8 +1195,10 @@ export const getGalleryByCategory = async (category) => {
 export const getGalleryByType = async (type) => {
   try {
     const allItems = await getGallery();
-    return allItems.filter(item =>
-      item.type?.toLowerCase() === type.toLowerCase() && item.isactive === true
+    return allItems.filter(
+      (item) =>
+        item.type?.toLowerCase() === type.toLowerCase() &&
+        item.isactive === true
     );
   } catch (error) {
     console.error(`❌ Error fetching gallery by type ${type}:`, error);
@@ -1408,7 +1210,9 @@ export const getGalleryByType = async (type) => {
 export const getGalleryCategories = async () => {
   try {
     const gallery = await getGallery();
-    const categories = [...new Set(gallery.map(item => item.category).filter(Boolean))];
+    const categories = [
+      ...new Set(gallery.map((item) => item.category).filter(Boolean)),
+    ];
     return categories;
   } catch (error) {
     console.error("❌ Error fetching gallery categories:", error);
@@ -1421,10 +1225,11 @@ export const searchGallery = async (query) => {
   try {
     const gallery = await getGallery();
     const searchTerm = query.toLowerCase();
-    return gallery.filter(item =>
-      item.title?.toLowerCase().includes(searchTerm) ||
-      item.category?.toLowerCase().includes(searchTerm) ||
-      item.type?.toLowerCase().includes(searchTerm)
+    return gallery.filter(
+      (item) =>
+        item.title?.toLowerCase().includes(searchTerm) ||
+        item.category?.toLowerCase().includes(searchTerm) ||
+        item.type?.toLowerCase().includes(searchTerm)
     );
   } catch (error) {
     console.error(`❌ Error searching gallery with query ${query}:`, error);
@@ -1433,20 +1238,18 @@ export const searchGallery = async (query) => {
 };
 // ========================================
 
-
 // ====================Feedback====================
 
-
-const FEEDBACK_BASE_URL = '/feedback'; // Relative path since baseURL is set
+const FEEDBACK_BASE_URL = "/feedback"; // Relative path since baseURL is set
 
 // ✅ Get all feedback
 export const getAllFeedback = async () => {
   try {
     const response = await axiosInstance.get("/feedback");
-    console.log('✅ Successfully fetched all feedback');
+    console.log("✅ Successfully fetched all feedback");
     return response.data;
   } catch (error) {
-    console.error('❌ Error fetching all feedback:', error);
+    console.error("❌ Error fetching all feedback:", error);
     throw error;
   }
 };
@@ -1467,10 +1270,10 @@ export const getFeedbackById = async (id) => {
 export const createFeedback = async (feedbackData) => {
   try {
     const response = await axiosInstance.post("/feedback", feedbackData);
-    console.log('✅ Successfully created new feedback');
+    console.log("✅ Successfully created new feedback");
     return response.data;
   } catch (error) {
-    console.error('❌ Error creating feedback:', error);
+    console.error("❌ Error creating feedback:", error);
     throw error;
   }
 };
@@ -1478,7 +1281,10 @@ export const createFeedback = async (feedbackData) => {
 // ✅ Update feedback
 export const updateFeedback = async (id, feedbackData) => {
   try {
-    const response = await axiosInstance.put(`/feedback/update/${id}`, feedbackData);
+    const response = await axiosInstance.put(
+      `/feedback/update/${id}`,
+      feedbackData
+    );
     console.log(`✅ Successfully updated feedback with ID ${id}`);
     return response.data;
   } catch (error) {
@@ -1492,7 +1298,11 @@ export const deleteFeedback = async (id) => {
   try {
     const response = await axiosInstance.delete(`/feedback/${id}`);
     console.log(`✅ Successfully deleted feedback with ID ${id}`);
-    return { success: true, message: 'Feedback deleted successfully', data: response.data };
+    return {
+      success: true,
+      message: "Feedback deleted successfully",
+      data: response.data,
+    };
   } catch (error) {
     console.error(`❌ Error deleting feedback with ID ${id}:`, error);
     throw error;
@@ -1505,11 +1315,12 @@ export const searchFeedback = async (query) => {
     const feedback = await getAllFeedback();
     const searchTerm = query.toLowerCase();
 
-    const results = feedback.filter(item =>
-      item.fullname?.toLowerCase().includes(searchTerm) ||
-      item.feedback?.toLowerCase().includes(searchTerm) ||
-      item.mobilenumber?.includes(searchTerm) ||
-      item.rating?.toString().includes(searchTerm)
+    const results = feedback.filter(
+      (item) =>
+        item.fullname?.toLowerCase().includes(searchTerm) ||
+        item.feedback?.toLowerCase().includes(searchTerm) ||
+        item.mobilenumber?.includes(searchTerm) ||
+        item.rating?.toString().includes(searchTerm)
     );
 
     console.log(`✅ Search for "${query}" returned ${results.length} results`);
@@ -1524,11 +1335,11 @@ export const searchFeedback = async (query) => {
 export const getApprovedFeedback = async () => {
   try {
     const feedback = await getAllFeedback();
-    const approved = feedback.filter(item => item.isapproved);
+    const approved = feedback.filter((item) => item.isapproved);
     console.log(`✅ Found ${approved.length} approved feedback entries`);
     return approved;
   } catch (error) {
-    console.error('❌ Error fetching approved feedback:', error);
+    console.error("❌ Error fetching approved feedback:", error);
     throw error;
   }
 };
@@ -1537,11 +1348,11 @@ export const getApprovedFeedback = async () => {
 export const getPendingFeedback = async () => {
   try {
     const feedback = await getAllFeedback();
-    const pending = feedback.filter(item => !item.isapproved);
+    const pending = feedback.filter((item) => !item.isapproved);
     console.log(`✅ Found ${pending.length} pending feedback entries`);
     return pending;
   } catch (error) {
-    console.error('❌ Error fetching pending feedback:', error);
+    console.error("❌ Error fetching pending feedback:", error);
     throw error;
   }
 };
@@ -1550,11 +1361,16 @@ export const getPendingFeedback = async () => {
 export const getFeedbackByRating = async (minRating) => {
   try {
     const feedback = await getAllFeedback();
-    const filtered = feedback.filter(item => item.rating >= minRating);
-    console.log(`✅ Found ${filtered.length} feedback entries with rating >= ${minRating}`);
+    const filtered = feedback.filter((item) => item.rating >= minRating);
+    console.log(
+      `✅ Found ${filtered.length} feedback entries with rating >= ${minRating}`
+    );
     return filtered;
   } catch (error) {
-    console.error(`❌ Error fetching feedback with rating >= ${minRating}:`, error);
+    console.error(
+      `❌ Error fetching feedback with rating >= ${minRating}:`,
+      error
+    );
     throw error;
   }
 };
@@ -1563,12 +1379,17 @@ export const getFeedbackByRating = async (minRating) => {
 export const toggleFeedbackApproval = async (id, currentStatus) => {
   try {
     const updatedFeedback = await updateFeedback(id, {
-      isapproved: !currentStatus
+      isapproved: !currentStatus,
     });
-    console.log(`✅ Toggled approval status for feedback ID ${id} to ${!currentStatus}`);
+    console.log(
+      `✅ Toggled approval status for feedback ID ${id} to ${!currentStatus}`
+    );
     return updatedFeedback;
   } catch (error) {
-    console.error(`❌ Error toggling approval status for feedback ID ${id}:`, error);
+    console.error(
+      `❌ Error toggling approval status for feedback ID ${id}:`,
+      error
+    );
     throw error;
   }
 };
@@ -1580,44 +1401,46 @@ export const getFeedbackStats = async () => {
 
     const stats = {
       total: feedback.length,
-      approved: feedback.filter(item => item.isapproved).length,
-      pending: feedback.filter(item => !item.isapproved).length,
-      averageRating: feedback.length > 0
-        ? (feedback.reduce((acc, item) => acc + item.rating, 0) / feedback.length).toFixed(1)
-        : 0,
+      approved: feedback.filter((item) => item.isapproved).length,
+      pending: feedback.filter((item) => !item.isapproved).length,
+      averageRating:
+        feedback.length > 0
+          ? (
+              feedback.reduce((acc, item) => acc + item.rating, 0) /
+              feedback.length
+            ).toFixed(1)
+          : 0,
       ratingDistribution: {
-        5: feedback.filter(item => item.rating === 5).length,
-        4: feedback.filter(item => item.rating === 4).length,
-        3: feedback.filter(item => item.rating === 3).length,
-        2: feedback.filter(item => item.rating === 2).length,
-        1: feedback.filter(item => item.rating === 1).length,
-      }
+        5: feedback.filter((item) => item.rating === 5).length,
+        4: feedback.filter((item) => item.rating === 4).length,
+        3: feedback.filter((item) => item.rating === 3).length,
+        2: feedback.filter((item) => item.rating === 2).length,
+        1: feedback.filter((item) => item.rating === 1).length,
+      },
     };
 
-    console.log('✅ Successfully calculated feedback statistics');
+    console.log("✅ Successfully calculated feedback statistics");
     return stats;
   } catch (error) {
-    console.error('❌ Error calculating feedback statistics:', error);
+    console.error("❌ Error calculating feedback statistics:", error);
     throw error;
   }
 };
 
 // ========================================
 
-
-
 // ====================Contacts/Inquiries====================
 
-const CONTACT_BASE_URL = '/inquiries'; // Adjust based on your API endpoint
+const CONTACT_BASE_URL = "/inquiries"; // Adjust based on your API endpoint
 
 // ✅ Get all contacts/inquiries
 export const getAllContacts = async () => {
   try {
     const response = await axiosInstance.get(CONTACT_BASE_URL);
-    console.log('✅ Successfully fetched all contacts');
+    console.log("✅ Successfully fetched all contacts");
     return response.data;
   } catch (error) {
-    console.error('❌ Error fetching all contacts:', error);
+    console.error("❌ Error fetching all contacts:", error);
     throw error;
   }
 };
@@ -1638,10 +1461,10 @@ export const getContactById = async (id) => {
 export const createContact = async (contactData) => {
   try {
     const response = await axiosInstance.post(CONTACT_BASE_URL, contactData);
-    console.log('✅ Successfully created new contact');
+    console.log("✅ Successfully created new contact");
     return response.data;
   } catch (error) {
-    console.error('❌ Error creating contact:', error);
+    console.error("❌ Error creating contact:", error);
     throw error;
   }
 };
@@ -1649,7 +1472,10 @@ export const createContact = async (contactData) => {
 // ✅ Update contact
 export const updateContact = async (id, contactData) => {
   try {
-    const response = await axiosInstance.put(`${CONTACT_BASE_URL}/update/${id}`, contactData);
+    const response = await axiosInstance.put(
+      `${CONTACT_BASE_URL}/update/${id}`,
+      contactData
+    );
     console.log(`✅ Successfully updated contact with ID ${id}`);
     return response.data;
   } catch (error) {
@@ -1663,7 +1489,11 @@ export const deleteContact = async (id) => {
   try {
     const response = await axiosInstance.delete(`${CONTACT_BASE_URL}/${id}`);
     console.log(`✅ Successfully deleted contact with ID ${id}`);
-    return { success: true, message: 'Contact deleted successfully', data: response.data };
+    return {
+      success: true,
+      message: "Contact deleted successfully",
+      data: response.data,
+    };
   } catch (error) {
     console.error(`❌ Error deleting contact with ID ${id}:`, error);
     throw error;
@@ -1676,13 +1506,14 @@ export const searchContacts = async (query) => {
     const contacts = await getAllContacts();
     const searchTerm = query.toLowerCase();
 
-    const results = contacts.filter(contact =>
-      contact.fullname?.toLowerCase().includes(searchTerm) ||
-      contact.email?.toLowerCase().includes(searchTerm) ||
-      contact.subject?.toLowerCase().includes(searchTerm) ||
-      contact.message?.toLowerCase().includes(searchTerm) ||
-      contact.mobilenumber?.includes(searchTerm) ||
-      contact.status?.toLowerCase().includes(searchTerm)
+    const results = contacts.filter(
+      (contact) =>
+        contact.fullname?.toLowerCase().includes(searchTerm) ||
+        contact.email?.toLowerCase().includes(searchTerm) ||
+        contact.subject?.toLowerCase().includes(searchTerm) ||
+        contact.message?.toLowerCase().includes(searchTerm) ||
+        contact.mobilenumber?.includes(searchTerm) ||
+        contact.status?.toLowerCase().includes(searchTerm)
     );
 
     console.log(`✅ Search for "${query}" returned ${results.length} results`);
@@ -1697,7 +1528,7 @@ export const searchContacts = async (query) => {
 export const getContactsByStatus = async (status) => {
   try {
     const contacts = await getAllContacts();
-    const filtered = contacts.filter(contact => contact.status === status);
+    const filtered = contacts.filter((contact) => contact.status === status);
     console.log(`✅ Found ${filtered.length} contacts with status: ${status}`);
     return filtered;
   } catch (error) {
@@ -1730,21 +1561,23 @@ export const getContactStats = async () => {
 
     const stats = {
       total: contacts.length,
-      new: contacts.filter(contact => contact.status === 'New').length,
-      inProgress: contacts.filter(contact => contact.status === 'In Progress').length,
-      resolved: contacts.filter(contact => contact.status === 'Resolved').length,
+      new: contacts.filter((contact) => contact.status === "New").length,
+      inProgress: contacts.filter((contact) => contact.status === "In Progress")
+        .length,
+      resolved: contacts.filter((contact) => contact.status === "Resolved")
+        .length,
       statusDistribution: statusCounts,
-      recentCount: contacts.filter(contact => {
+      recentCount: contacts.filter((contact) => {
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
         return new Date(contact.createdat) > sevenDaysAgo;
-      }).length
+      }).length,
     };
 
-    console.log('✅ Successfully calculated contact statistics');
+    console.log("✅ Successfully calculated contact statistics");
     return stats;
   } catch (error) {
-    console.error('❌ Error calculating contact statistics:', error);
+    console.error("❌ Error calculating contact statistics:", error);
     throw error;
   }
 };
@@ -1756,8 +1589,8 @@ export const getRecentContacts = async (days = 7) => {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
 
-    const recent = contacts.filter(contact =>
-      new Date(contact.createdat) > cutoffDate
+    const recent = contacts.filter(
+      (contact) => new Date(contact.createdat) > cutoffDate
     );
 
     console.log(`✅ Found ${recent.length} contacts from last ${days} days`);
@@ -1768,18 +1601,21 @@ export const getRecentContacts = async (days = 7) => {
   }
 };
 
-
-
 //CONTACT
 // ✅ CONTACT API FUNCTIONS
 export const fetchContacts = async () => {
   try {
-    const response = await axiosInstance.get('/contact');
+    const response = await axiosInstance.get("/contact");
     console.log("✅ fetchContacts response:", response.data);
     return response.data;
   } catch (error) {
-    console.error("❌ Error fetching contacts:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch contacts");
+    console.error(
+      "❌ Error fetching contacts:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch contacts"
+    );
   }
 };
 
@@ -1790,25 +1626,25 @@ export const filterContacts = (contacts, searchTerm) => {
   }
 
   const term = searchTerm.toLowerCase();
-  return contacts.filter(contact =>
-    contact.name?.toLowerCase().includes(term) ||
-    contact.phone?.includes(term) ||
-    contact.email?.toLowerCase().includes(term) ||
-    contact.subject?.toLowerCase().includes(term) ||
-    contact.message?.toLowerCase().includes(term)
+  return contacts.filter(
+    (contact) =>
+      contact.name?.toLowerCase().includes(term) ||
+      contact.phone?.includes(term) ||
+      contact.email?.toLowerCase().includes(term) ||
+      contact.subject?.toLowerCase().includes(term) ||
+      contact.message?.toLowerCase().includes(term)
   );
 };
 
 export const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
-
 
 export const getDepartmentById = async (id) => {
   try {
@@ -1821,8 +1657,6 @@ export const getDepartmentById = async (id) => {
 };
 
 // ========================================
-
-
 
 // ====================Facility====================
 
@@ -1889,7 +1723,7 @@ export const getDepartmentById = async (id) => {
 // Department functions
 export const getDepartments = async () => {
   try {
-    const response = await axiosInstance.get('/departments');
+    const response = await axiosInstance.get("/departments");
     return response.data;
   } catch (error) {
     console.error("Error fetching departments:", error);
@@ -1982,7 +1816,7 @@ export const uploadSingleFile = async (fileData) => {
     const res = await axiosInstance.post("/uploads/single", fileData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    return res.data;   // { filePath: "/uploads/xxx.jpg" }
+    return res.data; // { filePath: "/uploads/xxx.jpg" }
   } catch (err) {
     throw new Error(err.response?.data?.message || "File upload failed");
   }
@@ -2006,7 +1840,6 @@ export const getMonthlyAppointments = async (year) => {
   }
 };
 
-
 // ----------------------------------------------
 // 🔹 GET Monthly Inquiries
 // ----------------------------------------------
@@ -2025,16 +1858,14 @@ export const getMonthlyInquiries = async (year) => {
   }
 };
 
-
 // ----------------------------------------------
 // 🔹 GET Dashboard Count
 // ----------------------------------------------
 export const getDashboardCounts = async (year) => {
   try {
-    const res = await axiosInstance.get(
-      `/analytics/dashboard/counts`,
-      { params: { year } }
-    );
+    const res = await axiosInstance.get(`/analytics/dashboard/counts`, {
+      params: { year },
+    });
 
     return res.data.body; // { totaldoctors, totalappointments, ... }
   } catch (error) {
@@ -2053,10 +1884,6 @@ export const loginAdmin = async (email, password) => {
 
   return response.data; // returns { code, body: { token }, message }
 };
-
-
-
-
 
 // Create Hero Section
 export const createHeroSection = async (payload) => {
@@ -2094,7 +1921,10 @@ export const fetchHeroSectionById = async (id) => {
 // Update Hero Section
 export const updateHeroSection = async (id, payload) => {
   try {
-    const response = await axiosInstance.put(`/hero_section/update/${id}`, payload);
+    const response = await axiosInstance.put(
+      `/hero_section/update/${id}`,
+      payload
+    );
     return response.data;
   } catch (error) {
     console.error("Update Hero Error: ", error);
@@ -2113,7 +1943,6 @@ export const deleteHeroSection = async (id) => {
   }
 };
 
-
 // Upload Multiple Files
 export const uploadMultipleFiles = async (files) => {
   try {
@@ -2125,14 +1954,13 @@ export const uploadMultipleFiles = async (files) => {
     const response = await axiosInstance.post("/uploads/multiple", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    
+
     return response.data;
   } catch (error) {
     console.error("Upload Multiple Files Error: ", error);
     throw error;
   }
 };
-
 
 // Create AboutUs Section
 export const createAboutUs = async (payload) => {
@@ -2194,26 +2022,25 @@ export const uploadAboutUsImage = async (file) => {
   try {
     const formData = new FormData();
     formData.append("file", file);
-    
+
     const result = await uploadSingleFile(formData);
-    
+
     // Construct full URL with base URL
     let imageUrl = result.filePath;
-    
+
     // If filePath doesn't start with http, prepend BASE_URL
-    if (!imageUrl.startsWith('http')) {
+    if (!imageUrl.startsWith("http")) {
       // Remove leading slash if present
-      imageUrl = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+      imageUrl = imageUrl.startsWith("/") ? imageUrl.substring(1) : imageUrl;
       imageUrl = `${BASE_URL}/${imageUrl}`;
     }
-    
+
     return imageUrl;
   } catch (error) {
     console.error("Upload AboutUs Image Error: ", error);
     throw error;
   }
 };
-
 
 // Create Core Value
 export const createCoreValue = async (payload) => {
@@ -2251,7 +2078,10 @@ export const fetchCoreValueById = async (id) => {
 // Update Core Value
 export const updateCoreValue = async (id, payload) => {
   try {
-    const response = await axiosInstance.put(`/corevalues/update/${id}`, payload);
+    const response = await axiosInstance.put(
+      `/corevalues/update/${id}`,
+      payload
+    );
     return response.data;
   } catch (error) {
     console.error("Update Core Value Error: ", error);
@@ -2275,26 +2105,25 @@ export const uploadCoreValueImage = async (file) => {
   try {
     const formData = new FormData();
     formData.append("file", file);
-    
+
     const result = await uploadSingleFile(formData);
-    
+
     // Construct full URL with base URL
     let imageUrl = result.filePath;
-    
+
     // If filePath doesn't start with http, prepend BASE_URL
-    if (!imageUrl.startsWith('http')) {
+    if (!imageUrl.startsWith("http")) {
       // Remove leading slash if present
-      imageUrl = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+      imageUrl = imageUrl.startsWith("/") ? imageUrl.substring(1) : imageUrl;
       imageUrl = `${BASE_URL}/${imageUrl}`;
     }
-    
+
     return imageUrl;
   } catch (error) {
     console.error("Upload Core Value Image Error: ", error);
     throw error;
   }
 };
-
 
 // Create Contact Details
 export const createContactDetails = async (payload) => {
@@ -2332,7 +2161,10 @@ export const fetchContactDetailsById = async (id) => {
 // Update Contact Details
 export const updateContactDetails = async (id, payload) => {
   try {
-    const response = await axiosInstance.put(`/contactdetails/update/${id}`, payload);
+    const response = await axiosInstance.put(
+      `/contactdetails/update/${id}`,
+      payload
+    );
     return response.data;
   } catch (error) {
     console.error("Update Contact Details Error: ", error);
@@ -2350,7 +2182,6 @@ export const deleteContactDetails = async (id) => {
     throw error;
   }
 };
-
 
 // Create Journey Entry
 export const createJourney = async (payload) => {
@@ -2407,7 +2238,6 @@ export const deleteJourney = async (id) => {
   }
 };
 
-
 // Create Infrastructure Entry
 export const createInfra = async (payload) => {
   try {
@@ -2462,7 +2292,6 @@ export const deleteInfra = async (id) => {
     throw error;
   }
 };
-
 
 // Create Policy
 export const createPolicy = async (payload) => {

@@ -8,7 +8,7 @@ import {
   deleteFacility,
   toggleFacilityStatus,
   getDepartments,
-  uploadSingleFile
+  uploadSingleFile,
 } from "../../../api/userApi";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
@@ -35,31 +35,37 @@ export default function FacilitiesFullComponent() {
   // Quill modules and formats configuration
   const quillModules = {
     toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'align': [] }],
-      ['link'],
-      ['clean']
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      ["blockquote", "code-block"],
+      [{ color: [] }, { background: [] }],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ align: [] }],
+      ["link"],
+      ["clean"],
     ],
   };
 
   const quillFormats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike',
-    'blockquote', 'code-block',
-    'color', 'background',
-    'list', 'bullet',
-    'align',
-    'link'
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "code-block",
+    "color",
+    "background",
+    "list",
+    "bullet",
+    "align",
+    "link",
   ];
 
   // Add custom styles for Quill editor and facility content rendering
   useEffect(() => {
-    const style = document.createElement('style');
-    style.id = 'quill-facility-styles';
+    const style = document.createElement("style");
+    style.id = "quill-facility-styles";
     style.textContent = `
       /* Quill Editor Styles for Facilities */
       .facility-editor-wrapper {
@@ -250,16 +256,16 @@ export default function FacilitiesFullComponent() {
         line-height: 1.4 !important;
       }
     `;
-    
-    const existingStyle = document.getElementById('quill-facility-styles');
+
+    const existingStyle = document.getElementById("quill-facility-styles");
     if (existingStyle) {
       document.head.removeChild(existingStyle);
     }
-    
+
     document.head.appendChild(style);
-    
+
     return () => {
-      const styleToRemove = document.getElementById('quill-facility-styles');
+      const styleToRemove = document.getElementById("quill-facility-styles");
       if (styleToRemove && document.head.contains(styleToRemove)) {
         document.head.removeChild(styleToRemove);
       }
@@ -312,7 +318,7 @@ export default function FacilitiesFullComponent() {
   // Check if description has actual content
   const hasValidDescription = (description) => {
     if (!description) return false;
-    const textContent = description.replace(/<[^>]*>/g, '').trim();
+    const textContent = description.replace(/<[^>]*>/g, "").trim();
     return textContent.length > 0;
   };
 
@@ -361,7 +367,7 @@ export default function FacilitiesFullComponent() {
 
   // Handle rich text editor change
   const handleDescriptionChange = (content) => {
-    setFormData(prev => ({ ...prev, description: content }));
+    setFormData((prev) => ({ ...prev, description: content }));
   };
 
   // ===============================
@@ -400,7 +406,8 @@ export default function FacilitiesFullComponent() {
   // Delete
   // ===============================
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this facility?")) return;
+    if (!window.confirm("Are you sure you want to delete this facility?"))
+      return;
     try {
       await deleteFacility(id);
       loadFacilities();
@@ -426,7 +433,7 @@ export default function FacilitiesFullComponent() {
   // ===============================
   const getDepartmentName = (departmentId) => {
     if (!departmentId) return "No Department";
-    const dept = departments.find(d => d.id === departmentId);
+    const dept = departments.find((d) => d.id === departmentId);
     return dept ? dept.name : "Unknown Department";
   };
 
@@ -443,7 +450,9 @@ export default function FacilitiesFullComponent() {
         const fd = new FormData();
         fd.append("file", file);
         const res = await uploadSingleFile(fd);
-        const imgURL = BASE_URL + (res.filePath.startsWith("/") ? res.filePath : `/${res.filePath}`);
+        const imgURL =
+          BASE_URL +
+          (res.filePath.startsWith("/") ? res.filePath : `/${res.filePath}`);
         uploadedUrls.push(imgURL);
       }
 
@@ -464,31 +473,45 @@ export default function FacilitiesFullComponent() {
   // UI STARTS
   // ===============================
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="min-h-screen py-2">
+    <div className="min-h-screen">
+      <div className="">
         {/* Header */}
-        <div className="mx-auto px- sm:px-2 lg:px-1">
-          <div className="mb-6 bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] shadow-md rounded-xl p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">🏥 Facilities Management</h2>
-              <p className="text-gray-600">Manage all hospital facilities and departments</p>
-            </div>
-            <button
-              onClick={() => openModal()}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-              </svg>
-              Add Facility
-            </button>
+        <div className="mb-6 bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] shadow-md rounded-xl p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              🏥 Facilities Management
+            </h2>
+            <p className="text-gray-600">
+              Manage all hospital facilities and departments
+            </p>
           </div>
+          <button
+            onClick={() => openModal()}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add Facility
+          </button>
         </div>
 
         {/* Department Filter */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <label className="font-semibold text-gray-700 text-sm uppercase tracking-wide">Filter by Department:</label>
+            <label className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
+              Filter by Department:
+            </label>
             <select
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}
@@ -517,21 +540,33 @@ export default function FacilitiesFullComponent() {
               {facilities.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {facilities.map((item) => (
-                    <div key={item.id} className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+                    <div
+                      key={item.id}
+                      className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
+                    >
                       {/* Header with Status */}
                       <div className="p-4 border-b border-gray-100">
                         <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-semibold text-gray-900 text-lg truncate">{item.name}</h3>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.isactive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                            }`}>
-                            {item.isactive ? 'Active' : 'Inactive'}
+                          <h3 className="font-semibold text-gray-900 text-lg truncate">
+                            {item.name}
+                          </h3>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              item.isactive
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {item.isactive ? "Active" : "Inactive"}
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                             {item.category}
                           </span>
-                          <span className="text-xs text-gray-500">ID: {item.id}</span>
+                          <span className="text-xs text-gray-500">
+                            ID: {item.id}
+                          </span>
                         </div>
                       </div>
 
@@ -539,8 +574,18 @@ export default function FacilitiesFullComponent() {
                       <div className="p-4">
                         {/* Department */}
                         <div className="flex items-center text-sm text-gray-600 mb-3">
-                          <svg className="w-4 h-4 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          <svg
+                            className="w-4 h-4 mr-2 text-purple-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                            />
                           </svg>
                           {getDepartmentName(item.departmentid)}
                         </div>
@@ -548,31 +593,41 @@ export default function FacilitiesFullComponent() {
                         {/* Description with HTML content */}
                         {hasValidDescription(item.description) ? (
                           <div className="text-sm text-gray-600 mb-4 facility-preview facility-content">
-                            <div dangerouslySetInnerHTML={{ 
-                              __html: item.description 
-                            }} />
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: item.description,
+                              }}
+                            />
                           </div>
                         ) : (
-                          <p className="text-sm text-gray-400 mb-4 italic">No description available</p>
+                          <p className="text-sm text-gray-400 mb-4 italic">
+                            No description available
+                          </p>
                         )}
 
                         {/* Photos */}
                         <div className="mb-4">
-                          <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">Photos</label>
+                          <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">
+                            Photos
+                          </label>
                           <div className="flex gap-2 flex-wrap">
-                            {(item.photos?.flat() || []).slice(0, 4).map((photo, idx) => (
-                              <img
-                                key={idx}
-                                src={photo}
-                                className="w-12 h-12 rounded-lg object-cover border border-gray-200"
-                                alt={`Facility ${idx + 1}`}
-                                onError={(e) => {
-                                  e.target.style.display = 'none';
-                                }}
-                              />
-                            ))}
+                            {(item.photos?.flat() || [])
+                              .slice(0, 4)
+                              .map((photo, idx) => (
+                                <img
+                                  key={idx}
+                                  src={photo}
+                                  className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                                  alt={`Facility ${idx + 1}`}
+                                  onError={(e) => {
+                                    e.target.style.display = "none";
+                                  }}
+                                />
+                              ))}
                             {(item.photos?.flat() || []).length === 0 && (
-                              <span className="text-xs text-gray-400 italic">No photos</span>
+                              <span className="text-xs text-gray-400 italic">
+                                No photos
+                              </span>
                             )}
                             {(item.photos?.flat() || []).length > 4 && (
                               <div className="w-12 h-12 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center text-xs text-gray-500">
@@ -584,7 +639,8 @@ export default function FacilitiesFullComponent() {
 
                         {/* Created Date */}
                         <div className="text-xs text-gray-500 border-t border-gray-100 pt-3">
-                          Created: {new Date(item.createdat).toLocaleDateString()}
+                          Created:{" "}
+                          {new Date(item.createdat).toLocaleDateString()}
                         </div>
                       </div>
 
@@ -592,17 +648,37 @@ export default function FacilitiesFullComponent() {
                       <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 flex gap-2">
                         {/* Activate/Deactivate Button */}
                         <button
-                          onClick={() => handleToggleStatus(item.id, item.isactive)}
-                          className={`flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${item.isactive
-                            ? "bg-red-100 text-red-700 hover:bg-red-200 border border-red-200"
-                            : "bg-green-100 text-green-700 hover:bg-green-200 border border-green-200"
-                            }`}
+                          onClick={() =>
+                            handleToggleStatus(item.id, item.isactive)
+                          }
+                          className={`flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                            item.isactive
+                              ? "bg-red-100 text-red-700 hover:bg-red-200 border border-red-200"
+                              : "bg-green-100 text-green-700 hover:bg-green-200 border border-green-200"
+                          }`}
                         >
-                          <svg className={`w-4 h-4 mr-1 ${item.isactive ? 'text-red-600' : 'text-green-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg
+                            className={`w-4 h-4 mr-1 ${
+                              item.isactive ? "text-red-600" : "text-green-600"
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
                             {item.isactive ? (
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
                             ) : (
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
                             )}
                           </svg>
                           {item.isactive ? "Deactivate" : "Activate"}
@@ -613,8 +689,18 @@ export default function FacilitiesFullComponent() {
                           onClick={() => openModal(item)}
                           className="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
                         >
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          <svg
+                            className="w-4 h-4 mr-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
                           </svg>
                           Edit
                         </button>
@@ -624,8 +710,18 @@ export default function FacilitiesFullComponent() {
                           onClick={() => handleDelete(item.id)}
                           className="flex-1 inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700 transition-colors duration-200"
                         >
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          <svg
+                            className="w-4 h-4 mr-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
                           </svg>
                           Delete
                         </button>
@@ -636,10 +732,22 @@ export default function FacilitiesFullComponent() {
               ) : (
                 /* Empty State */
                 <div className="text-center py-12">
-                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  <svg
+                    className="mx-auto h-12 w-12 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">No facilities found</h3>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">
+                    No facilities found
+                  </h3>
                   <p className="mt-1 text-sm text-gray-500">
                     Get started by creating a new facility.
                   </p>
@@ -667,13 +775,26 @@ export default function FacilitiesFullComponent() {
                   onClick={() => setModalOpen(false)}
                   className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+              <form
+                onSubmit={handleSubmit}
+                className="p-6 space-y-6 max-h-[70vh] overflow-y-auto"
+              >
                 <div className="grid grid-cols-1 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -733,8 +854,8 @@ export default function FacilitiesFullComponent() {
                       Description
                     </label>
                     <div className="facility-editor-wrapper">
-                      <ReactQuill 
-                        value={formData.description} 
+                      <ReactQuill
+                        value={formData.description}
                         onChange={handleDescriptionChange}
                         modules={quillModules}
                         formats={quillFormats}
@@ -744,12 +865,15 @@ export default function FacilitiesFullComponent() {
                       />
                     </div>
                     <p className="text-xs text-gray-500 mt-2">
-                      Use the toolbar to format your description with headings, bold, italic, lists, and more.
+                      Use the toolbar to format your description with headings,
+                      bold, italic, lists, and more.
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Upload Photos</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Upload Photos
+                    </label>
                     <input
                       type="file"
                       accept="image/*"
@@ -772,7 +896,9 @@ export default function FacilitiesFullComponent() {
                               onClick={() =>
                                 setFormData((prev) => ({
                                   ...prev,
-                                  photos: prev.photos.filter((_, i) => i !== idx),
+                                  photos: prev.photos.filter(
+                                    (_, i) => i !== idx
+                                  ),
                                 }))
                               }
                               className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
@@ -791,10 +917,18 @@ export default function FacilitiesFullComponent() {
                       id="isactive"
                       name="isactive"
                       checked={formData.isactive}
-                      onChange={(e) => setFormData(prev => ({ ...prev, isactive: e.target.checked }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          isactive: e.target.checked,
+                        }))
+                      }
                       className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     />
-                    <label htmlFor="isactive" className="ml-2 block text-sm font-medium text-gray-700">
+                    <label
+                      htmlFor="isactive"
+                      className="ml-2 block text-sm font-medium text-gray-700"
+                    >
                       Active Facility
                     </label>
                   </div>
@@ -815,9 +949,24 @@ export default function FacilitiesFullComponent() {
                   >
                     {formLoading ? (
                       <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         Saving...
                       </span>

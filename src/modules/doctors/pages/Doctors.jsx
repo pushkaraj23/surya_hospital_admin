@@ -377,7 +377,7 @@ const DoctorsComponent = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-2">
+    <div className="min-h-screen">
       <div >
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 p-3 rounded-xl shadow-sm mb-6 border border-gray-200">

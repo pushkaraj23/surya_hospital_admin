@@ -441,7 +441,7 @@ const AboutUsMV = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">About Us Sections</h1>
+          <h1 className="text-2xl font-bold text-gray-800">About Us Section</h1>
           <p className="text-gray-600 mt-1">Manage your organization's about us content</p>
         </div>
         <button
@@ -1045,7 +1045,7 @@ const AboutUsMV = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen">
       {renderContent()}
     </div>
   );
