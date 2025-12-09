@@ -20,6 +20,7 @@ import {
 } from "@mui/icons-material";
 
 // Lucide Icon
+import React from "react";
 import { Newspaper } from "lucide-react";
 
 const Sidebar = () => {
@@ -34,14 +35,13 @@ const Sidebar = () => {
     { path: "/department", label: "Department", icon: Business },
     { path: "/blog", label: "Blog", icon: Article },
     { path: "/gallery", label: "Gallery", icon: PhotoLibrary },
-    { path: "/news", label: "News", icon: Newspaper },
+    // { path: "/news", label: "News", icon: Newspaper },
     { path: "/appointment", label: "Appointments", icon: EventAvailable },
     { path: "/feedback", label: "Feedbacks", icon: RateReview },
     { path: "/contact", label: "Contact", icon: ContactMail },
     { path: "/facilities", label: "Facilities", icon: LocalHospital },
-    { path: "/users", label: "Users", icon: Group },
-
-    // ⭐ NEW POLICIES TAB
+    // { path: "/users", label: "Users", icon: Group },
+    { path: "/newsletter", label: "Newsletter", icon: Newspaper },
     { path: "/policies", label: "Policies", icon: Gavel },
   ];
 

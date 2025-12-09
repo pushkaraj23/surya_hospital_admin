@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Search,
   Download,
@@ -421,36 +421,64 @@ const BlogAdmin = () => {
       )}
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 p-4 rounded-xl shadow-sm mb-6 border border-gray-200 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-7">
+        <div
+          className="rounded-3xl py-6 px-8 shadow-xl relative overflow-hidden 
+                  bg-gradient-to-br from-primary/10 to-white border border-gray-200"
+        >
+          {/* Decorative Background Blobs */}
+          <div className="absolute -top-10 -right-10 w-36 h-36 bg-secondary/20 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-44 h-44 bg-primary/10 rounded-full blur-2xl"></div>
 
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <Edit className="text-blue-600" />
-            Blog & Article Management
-          </h1>
-          <p className="text-gray-500 mt-1">Create, edit and manage blog posts</p>
+          <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+            {/* LEFT — Title & Description */}
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <div className="h-5 w-1 rounded-full bg-secondary"></div>
+                <span className="uppercase tracking-wider text-xs font-semibold text-primary/70">
+                  Content Management
+                </span>
+              </div>
+
+              <h1 className="text-3xl font-extrabold text-primary flex items-center gap-2">
+                Blog & Article Management
+              </h1>
+
+              <p className="text-primary/60 mt-1 text-sm max-w-xl leading-relaxed">
+                Create, edit, publish and manage all blogs and articles across
+                the website.
+              </p>
+            </div>
+
+            {/* RIGHT — Buttons */}
+            <div className="flex flex-wrap gap-4">
+              {/* New Blog Button */}
+              <button
+                onClick={() => {
+                  setEditingBlog(null);
+                  setShowBlogModal(true);
+                }}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-semibold 
+                     bg-gradient-to-br from-accent to-secondary shadow-md 
+                     hover:shadow-lg active:scale-95 transition-all"
+              >
+                <Add fontSize="small" />
+                New
+              </button>
+
+              {/* Export Button */}
+              <button
+                onClick={exportToCSV}
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-semibold 
+                     bg-gradient-to-br from-primary to-primary/40 shadow-md
+                     hover:shadow-lg active:scale-95 transition-all"
+              >
+                <Download fontSize="small" />
+                Export CSV
+              </button>
+            </div>
+          </div>
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => {
-              setEditingBlog(null);
-              setShowBlogModal(true);
-            }}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-          >
-            <Add fontSize="small" /> New Blog Post
-          </button>
-
-          <button
-            onClick={exportToCSV}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-          >
-            <Download fontSize="small" /> Export CSV
-          </button>
-        </div>
-
       </div>
 
       {/* Filters */}
@@ -616,10 +644,11 @@ const BlogCard = ({ blog, onEdit, onDelete, onToggleStatus }) => {
         {/* Status Badge */}
         <div className="absolute top-3 right-3">
           <span
-            className={`px-3 py-1 rounded-full text-xs font-semibold ${blog.isactive
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${
+              blog.isactive
                 ? "bg-green-100 text-green-700"
                 : "bg-gray-100 text-gray-600"
-              }`}
+            }`}
           >
             {blog.isactive ? "Active" : "Inactive"}
           </span>
@@ -676,10 +705,11 @@ const BlogCard = ({ blog, onEdit, onDelete, onToggleStatus }) => {
         <div className="flex gap-2 pt-3 border-t border-gray-100">
           <button
             onClick={onToggleStatus}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium flex items-center justify-center gap-1 transition-colors ${blog.isactive
+            className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium flex items-center justify-center gap-1 transition-colors ${
+              blog.isactive
                 ? "bg-orange-50 text-orange-600 hover:bg-orange-100"
                 : "bg-green-50 text-green-600 hover:bg-green-100"
-              }`}
+            }`}
           >
             {blog.isactive ? "Deactivate" : "Activate"}
           </button>

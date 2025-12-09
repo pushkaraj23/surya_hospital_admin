@@ -1,5 +1,5 @@
 import { Add, PhotoLibrary } from "@mui/icons-material";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   getGallery,
   addGalleryItem,
@@ -321,21 +321,45 @@ const GalleryManagement = () => {
         )}
 
         {/* Header */}
-        <div className="bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] shadow-md rounded-xl p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <PhotoLibrary /> Gallery Management
-            </h1>
-            <p className="text-gray-600 mt-2">
-              Organize your photos and videos into albums
-            </p>
+        <div
+          className="relative rounded-3xl py-6 px-8 shadow-xl overflow-hidden 
+             bg-gradient-to-br from-primary/10 to-white border border-gray-200 mb-7"
+        >
+          {/* Decorative Background Blobs */}
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-secondary/20 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-2xl"></div>
+
+          <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+            {/* LEFT — Title Section */}
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <div className="h-5 w-1 rounded-full bg-secondary"></div>
+                <span className="uppercase tracking-wider text-xs font-semibold text-primary/70">
+                  Media Library
+                </span>
+              </div>
+
+              <h1 className="text-3xl font-extrabold text-primary flex items-center gap-2">
+                Gallery Management
+              </h1>
+
+              <p className="text-primary/60 mt-1 text-sm leading-relaxed">
+                Organize photos, videos, and albums across your hospital
+                website.
+              </p>
+            </div>
+
+            {/* RIGHT — Action Button */}
+            <button
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-semibold 
+                 bg-gradient-to-br from-accent to-secondary shadow-md 
+                 hover:shadow-lg active:scale-95 transition-all"
+              onClick={() => setShowCreateAlbum(true)}
+            >
+              <Add fontSize="small" />
+              Create Album
+            </button>
           </div>
-          <button
-            className="mt-4 sm:mt-0 bg-blue-600 hover:bg-blue-700 text-white px-3 py-3 rounded-lg  transition-colors duration-200"
-            onClick={() => setShowCreateAlbum(true)}
-          >
-             <Add fontSize="small" /> Create New Album
-          </button>
         </div>
 
         {/* Create Album Modal */}

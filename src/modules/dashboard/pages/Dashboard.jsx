@@ -1,8 +1,9 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import {
   getMonthlyAppointments,
   getMonthlyInquiries,
-  getDashboardCounts
+  getDashboardCounts,
 } from "../../../api/userApi";
 import {
   TrendingUp,
@@ -16,7 +17,7 @@ import {
   ChevronUp,
   ChevronDown,
   RefreshCw,
-  CalendarDays
+  CalendarDays,
 } from "lucide-react";
 import {
   Chart as ChartJS,
@@ -29,9 +30,9 @@ import {
   Tooltip,
   Legend,
   Filler,
-  ArcElement
-} from 'chart.js';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
+  ArcElement,
+} from "chart.js";
+import { Line, Bar, Doughnut } from "react-chartjs-2";
 
 // Register ChartJS components
 ChartJS.register(
@@ -72,14 +73,18 @@ const Dashboard = () => {
       const [appointments, inquiries, counts] = await Promise.all([
         getMonthlyAppointments(selectedYear),
         getMonthlyInquiries(selectedYear),
-        getDashboardCounts(selectedYear)
+        getDashboardCounts(selectedYear),
       ]);
 
       setAppointmentsData(appointments);
       setInquiriesData(inquiries);
       setCountsData(counts);
 
-      console.log("Dashboard Data Loaded:", { appointments, inquiries, counts });
+      console.log("Dashboard Data Loaded:", {
+        appointments,
+        inquiries,
+        counts,
+      });
     } catch (err) {
       console.error("Dashboard Error:", err);
       setError(err.message || "Failed to load dashboard data");
@@ -104,24 +109,36 @@ const Dashboard = () => {
   const calculateStats = () => {
     if (!appointmentsData || !inquiriesData) return {};
 
-    const totalAppointments = appointmentsData.totals.reduce((a, b) => a + b, 0);
+    const totalAppointments = appointmentsData.totals.reduce(
+      (a, b) => a + b,
+      0
+    );
     const totalInquiries = inquiriesData.totals.reduce((a, b) => a + b, 0);
-    
+
     // Get current month index (0-11)
     const currentMonthIndex = new Date().getMonth();
-    const currentMonthAppointments = appointmentsData.totals[currentMonthIndex] || 0;
-    const lastMonthAppointments = appointmentsData.totals[currentMonthIndex - 1] || 0;
-    
-    const appointmentGrowth = lastMonthAppointments > 0 
-      ? ((currentMonthAppointments - lastMonthAppointments) / lastMonthAppointments * 100).toFixed(1)
-      : currentMonthAppointments > 0 ? 100 : 0;
+    const currentMonthAppointments =
+      appointmentsData.totals[currentMonthIndex] || 0;
+    const lastMonthAppointments =
+      appointmentsData.totals[currentMonthIndex - 1] || 0;
+
+    const appointmentGrowth =
+      lastMonthAppointments > 0
+        ? (
+            ((currentMonthAppointments - lastMonthAppointments) /
+              lastMonthAppointments) *
+            100
+          ).toFixed(1)
+        : currentMonthAppointments > 0
+        ? 100
+        : 0;
 
     return {
       totalAppointments,
       totalInquiries,
       appointmentGrowth,
       averageAppointments: (totalAppointments / 12).toFixed(1),
-      averageInquiries: (totalInquiries / 12).toFixed(1)
+      averageInquiries: (totalInquiries / 12).toFixed(1),
     };
   };
 
@@ -132,71 +149,71 @@ const Dashboard = () => {
     labels: appointmentsData?.months || [],
     datasets: [
       {
-        label: 'Appointments',
+        label: "Appointments",
         data: appointmentsData?.totals || [],
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderColor: "rgb(59, 130, 246)",
+        backgroundColor: "rgba(59, 130, 246, 0.1)",
         tension: 0.4,
         fill: true,
-      }
-    ]
+      },
+    ],
   };
 
   const inquiriesChartData = {
     labels: inquiriesData?.months || [],
     datasets: [
       {
-        label: 'Inquiries',
+        label: "Inquiries",
         data: inquiriesData?.totals || [],
-        backgroundColor: 'rgba(16, 185, 129, 0.6)',
-        borderColor: 'rgb(16, 185, 129)',
+        backgroundColor: "rgba(16, 185, 129, 0.6)",
+        borderColor: "rgb(16, 185, 129)",
         borderWidth: 2,
-      }
-    ]
+      },
+    ],
   };
 
   const combinedChartData = {
     labels: appointmentsData?.months || [],
     datasets: [
       {
-        label: 'Appointments',
+        label: "Appointments",
         data: appointmentsData?.totals || [],
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.5)',
-        yAxisID: 'y',
+        borderColor: "rgb(59, 130, 246)",
+        backgroundColor: "rgba(59, 130, 246, 0.5)",
+        yAxisID: "y",
       },
       {
-        label: 'Inquiries',
+        label: "Inquiries",
         data: inquiriesData?.totals || [],
-        borderColor: 'rgb(16, 185, 129)',
-        backgroundColor: 'rgba(16, 185, 129, 0.5)',
-        yAxisID: 'y1',
-      }
-    ]
+        borderColor: "rgb(16, 185, 129)",
+        backgroundColor: "rgba(16, 185, 129, 0.5)",
+        yAxisID: "y1",
+      },
+    ],
   };
 
   const donutChartData = {
-    labels: ['Doctors', 'Departments', 'News & Events'],
+    labels: ["Doctors", "Departments", "News & Events"],
     datasets: [
       {
         data: [
           parseInt(countsData?.totaldoctors || 0),
           parseInt(countsData?.totaldepartments || 0),
-          parseInt(countsData?.totalnewsevents || 0)
+          parseInt(countsData?.totalnewsevents || 0),
         ],
         backgroundColor: [
-          'rgba(59, 130, 246, 0.8)',
-          'rgba(168, 85, 247, 0.8)',
-          'rgba(251, 146, 60, 0.8)'
+          "rgba(59, 130, 246, 0.8)",
+          "rgba(168, 85, 247, 0.8)",
+          "rgba(251, 146, 60, 0.8)",
         ],
         borderColor: [
-          'rgb(59, 130, 246)',
-          'rgb(168, 85, 247)',
-          'rgb(251, 146, 60)'
+          "rgb(59, 130, 246)",
+          "rgb(168, 85, 247)",
+          "rgb(251, 146, 60)",
         ],
         borderWidth: 2,
-      }
-    ]
+      },
+    ],
   };
 
   const chartOptions = {
@@ -204,41 +221,41 @@ const Dashboard = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top',
+        position: "top",
       },
       title: {
         display: false,
-      }
+      },
     },
     scales: {
       y: {
-        beginAtZero: true
-      }
-    }
+        beginAtZero: true,
+      },
+    },
   };
 
   const multiAxisOptions = {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
-      mode: 'index',
+      mode: "index",
       intersect: false,
     },
     plugins: {
       legend: {
-        position: 'top',
-      }
+        position: "top",
+      },
     },
     scales: {
       y: {
-        type: 'linear',
+        type: "linear",
         display: true,
-        position: 'left',
+        position: "left",
       },
       y1: {
-        type: 'linear',
+        type: "linear",
         display: true,
-        position: 'right',
+        position: "right",
         grid: {
           drawOnChartArea: false,
         },
@@ -264,11 +281,23 @@ const Dashboard = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center bg-white p-8 rounded-lg shadow-md max-w-md">
           <div className="text-red-500 mb-4">
-            <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-16 h-16 mx-auto"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Dashboard</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Error Loading Dashboard
+          </h3>
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={() => fetchDashboardData(year)}
@@ -285,33 +314,66 @@ const Dashboard = () => {
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
-              <p className="text-gray-600 mt-1">Hospital performance metrics and insights</p>
-            </div>
-            <div className="flex items-center gap-3">
-              {/* Year Selector */}
-              <select
-                value={year}
-                onChange={(e) => setYear(parseInt(e.target.value))}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {availableYears.map(y => (
-                  <option key={y} value={y}>{y}</option>
-                ))}
-              </select>
-              
-              {/* Refresh Button */}
-              <button
-                onClick={handleRefresh}
-                disabled={refreshing}
-                className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
-              >
-                <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-                Refresh
-              </button>
+        <div className="mb-7">
+          {/* Header Wrapper */}
+          <div className="rounded-3xl py-5 px-8 shadow-xl relative overflow-hidden bg-gradient-to-br from-primary/10 to-white border border-gray-200">
+            {/* Decorative Background Elements */}
+            <div className="absolute -top-6 -right-6 w-32 h-32 bg-secondary/20 rounded-full blur-xl"></div>
+            <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-2xl"></div>
+
+            <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+              {/* LEFT — Title Section */}
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="h-5 w-1 rounded-full bg-secondary"></div>
+                  <span className="uppercase tracking-wider text-xs font-semibold text-primary/70">
+                    Dashboard Overview
+                  </span>
+                </div>
+
+                <h1 className="text-3xl font-extrabold text-primary mt-1 leading-tight">
+                  Analytics Dashboard
+                </h1>
+
+                <p className="text-primary/60 mt-1 text-sm">
+                  Real-time metrics, performance insights, and activity trends
+                </p>
+              </div>
+
+              {/* RIGHT — Actions */}
+              <div className="flex items-center gap-4">
+                {/* YEAR DROPDOWN */}
+                <div className="relative group">
+                  <select
+                    value={year}
+                    onChange={(e) => setYear(parseInt(e.target.value))}
+                    className="px-5 py-2.5 bg-white/70 backdrop-blur-md border border-gray-300 rounded-xl text-primary font-semibold shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-secondary transition-all pr-10"
+                  >
+                    {availableYears.map((y) => (
+                      <option key={y} value={y}>
+                        {y}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Dropdown Arrow */}
+                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-primary/60 group-hover:text-secondary transition">
+                    ▼
+                  </span>
+                </div>
+
+                {/* REFRESH BUTTON */}
+                <button
+                  onClick={handleRefresh}
+                  disabled={refreshing}
+                  className="px-6 py-2.5 rounded-xl font-semibold text-white flex items-center gap-2 shadow-lg bg-gradient-to-br from-accent to-secondary active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  <RefreshCw
+                    className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
+                  />
+                  Refresh
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -322,11 +384,15 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Doctors</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Doctors
+                </p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   {countsData?.totaldoctors || 0}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">Active medical staff</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Active medical staff
+                </p>
               </div>
               <div className="bg-blue-100 p-3 rounded-lg">
                 <Users className="w-6 h-6 text-blue-600" />
@@ -338,7 +404,9 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Appointments</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Appointments
+                </p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   {stats.totalAppointments || 0}
                 </p>
@@ -346,12 +414,16 @@ const Dashboard = () => {
                   {stats.appointmentGrowth > 0 ? (
                     <>
                       <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
-                      <span className="text-xs text-green-600">+{stats.appointmentGrowth}%</span>
+                      <span className="text-xs text-green-600">
+                        +{stats.appointmentGrowth}%
+                      </span>
                     </>
                   ) : stats.appointmentGrowth < 0 ? (
                     <>
                       <TrendingDown className="w-4 h-4 text-red-500 mr-1" />
-                      <span className="text-xs text-red-600">{stats.appointmentGrowth}%</span>
+                      <span className="text-xs text-red-600">
+                        {stats.appointmentGrowth}%
+                      </span>
                     </>
                   ) : (
                     <span className="text-xs text-gray-500">No change</span>
@@ -368,11 +440,15 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Departments</p>
+                <p className="text-sm font-medium text-gray-600">
+                  Total Departments
+                </p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   {countsData?.totaldepartments || 0}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">Medical departments</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Medical departments
+                </p>
               </div>
               <div className="bg-purple-100 p-3 rounded-lg">
                 <Building2 className="w-6 h-6 text-purple-600" />
@@ -384,7 +460,9 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">News & Events</p>
+                <p className="text-sm font-medium text-gray-600">
+                  News & Events
+                </p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   {countsData?.totalnewsevents || 0}
                 </p>
@@ -402,7 +480,9 @@ const Dashboard = () => {
           {/* Appointments Chart */}
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">Monthly Appointments</h3>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Monthly Appointments
+              </h3>
               <div className="flex items-center gap-2">
                 <Activity className="w-5 h-5 text-blue-500" />
                 <span className="text-sm text-gray-600">
@@ -418,7 +498,9 @@ const Dashboard = () => {
           {/* Inquiries Chart */}
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">Monthly Inquiries</h3>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Monthly Inquiries
+              </h3>
               <div className="flex items-center gap-2">
                 <Phone className="w-5 h-5 text-green-500" />
                 <span className="text-sm text-gray-600">
@@ -437,8 +519,12 @@ const Dashboard = () => {
           {/* Combined Trends */}
           <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">Combined Trends</h3>
-              <p className="text-sm text-gray-600">Appointments vs Inquiries comparison</p>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Combined Trends
+              </h3>
+              <p className="text-sm text-gray-600">
+                Appointments vs Inquiries comparison
+              </p>
             </div>
             <div className="h-80">
               <Line data={combinedChartData} options={multiAxisOptions} />
@@ -448,8 +534,12 @@ const Dashboard = () => {
           {/* Resource Distribution */}
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">Resource Distribution</h3>
-              <p className="text-sm text-gray-600">Hospital resources overview</p>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Resource Distribution
+              </h3>
+              <p className="text-sm text-gray-600">
+                Hospital resources overview
+              </p>
             </div>
             <div className="h-80 flex items-center justify-center">
               <div className="w-full">
@@ -462,7 +552,9 @@ const Dashboard = () => {
         {/* Monthly Summary Table */}
         <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100">
           <div className="p-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-800">Monthly Summary - {year}</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              Monthly Summary - {year}
+            </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -490,10 +582,15 @@ const Dashboard = () => {
                   const appointments = appointmentsData.totals[index];
                   const inquiries = inquiriesData.totals[index];
                   const total = appointments + inquiries;
-                  const isCurrentMonth = index === new Date().getMonth() && year === new Date().getFullYear();
-                  
+                  const isCurrentMonth =
+                    index === new Date().getMonth() &&
+                    year === new Date().getFullYear();
+
                   return (
-                    <tr key={month} className={isCurrentMonth ? 'bg-blue-50' : ''}>
+                    <tr
+                      key={month}
+                      className={isCurrentMonth ? "bg-blue-50" : ""}
+                    >
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {month}
                         {isCurrentMonth && (

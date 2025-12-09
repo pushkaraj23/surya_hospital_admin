@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   getFacilities,
   getFacilityById,
@@ -476,34 +476,57 @@ export default function FacilitiesFullComponent() {
     <div className="min-h-screen">
       <div className="">
         {/* Header */}
-        <div className="mb-6 bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] shadow-md rounded-xl p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              🏥 Facilities Management
-            </h2>
-            <p className="text-gray-600">
-              Manage all hospital facilities and departments
-            </p>
-          </div>
-          <button
-            onClick={() => openModal()}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+        <div
+          className="mb-7 rounded-3xl py-6 px-8 shadow-xl relative overflow-hidden 
+             bg-gradient-to-br from-primary/10 to-white border border-gray-200"
+        >
+          {/* Decorative Blobs */}
+          <div className="absolute -top-10 -right-10 w-36 h-36 bg-secondary/20 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-44 h-44 bg-primary/10 rounded-full blur-2xl"></div>
+
+          <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+            {/* LEFT — Title + Description */}
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <div className="h-5 w-1 rounded-full bg-secondary"></div>
+                <span className="uppercase tracking-wider text-xs font-semibold text-primary/70">
+                  Infrastructure & Operations
+                </span>
+              </div>
+
+              <h2 className="text-3xl font-extrabold text-primary flex items-center gap-2">
+                Facilities Management
+              </h2>
+
+              <p className="text-primary/60 mt-1 text-sm max-w-xl leading-relaxed">
+                Manage all hospital facilities, infrastructure sections, and
+                related onboarding details.
+              </p>
+            </div>
+
+            {/* RIGHT — Add Button */}
+            <button
+              onClick={() => openModal()}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-semibold 
+                 bg-gradient-to-br from-accent to-secondary shadow-md 
+                 hover:shadow-lg active:scale-95 transition-all"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            Add Facility
-          </button>
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Add Facility
+            </button>
+          </div>
         </div>
 
         {/* Department Filter */}

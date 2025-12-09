@@ -1,5 +1,4 @@
 // src/pages/departments/DepartmentTable.jsx
-
 import React, { useState } from "react";
 import { Edit2, Trash2, Eye, Power, X } from "lucide-react";
 

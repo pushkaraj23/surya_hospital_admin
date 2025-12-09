@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Search,
   Download,
@@ -241,8 +241,9 @@ const AppointmentsAdmin = () => {
       a.status,
     ]);
 
-    const csv =
-      [headers, ...rows].map((r) => r.map((f) => `"${f}"`).join(",")).join("\n");
+    const csv = [headers, ...rows]
+      .map((r) => r.map((f) => `"${f}"`).join(","))
+      .join("\n");
 
     const blob = new Blob([csv], { type: "text/csv" });
     const a = document.createElement("a");
@@ -267,14 +268,33 @@ const AppointmentsAdmin = () => {
   // -------------------------------------
   return (
     <div className="min-h-screen">
-      <div className=" bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops))] from-[#c8c9f8] via-[#ced5fb] to-[#e0e7ff] p-3 rounded-xl shadow border  mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <CalendarToday className="text-blue-600" />
-          Appointments Management
-        </h1>
-        <p className="text-gray-600 mt-2">
-          Manage and analyze Appoinment
-        </p>
+      <div
+        className="relative rounded-3xl py-6 px-8 shadow-xl overflow-hidden 
+             bg-gradient-to-br from-primary/10 to-white border border-gray-200 mb-6"
+      >
+        {/* Decorative Blobs */}
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-secondary/20 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-2xl"></div>
+
+        <div className="relative z-10 flex flex-col gap-2">
+          {/* Accent Label */}
+          <div className="flex items-center gap-2">
+            <div className="h-5 w-1 rounded-full bg-secondary"></div>
+            <span className="uppercase tracking-wider text-xs font-semibold text-primary/70">
+              Appointment Center
+            </span>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-3xl font-extrabold text-primary flex items-center gap-2">
+            Appointments Management
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-primary/60 text-sm max-w-xl leading-relaxed">
+            Manage, monitor, and analyze appointments and scheduling activity.
+          </p>
+        </div>
       </div>
 
       {/* Filters */}
@@ -361,9 +381,7 @@ const AppointmentsAdmin = () => {
                     {getDepartmentName(a.department)}
                   </td>
 
-                  <td className="py-3 px-5">
-                    {getDoctorName(a.doctor)}
-                  </td>
+                  <td className="py-3 px-5">{getDoctorName(a.doctor)}</td>
 
                   <td className="py-3 px-5">
                     {a.preferredDate} <br />
@@ -373,9 +391,7 @@ const AppointmentsAdmin = () => {
                   <td className="py-3 px-5">
                     <select
                       value={a.status}
-                      onChange={(e) =>
-                        handleStatusUpdate(a.id, e.target.value)
-                      }
+                      onChange={(e) => handleStatusUpdate(a.id, e.target.value)}
                       className={`px-3 py-1 rounded-full text-sm ${getStatusColor(
                         a.status
                       )}`}

@@ -1,4 +1,5 @@
 // src/pages/departments/DepartmentForm.jsx
+import React from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { Save, X } from "lucide-react";

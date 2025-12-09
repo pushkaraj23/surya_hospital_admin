@@ -1,5 +1,4 @@
-// src/pages/departments/DepartmentManagement.jsx
-
+import React from "react";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "../../../api/apiConfig";
@@ -190,39 +189,63 @@ export default function DepartmentManagement() {
     <div className="min-h-screen">
       <div className=" ">
         {/* Top Header / Hero */}
-        <div className="flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100  p-3 rounded-xl shadow-sm mb-6 border border-gray-200">
-          {/* LEFT SIDE: Title + Description */}
-          <div className="flex flex-col">
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <span className="text-indigo-500 text-lg font-semibold">👥</span>
-              Department Management
-            </h1>
+        <div className="mb-7">
+          <div
+            className="rounded-3xl py-6 px-8 shadow-xl relative overflow-hidden 
+                  bg-gradient-to-br from-primary/10 to-white border border-gray-200"
+          >
+            {/* Decorative Blurred Background Elements */}
+            <div className="absolute -top-8 -right-8 w-32 h-32 bg-secondary/20 rounded-full blur-2xl"></div>
+            <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-2xl"></div>
 
-            <p className="text-sm sm:text-base text-slate-600 max-w-xl">
-              Create, update, and manage all hospital departments.
-            </p>
-          </div>
+            <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+              {/* LEFT — Title & Description */}
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="h-5 w-1 rounded-full bg-secondary"></div>
+                  <span className="uppercase tracking-wider text-xs font-semibold text-primary/70">
+                    Department Overview
+                  </span>
+                </div>
 
-          {/* RIGHT SIDE: Buttons */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => {
-                resetForm();
-                setShowFormModal(true);
-              }}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-md  text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              <Plus size={16} />
-              <span>Add Department</span>
-            </button>
+                <h1 className="text-3xl font-extrabold text-primary flex items-center gap-2">
+                  Department Management
+                </h1>
 
-            <button
-              onClick={() => refetch()}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-md font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              <RefreshCw size={16} className="text-slate-500" />
-              <span>Refresh</span>
-            </button>
+                <p className="text-primary/60 mt-1 text-sm max-w-xl leading-relaxed">
+                  Create, update, and manage all hospital departments
+                  efficiently.
+                </p>
+              </div>
+
+              {/* RIGHT — Action Buttons */}
+              <div className="flex items-center gap-4">
+                {/* Add Department Button */}
+                <button
+                  onClick={() => {
+                    resetForm();
+                    setShowFormModal(true);
+                  }}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-semibold 
+                     bg-gradient-to-br from-accent to-secondary shadow-md 
+                     hover:shadow-lg active:scale-95 transition-all"
+                >
+                  <Plus size={18} />
+                  Add Department
+                </button>
+
+                {/* Refresh Button */}
+                <button
+                  onClick={() => refetch()}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-primary 
+                     bg-white/70 backdrop-blur-md border border-gray-300 shadow-sm 
+                     hover:bg-gray-100 active:scale-95 transition-all"
+                >
+                  <RefreshCw size={18} className="text-primary/70" />
+                  Refresh
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import AboutUsMV from "./AboutUsMV";
 import CoreValuesManager from "./CoreValuesManager";
@@ -42,7 +43,7 @@ const AboutUs = () => {
       icon: <Home className="w-5 h-5" />,
       component: <JourneyManager />,
     },
-     {
+    {
       id: "HomeAbout",
       label: "homeAbout",
       icon: <Home className="w-5 h-5" />,
@@ -55,15 +56,35 @@ const AboutUs = () => {
   return (
     <div className="min-h-screen">
       {/* Page Header */}
-      <div className="flex items-center justify-between gap-4 mt-2 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 p-4 rounded-xl shadow-sm border border-gray-200">
-        <div className="px-2">
-          <h1 className="text-2xl font-bold text-gray-900">
-            About Us Management
-          </h1>
-          <p className="text-gray-700">
-            Manage all About Us sections including core values, contact details,
-            and infrastructure.
-          </p>
+      <div className="mb-7">
+        <div
+          className="rounded-3xl py-6 px-8 shadow-xl relative overflow-hidden 
+                  bg-gradient-to-br from-primary/10 to-white border border-gray-200"
+        >
+          {/* Decorative Background Blobs */}
+          <div className="absolute -top-8 -right-8 w-32 h-32 bg-secondary/25 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-2xl"></div>
+
+          <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+            {/* LEFT — Header Text */}
+            <div>
+              <div className="flex items-center gap-2">
+                <div className="h-5 w-1 rounded-full bg-secondary"></div>
+                <span className="uppercase tracking-wider text-xs font-semibold text-primary/70">
+                  About Section Overview
+                </span>
+              </div>
+
+              <h1 className="text-3xl font-extrabold text-primary mt-1 leading-tight">
+                About Us Management
+              </h1>
+
+              <p className="text-primary/60 mt-1 text-sm">
+                Manage all About Us content including mission, vision, director
+                section, infrastructure, home-about and core values.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 

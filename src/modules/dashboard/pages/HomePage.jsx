@@ -316,31 +316,50 @@ const HeroSectionManager = () => {
   const renderList = () => (
     <div className="space-y-6">
       {/* Top Header / Hero */}
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100  p-3 rounded-xl shadow-sm mb-6 border border-gray-200">
-        {/* LEFT SIDE: Title + Description */}
-        <div className="flex flex-col">
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <span className="text-indigo-500 text-lg font-semibold">👥</span>
-            Hero Section
-          </h1>
+      <div className="mb-7">
+        <div
+          className="rounded-3xl py-6 px-8 shadow-xl relative overflow-hidden 
+                  bg-gradient-to-br from-primary/10 to-white border border-gray-200"
+        >
+          {/* Decorative floating blobs */}
+          <div className="absolute -top-8 -right-8 w-32 h-32 bg-secondary/25 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-2xl"></div>
 
-          <p className="text-sm sm:text-base text-slate-600 max-w-xl">
-            Manage your hero section banners
-          </p>
-        </div>
+          <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+            {/* LEFT — Title & Subtitle */}
+            <div>
+              <div className="flex items-center gap-2">
+                <div className="h-5 w-1 rounded-full bg-secondary"></div>
+                <span className="uppercase tracking-wider text-xs font-semibold text-primary/70">
+                  Manage Hero Content
+                </span>
+              </div>
 
-        {/* RIGHT SIDE: Buttons */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => {
-              resetForm();
-              setMode("create");
-            }}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-            Create New Hero
-          </button>
+              <h1 className="text-3xl font-extrabold text-primary mt-1 leading-tight flex items-center gap-2">
+                Hero Section
+              </h1>
+
+              <p className="text-primary/60 mt-1 text-sm">
+                Update banners, titles, images and call-to-action content
+              </p>
+            </div>
+
+            {/* RIGHT — CTA Button */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => {
+                  resetForm();
+                  setMode("create");
+                }}
+                className="px-6 py-2.5 rounded-xl font-semibold text-white flex items-center gap-2
+                     shadow-lg bg-gradient-to-br from-accent to-secondary
+                     hover:opacity-90 active:scale-95 transition-all"
+              >
+                <Plus className="w-5 h-5" />
+                Create New Hero
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -806,11 +825,7 @@ const HeroSectionManager = () => {
     </div>
   );
 
-  return (
-    <div className="min-h-screen">
-      {renderContent()}
-    </div>
-  );
+  return <div className="min-h-screen">{renderContent()}</div>;
 };
 
 export default HeroSectionManager;

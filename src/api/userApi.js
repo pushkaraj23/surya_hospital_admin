@@ -2348,9 +2348,6 @@ export const deletePolicy = async (id) => {
   }
 };
 
-
-
-
 export const getAllHomeAbout = async () => {
   try {
     const response = await axiosInstance.get('/homeabout');
@@ -2402,5 +2399,30 @@ export const deleteHomeAbout = async (id) => {
   } catch (error) {
     console.error(`Error deleting home about data with id ${id}:`, error);
     throw error;
+  }
+};
+
+export const fetchNewsletterList = async () => {
+  try {
+    const res = await axiosInstance.get("/newsletter");
+
+    if (Array.isArray(res.data)) {
+      return res.data;
+    }
+
+    return [];
+  } catch (err) {
+    console.error("Error fetching newsletter list:", err);
+    throw err;
+  }
+};
+
+export const deleteNewsletterById = async (id) => {
+  try {
+    const res = await axiosInstance.delete(`/newsletter/${id}`);
+    return res.data; // success message or deleted object
+  } catch (err) {
+    console.error(`Error deleting newsletter ID ${id}:`, err);
+    throw err;
   }
 };
