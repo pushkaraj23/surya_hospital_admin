@@ -2347,3 +2347,60 @@ export const deletePolicy = async (id) => {
     throw error;
   }
 };
+
+
+
+
+export const getAllHomeAbout = async () => {
+  try {
+    const response = await axiosInstance.get('/homeabout');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching home about data:', error);
+    throw error;
+  }
+};
+
+// GET BY ID: Fetch home about data by ID
+export const getHomeAboutById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/homeabout/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching home about data with id ${id}:`, error);
+    throw error;
+  }
+};
+
+// POST: Create new home about data
+export const createHomeAbout = async (homeAboutData) => {
+  try {
+    const response = await axiosInstance.post('/homeabout', homeAboutData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating home about data:', error);
+    throw error;
+  }
+};
+
+// PUT: Update home about data by ID
+export const updateHomeAbout = async (id, homeAboutData) => {
+  try {
+    const response = await axiosInstance.put(`/homeabout/update/${id}`, homeAboutData);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating home about data with id ${id}:`, error);
+    throw error;
+  }
+};
+
+// DELETE: Delete home about data by ID
+export const deleteHomeAbout = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/homeabout/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting home about data with id ${id}:`, error);
+    throw error;
+  }
+};

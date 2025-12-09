@@ -5,6 +5,8 @@ import ContactDetailsManager from "./ContactDetailsManager";
 import InfraManager from "./InfraManager";
 
 import { Building2, Target, Phone, Home, ChevronRight } from "lucide-react";
+import JourneyManager from "./JourneyManager";
+import HomeAbout from "./HomeAbout";
 
 const AboutUs = () => {
   const [activeTab, setActiveTab] = useState("about");
@@ -33,6 +35,18 @@ const AboutUs = () => {
       label: "Infrastructure",
       icon: <Home className="w-5 h-5" />,
       component: <InfraManager />,
+    },
+    {
+      id: "journey",
+      label: "journey",
+      icon: <Home className="w-5 h-5" />,
+      component: <JourneyManager />,
+    },
+     {
+      id: "HomeAbout",
+      label: "homeAbout",
+      icon: <Home className="w-5 h-5" />,
+      component: <HomeAbout />,
     },
   ];
 
