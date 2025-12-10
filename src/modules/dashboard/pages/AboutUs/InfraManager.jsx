@@ -103,7 +103,7 @@ const InfraManager = () => {
   };
 
   return (
-    <div>
+    <div className="p-5">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-[#263243]">

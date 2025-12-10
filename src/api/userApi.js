@@ -2426,3 +2426,71 @@ export const deleteNewsletterById = async (id) => {
     throw err;
   }
 };
+
+
+
+// GET all users
+export const getUsers = async () => {
+  try {
+    const response = await axiosInstance.get('/users');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error;
+  }
+};
+
+// GET user by ID
+export const getUserById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/users/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching user ${id}:`, error);
+    throw error;
+  }
+};
+
+// POST create new user
+export const createUser = async (userData) => {
+  try {
+    const response = await axiosInstance.post('/users', userData);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+};
+
+// PUT update user
+export const updateUser = async (id, userData) => {
+  try {
+    const response = await axiosInstance.put(`/users/update/${id}`, userData);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating user ${id}:`, error);
+    throw error;
+  }
+};
+
+// DELETE user
+export const deleteUser = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/users/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting user ${id}:`, error);
+    throw error;
+  }
+};
+
+// Optional: User data validation/transformation
+export const formatUserData = (userData) => {
+  return {
+    fullname: userData.fullname || '',
+    email: userData.email || '',
+    passwordhash: userData.passwordhash || '',
+    role: userData.role || 'User',
+    isactive: userData.isactive !== undefined ? userData.isactive : true
+  };
+};

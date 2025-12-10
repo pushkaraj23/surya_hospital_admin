@@ -40,7 +40,7 @@ const Sidebar = () => {
     { path: "/feedback", label: "Feedbacks", icon: RateReview },
     { path: "/contact", label: "Contact", icon: ContactMail },
     { path: "/facilities", label: "Facilities", icon: LocalHospital },
-    // { path: "/users", label: "Users", icon: Group },
+    { path: "/users", label: "Users", icon: Group },
     { path: "/newsletter", label: "Newsletter", icon: Newspaper },
     { path: "/policies", label: "Policies", icon: Gavel },
   ];

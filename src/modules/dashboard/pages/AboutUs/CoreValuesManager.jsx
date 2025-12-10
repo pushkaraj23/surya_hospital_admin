@@ -358,7 +358,7 @@ const CoreValuesManager = () => {
 
   // Render Core Values List
   const renderList = () => (
-    <div className="space-y-6">
+    <div className="space-y-6 p-5">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Core Values</h1>

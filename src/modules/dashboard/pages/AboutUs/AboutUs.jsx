@@ -162,7 +162,7 @@ const AboutUs = () => {
         </div>
 
         {/* Active Component */}
-        <div className="bg-white rounded-xl border shadow-sm p-6 min-h-[400px]">
+        <div className="bg-white rounded-xl  shadow-sm  min-h-[400px]">
           {activeComponent}
         </div>
       </div>
