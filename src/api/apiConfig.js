@@ -1,2 +1,2 @@
-export const BASE_URL = "http://147.93.96.98:8654";
+export const BASE_URL = "https://api.suryahospitalpune.com/";
 
