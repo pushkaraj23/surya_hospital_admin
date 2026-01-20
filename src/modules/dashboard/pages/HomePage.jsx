@@ -1326,7 +1326,6 @@ import {
   uploadMultipleFiles,
   getFullImageUrl // ✅ Import this
 } from "../../../api/userApi";
-import { BASE_URL } from "../../../api/apiConfig";
 import { FiTrash2 } from "react-icons/fi";
 
 import {
