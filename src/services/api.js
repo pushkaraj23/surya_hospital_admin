@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://your-api-url.com/api';
+const API_BASE_URL = 'https://api.suryahospitalpune.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

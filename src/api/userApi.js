@@ -2427,7 +2427,36 @@ export const deleteNewsletterById = async (id) => {
   }
 };
 
+// ========== Tourism Enquiry (Medical Tourism) ==========
+export const getTourismEnquiries = async () => {
+  try {
+    const res = await axiosInstance.get("/tourismenquiry");
+    return Array.isArray(res.data) ? res.data : res.data?.data ?? [];
+  } catch (err) {
+    console.error("Error fetching tourism enquiries:", err);
+    throw err;
+  }
+};
 
+export const updateTourismEnquiry = async (id, payload) => {
+  try {
+    const res = await axiosInstance.put(`/tourismenquiry/update/${id}`, payload);
+    return res.data;
+  } catch (err) {
+    console.error(`Error updating tourism enquiry ${id}:`, err);
+    throw err;
+  }
+};
+
+export const deleteTourismEnquiry = async (id) => {
+  try {
+    const res = await axiosInstance.delete(`/tourismenquiry/${id}`);
+    return res.data;
+  } catch (err) {
+    console.error(`Error deleting tourism enquiry ${id}:`, err);
+    throw err;
+  }
+};
 
 // GET all users
 export const getUsers = async () => {

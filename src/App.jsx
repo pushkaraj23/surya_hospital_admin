@@ -19,6 +19,7 @@ import AboutUs from "./modules/dashboard/pages/AboutUs/AboutUs";
 import PolicyPage from "./modules/dashboard/pages/PolicyPage";
 import Newsletter from "./modules/dashboard/pages/Newsletter";
 import UsersManagement from "./modules/dashboard/pages/UsersManagement";
+import TourismEnquiry from "./modules/dashboard/pages/TourismEnquiry";
 
 // function PrivateRoute({ children }) {
 //   const isLoggedIn = localStorage.getItem("adminToken");
@@ -53,6 +54,7 @@ export default function App() {
         <Route path="facilities" element={<FacilitiesComponent />} />
         <Route path="/policies" element={<PolicyPage />} />
         <Route path="/newsletter" element={<Newsletter />} />
+        <Route path="/tourism-enquiry" element={<TourismEnquiry />} />
         <Route path="/users" element={<UsersManagement />} />
       </Route>
     </Routes>

@@ -16,7 +16,8 @@ import {
   LocalHospital,
   Group,
   Menu as MenuIcon,
-  Gavel, // <-- Added for Policies
+  Gavel,
+  FlightTakeoff,
 } from "@mui/icons-material";
 
 // Lucide Icon
@@ -42,6 +43,7 @@ const Sidebar = () => {
     { path: "/facilities", label: "Facilities", icon: LocalHospital },
     { path: "/users", label: "Users", icon: Group },
     { path: "/newsletter", label: "Newsletter", icon: Newspaper },
+    { path: "/tourism-enquiry", label: "Tourism Enquiry", icon: FlightTakeoff },
     { path: "/policies", label: "Policies", icon: Gavel },
   ];
 
