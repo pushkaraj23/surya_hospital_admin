@@ -7,9 +7,13 @@ const axiosInstance = axios.create({
   },
 });
 
-// Request interceptor
+// Request interceptor: attach auth token when present
 axiosInstance.interceptors.request.use(
   (config) => {
+    const token = localStorage.getItem("adminToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     console.log(
       `🚀 Making ${config.method?.toUpperCase()} request to: ${config.url}`
     );
@@ -28,20 +32,26 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Handle different error types
+    // Handle 401: clear token and redirect to login
+    if (error.response?.status === 401) {
+      localStorage.removeItem("adminToken");
+      localStorage.removeItem("adminEmail");
+      if (!window.location.pathname.includes("/login")) {
+        window.location.href = "/login";
+      }
+      return Promise.reject(error);
+    }
+    // Handle other errors
     if (error.response) {
-      // Server responded with error status
       console.error("❌ API Error Response:", {
         status: error.response.status,
         data: error.response.data,
         url: error.config?.url,
       });
     } else if (error.request) {
-      // Request made but no response received
       console.error("❌ Network Error:", error.message);
       error.message = "Network error: Unable to connect to server";
     } else {
-      // Something else happened
       console.error("❌ Request Error:", error.message);
     }
 
