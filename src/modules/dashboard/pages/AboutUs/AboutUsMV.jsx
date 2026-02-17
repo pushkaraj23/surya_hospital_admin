@@ -1053,11 +1053,922 @@
 
 // export default AboutUsMV;
 
+
+
+// import React, { useState, useEffect } from "react";
+// import {
+//   fetchAboutUs,
+//   updateAboutUs,
+//   uploadAboutUsImage
+// } from "../../../../api/userApi";
+// import {
+//   Save,
+//   X,
+//   Upload,
+//   Building2,
+//   Target,
+//   Eye,
+//   Users,
+//   MessageSquare,
+//   Calendar,
+//   Loader2,
+//   AlertCircle
+// } from "lucide-react";
+
+// const AboutUsMV = () => {
+//   const [aboutUsList, setAboutUsList] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [activeAboutUsId, setActiveAboutUsId] = useState(null);
+//   const [formData, setFormData] = useState({
+//     introduction: "",
+//     history: "",
+//     image1: "",
+//     image2: "",
+//     mission: "",
+//     missionimage: "",
+//     vision: "",
+//     visionimage: "",
+//     directorname: "",
+//     directorimage: "",
+//     directormessage: ""
+//   });
+
+//   const [uploadingImage, setUploadingImage] = useState({
+//     image1: false,
+//     image2: false,
+//     missionimage: false,
+//     visionimage: false,
+//     directorimage: false
+//   });
+//   const [updateLoading, setUpdateLoading] = useState(false);
+
+//   useEffect(() => {
+//     loadAboutUsSections();
+//   }, []);
+
+//   const loadAboutUsSections = async () => {
+//     setLoading(true);
+//     try {
+//       const data = await fetchAboutUs();
+//       const sectionsArray = Array.isArray(data) ? data : [data];
+//       setAboutUsList(sectionsArray);
+//       if (sectionsArray.length > 0) {
+//         selectAboutUs(sectionsArray[0]);
+//       }
+//     } catch (error) {
+//       console.error("Error loading aboutus sections:", error);
+//       alert("Error loading aboutus sections: " + error.message);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const selectAboutUs = (aboutUs) => {
+//     setActiveAboutUsId(aboutUs.id);
+//     setFormData({
+//       introduction: aboutUs.introduction || "",
+//       history: aboutUs.history || "",
+//       image1: aboutUs.image1 || "",
+//       image2: aboutUs.image2 || "",
+//       mission: aboutUs.mission || "",
+//       missionimage: aboutUs.missionimage || "",
+//       vision: aboutUs.vision || "",
+//       visionimage: aboutUs.visionimage || "",
+//       directorname: aboutUs.directorname || "",
+//       directorimage: aboutUs.directorimage || "",
+//       directormessage: aboutUs.directormessage || ""
+//     });
+//   };
+
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: value
+//     }));
+//   };
+
+//   const handleTextareaChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: value
+//     }));
+//   };
+
+//   const handleImageUpload = async (field, file) => {
+//     if (!file) return;
+
+//     setUploadingImage(prev => ({ ...prev, [field]: true }));
+
+//     try {
+//       const imageUrl = await uploadAboutUsImage(file);
+
+//       setFormData(prev => ({
+//         ...prev,
+//         [field]: imageUrl
+//       }));
+
+//       alert("Image uploaded successfully!");
+//     } catch (error) {
+//       alert("Error uploading image: " + error.message);
+//     } finally {
+//       setUploadingImage(prev => ({ ...prev, [field]: false }));
+//     }
+//   };
+
+//   const handleImageSelect = (field, e) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       handleImageUpload(field, file);
+//     }
+//     e.target.value = "";
+//   };
+
+//   const removeImage = (field) => {
+//     setFormData(prev => ({ ...prev, [field]: "" }));
+//   };
+
+//   const formatDate = (dateString) => {
+//     if (!dateString) return "N/A";
+//     const date = new Date(dateString);
+//     return date.toLocaleDateString('en-US', {
+//       year: 'numeric',
+//       month: 'short',
+//       day: 'numeric'
+//     });
+//   };
+
+//   const handleUpdate = async () => {
+//     if (!activeAboutUsId) return;
+
+//     setUpdateLoading(true);
+//     try {
+//       await updateAboutUs(activeAboutUsId, formData);
+//       alert("About Us section updated successfully!");
+//       loadAboutUsSections();
+//     } catch (error) {
+//       alert("Error updating about us section: " + error.message);
+//     } finally {
+//       setUpdateLoading(false);
+//     }
+//   };
+
+//   const ImageUploadSection = ({ title, field, imageUrl }) => (
+//     <div className="space-y-3">
+//       <label className="block text-sm font-medium text-gray-700">{title}</label>
+//       <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors">
+//         <input
+//           type="file"
+//           id={`upload-${field}`}
+//           accept="image/*"
+//           onChange={(e) => handleImageSelect(field, e)}
+//           className="hidden"
+//         />
+
+//         {imageUrl ? (
+//           <div className="relative">
+//             <img
+//               src={imageUrl}
+//               alt={title}
+//               className="w-full h-48 object-cover rounded-lg"
+//             />
+//             <button
+//               type="button"
+//               onClick={() => removeImage(field)}
+//               className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
+//             >
+//               <X className="w-4 h-4" />
+//             </button>
+//           </div>
+//         ) : (
+//           <label htmlFor={`upload-${field}`} className="cursor-pointer">
+//             <div className="py-8">
+//               <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+//               <p className="text-sm text-gray-600">Click to upload image</p>
+//               <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 5MB</p>
+//             </div>
+//           </label>
+//         )}
+
+//         {uploadingImage[field] && (
+//           <div className="mt-2 flex items-center justify-center gap-2">
+//             <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+//             <span className="text-sm text-gray-600">Uploading...</span>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+
+//   const currentAboutUs = aboutUsList.find((a) => a.id === activeAboutUsId);
+
+//   return (
+//     <div className="min-h-screen bg-gray-50">
+     
+        
+//         {loading ? (
+//           <div className="flex justify-center py-12">
+//             <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+//           </div>
+//         ) : aboutUsList.length === 0 ? (
+//           <div className="text-center py-12 bg-white rounded-xl border">
+//             <p className="text-gray-500">No about us sections available</p>
+//           </div>
+//         ) : (
+//           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+//             {/* Main Content - Detail Editor */}
+//             <div className="lg:col-span-5">
+//               {currentAboutUs && (
+//                 <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+//                   {/* Header */}
+//                   <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+//                     <div className="flex items-center justify-between">
+//                       <div className="flex items-center gap-3">
+//                         <Building2 className="w-8 h-8 text-blue-600" />
+//                         <div>
+//                           <h1 className="text-2xl font-bold text-gray-900">About Us Section</h1>
+//                           <div className="flex items-center gap-4 mt-1">
+//                             {currentAboutUs?.created_at && (
+//                               <span className="flex items-center gap-1 text-sm text-gray-600">
+//                                 <Calendar className="w-4 h-4" />
+//                                 {formatDate(currentAboutUs.created_at)}
+//                               </span>
+//                             )}
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {/* Main Content */}
+//                   <div className="p-8 space-y-8">
+//                     {/* Introduction & History */}
+//                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+//                       <div className="space-y-6">
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-2">
+//                             Introduction
+//                           </label>
+//                           <textarea
+//                             name="introduction"
+//                             value={formData.introduction}
+//                             onChange={handleTextareaChange}
+//                             rows="8"
+//                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                           />
+//                         </div>
+
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-2">
+//                             History
+//                           </label>
+//                           <textarea
+//                             name="history"
+//                             value={formData.history}
+//                             onChange={handleTextareaChange}
+//                             rows="8"
+//                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                           />
+//                         </div>
+//                       </div>
+
+//                       {/* Images Section */}
+//                       <div className="space-y-4">
+//                         <ImageUploadSection
+//                           title="Image 1"
+//                           field="image1"
+//                           imageUrl={formData.image1}
+//                         />
+
+//                         <ImageUploadSection
+//                           title="Image 2"
+//                           field="image2"
+//                           imageUrl={formData.image2}
+//                         />
+//                       </div>
+//                     </div>
+
+//                     {/* Mission & Vision */}
+//                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8 border-t">
+//                       <div className="space-y-4">
+//                         <div className="flex items-center gap-3 mb-4">
+//                           <Target className="w-6 h-6 text-green-600" />
+//                           <h2 className="text-xl font-bold text-gray-800">Our Mission</h2>
+//                         </div>
+
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-2">
+//                             Mission
+//                           </label>
+//                           <textarea
+//                             name="mission"
+//                             value={formData.mission}
+//                             onChange={handleTextareaChange}
+//                             rows="8"
+//                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                           />
+//                         </div>
+//                       </div>
+
+//                       <div>
+//                         <ImageUploadSection
+//                           title="Mission Image"
+//                           field="missionimage"
+//                           imageUrl={formData.missionimage}
+//                         />
+//                       </div>
+//                     </div>
+
+//                     {/* Vision Section */}
+//                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8 border-t">
+//                       <div className="space-y-4">
+//                         <div className="flex items-center gap-3 mb-4">
+//                           <Eye className="w-6 h-6 text-purple-600" />
+//                           <h2 className="text-xl font-bold text-gray-800">Our Vision</h2>
+//                         </div>
+
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-2">
+//                             Vision
+//                           </label>
+//                           <textarea
+//                             name="vision"
+//                             value={formData.vision}
+//                             onChange={handleTextareaChange}
+//                             rows="8"
+//                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                           />
+//                         </div>
+//                       </div>
+
+//                       <div>
+//                         <ImageUploadSection
+//                           title="Vision Image"
+//                           field="visionimage"
+//                           imageUrl={formData.visionimage}
+//                         />
+//                       </div>
+//                     </div>
+
+//                     {/* Director Section */}
+//                     <div className="pt-8 border-t">
+//                       <div className="flex items-center gap-3 mb-6">
+//                         <Users className="w-6 h-6 text-orange-600" />
+//                         <h2 className="text-xl font-bold text-gray-800">Director's Message</h2>
+//                       </div>
+
+//                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+//                         <div className="space-y-4">
+//                           <div>
+//                             <label className="block text-sm font-medium text-gray-700 mb-2">
+//                               Director Name
+//                             </label>
+//                             <input
+//                               type="text"
+//                               name="directorname"
+//                               value={formData.directorname}
+//                               onChange={handleInputChange}
+//                               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                             />
+//                           </div>
+
+//                           <div>
+//                             <label className="block text-sm font-medium text-gray-700 mb-2">
+//                               Director Message
+//                             </label>
+//                             <textarea
+//                               name="directormessage"
+//                               value={formData.directormessage}
+//                               onChange={handleTextareaChange}
+//                               rows="6"
+//                               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                             />
+//                           </div>
+//                         </div>
+
+//                         <div>
+//                           <ImageUploadSection
+//                             title="Director Image"
+//                             field="directorimage"
+//                             imageUrl={formData.directorimage}
+//                           />
+//                         </div>
+//                       </div>
+//                     </div>
+
+//                     {/* Action Button */}
+//                     <div className="flex justify-end pt-8 border-t">
+//                       <button
+//                         type="button"
+//                         onClick={handleUpdate}
+//                         disabled={updateLoading}
+//                         className="flex items-center gap-2 px-8 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors font-medium"
+//                       >
+//                         {updateLoading ? (
+//                           <Loader2 className="w-5 h-5 animate-spin" />
+//                         ) : (
+//                           <Save className="w-5 h-5" />
+//                         )}
+//                         {updateLoading ? "Saving..." : "Save Changes"}
+//                       </button>
+//                     </div>
+//                   </div>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//   );
+// };
+
+// export default AboutUsMV;
+
+
+// import React, { useState, useEffect } from "react";
+// import {
+//   fetchAboutUs,
+//   updateAboutUs,
+//   uploadAboutUsImage,
+//   getFullImageUrl
+// } from "../../../../api/userApi";
+// import {
+//   Save,
+//   X,
+//   Upload,
+//   Building2,
+//   Target,
+//   Eye,
+//   Users,
+//   Calendar,
+//   Loader2,
+//   AlertCircle
+// } from "lucide-react";
+
+
+// const AboutUsMV = () => {
+//   const [aboutUsList, setAboutUsList] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [activeAboutUsId, setActiveAboutUsId] = useState(null);
+  
+//   // ✅ Form data stores RELATIVE paths for saving
+//   // ✅ Preview stores FULL URLs for display
+//   const [formData, setFormData] = useState({
+//     introduction: "",
+//     history: "",
+//     image1: "",
+//     image2: "",
+//     mission: "",
+//     missionimage: "",
+//     vision: "",
+//     visionimage: "",
+//     directorname: "",
+//     directorimage: "",
+//     directormessage: ""
+//   });
+
+//   // ✅ Separate state for preview URLs (full URLs with BASE_URL)
+//   const [previewUrls, setPreviewUrls] = useState({
+//     image1: "",
+//     image2: "",
+//     missionimage: "",
+//     visionimage: "",
+//     directorimage: ""
+//   });
+
+//   const [uploadingImage, setUploadingImage] = useState({
+//     image1: false,
+//     image2: false,
+//     missionimage: false,
+//     visionimage: false,
+//     directorimage: false
+//   });
+//   const [updateLoading, setUpdateLoading] = useState(false);
+
+//   useEffect(() => {
+//     loadAboutUsSections();
+//   }, []);
+
+//   const loadAboutUsSections = async () => {
+//     setLoading(true);
+//     try {
+//       const data = await fetchAboutUs();
+//       const sectionsArray = Array.isArray(data) ? data : [data];
+//       setAboutUsList(sectionsArray);
+//       if (sectionsArray.length > 0) {
+//         selectAboutUs(sectionsArray[0]);
+//       }
+//     } catch (error) {
+//       console.error("Error loading aboutus sections:", error);
+//       alert("Error loading aboutus sections: " + error.message);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const selectAboutUs = (aboutUs) => {
+//     setActiveAboutUsId(aboutUs.id);
+    
+//     // ✅ Store RELATIVE paths in formData (for saving to API)
+//     setFormData({
+//       introduction: aboutUs.introduction || "",
+//       history: aboutUs.history || "",
+//       image1: aboutUs.image1 || "",
+//       image2: aboutUs.image2 || "",
+//       mission: aboutUs.mission || "",
+//       missionimage: aboutUs.missionimage || "",
+//       vision: aboutUs.vision || "",
+//       visionimage: aboutUs.visionimage || "",
+//       directorname: aboutUs.directorname || "",
+//       directorimage: aboutUs.directorimage || "",
+//       directormessage: aboutUs.directormessage || ""
+//     });
+
+//     // ✅ Store FULL URLs in previewUrls (for displaying images)
+//     setPreviewUrls({
+//       image1: getFullImageUrl(aboutUs.image1),
+//       image2: getFullImageUrl(aboutUs.image2),
+//       missionimage: getFullImageUrl(aboutUs.missionimage),
+//       visionimage: getFullImageUrl(aboutUs.visionimage),
+//       directorimage: getFullImageUrl(aboutUs.directorimage)
+//     });
+//   };
+
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: value
+//     }));
+//   };
+
+//   const handleTextareaChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: value
+//     }));
+//   };
+
+//   // ✅ Image upload - store RELATIVE path, create FULL URL for preview
+//   const handleImageUpload = async (field, file) => {
+//     if (!file) return;
+
+//     setUploadingImage(prev => ({ ...prev, [field]: true }));
+
+//     try {
+//       // uploadAboutUsImage returns relative path like "/uploads/aboutus/image.jpg"
+//       const relativePath = await uploadAboutUsImage(file);
+
+//       // ✅ Store RELATIVE path in formData (for API)
+//       setFormData(prev => ({
+//         ...prev,
+//         [field]: relativePath
+//       }));
+
+//       // ✅ Store FULL URL in previewUrls (for display)
+//       setPreviewUrls(prev => ({
+//         ...prev,
+//         [field]: getFullImageUrl(relativePath)
+//       }));
+
+//       alert("Image uploaded successfully!");
+//     } catch (error) {
+//       alert("Error uploading image: " + error.message);
+//     } finally {
+//       setUploadingImage(prev => ({ ...prev, [field]: false }));
+//     }
+//   };
+
+//   const handleImageSelect = (field, e) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       handleImageUpload(field, file);
+//     }
+//     e.target.value = "";
+//   };
+
+//   const removeImage = (field) => {
+//     // ✅ Clear both relative path and preview URL
+//     setFormData(prev => ({ ...prev, [field]: "" }));
+//     setPreviewUrls(prev => ({ ...prev, [field]: "" }));
+//   };
+
+//   const formatDate = (dateString) => {
+//     if (!dateString) return "N/A";
+//     const date = new Date(dateString);
+//     return date.toLocaleDateString('en-US', {
+//       year: 'numeric',
+//       month: 'short',
+//       day: 'numeric'
+//     });
+//   };
+
+//   // ✅ Update sends RELATIVE paths (formData), not full URLs
+//   const handleUpdate = async () => {
+//     if (!activeAboutUsId) return;
+
+//     setUpdateLoading(true);
+//     try {
+//       // ✅ formData already contains relative paths - send as is
+//       await updateAboutUs(activeAboutUsId, formData);
+//       alert("About Us section updated successfully!");
+//       loadAboutUsSections();
+//     } catch (error) {
+//       alert("Error updating about us section: " + error.message);
+//     } finally {
+//       setUpdateLoading(false);
+//     }
+//   };
+
+//   // ✅ ImageUploadSection uses previewUrls for display
+//   const ImageUploadSection = ({ title, field }) => {
+//     // ✅ Use previewUrls (full URL) for displaying the image
+//     const imageUrl = previewUrls[field];
+    
+//     return (
+//       <div className="space-y-3">
+//         <label className="block text-sm font-medium text-gray-700">{title}</label>
+//         <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors">
+//           <input
+//             type="file"
+//             id={`upload-${field}`}
+//             accept="image/*"
+//             onChange={(e) => handleImageSelect(field, e)}
+//             className="hidden"
+//           />
+
+//           {imageUrl ? (
+//             <div className="relative">
+//               <img
+//                 src={imageUrl}
+//                 alt={title}
+//                 className="w-full h-48 object-cover rounded-lg"
+//                 onError={(e) => {
+//                   console.error("Image failed to load:", imageUrl);
+//                   e.target.style.display = "none";
+//                   e.target.nextSibling.style.display = "flex";
+//                 }}
+//               />
+//               {/* Fallback for broken image */}
+//               <div className="hidden w-full h-48 bg-gray-100 rounded-lg items-center justify-center">
+//                 <span className="text-gray-400 text-4xl">📷</span>
+//               </div>
+//               <button
+//                 type="button"
+//                 onClick={() => removeImage(field)}
+//                 className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 shadow-lg"
+//               >
+//                 <X className="w-4 h-4" />
+//               </button>
+//               {/* Change image button */}
+//               <label
+//                 htmlFor={`upload-${field}`}
+//                 className="absolute bottom-2 right-2 bg-blue-500 text-white p-1.5 rounded-full hover:bg-blue-600 shadow-lg cursor-pointer"
+//               >
+//                 <Upload className="w-4 h-4" />
+//               </label>
+//             </div>
+//           ) : (
+//             <label htmlFor={`upload-${field}`} className="cursor-pointer block">
+//               <div className="py-8">
+//                 <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+//                 <p className="text-sm text-gray-600">Click to upload image</p>
+//                 <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 5MB</p>
+//               </div>
+//             </label>
+//           )}
+
+//           {uploadingImage[field] && (
+//             <div className="mt-2 flex items-center justify-center gap-2 bg-blue-50 py-2 rounded">
+//               <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+//               <span className="text-sm text-blue-600">Uploading...</span>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     );
+//   };
+
+//   const currentAboutUs = aboutUsList.find((a) => a.id === activeAboutUsId);
+
+//   return (
+//     <div className="min-h-screen bg-gray-50">
+//       {loading ? (
+//         <div className="flex flex-col justify-center items-center py-12 gap-4">
+//           <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+//           <p className="text-gray-500">Loading...</p>
+//         </div>
+//       ) : aboutUsList.length === 0 ? (
+//         <div className="text-center py-12 bg-white rounded-xl border">
+//           <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+//           <p className="text-gray-500">No about us sections available</p>
+//         </div>
+//       ) : (
+//         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+//           {/* Main Content - Detail Editor */}
+//           <div className="lg:col-span-5">
+//             {currentAboutUs && (
+//               <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+//                 {/* Header */}
+//                 <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+//                   <div className="flex items-center justify-between">
+//                     <div className="flex items-center gap-3">
+//                       <Building2 className="w-8 h-8 text-blue-600" />
+//                       <div>
+//                         <h1 className="text-2xl font-bold text-gray-900">About Us Section</h1>
+//                         <div className="flex items-center gap-4 mt-1">
+//                           {currentAboutUs?.created_at && (
+//                             <span className="flex items-center gap-1 text-sm text-gray-600">
+//                               <Calendar className="w-4 h-4" />
+//                               {formatDate(currentAboutUs.created_at)}
+//                             </span>
+//                           )}
+//                         </div>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* Main Content */}
+//                 <div className="p-8 space-y-8">
+//                   {/* Introduction & History */}
+//                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+//                     <div className="space-y-6">
+//                       <div>
+//                         <label className="block text-sm font-medium text-gray-700 mb-2">
+//                           Introduction
+//                         </label>
+//                         <textarea
+//                           name="introduction"
+//                           value={formData.introduction}
+//                           onChange={handleTextareaChange}
+//                           rows="8"
+//                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                           placeholder="Enter introduction..."
+//                         />
+//                       </div>
+
+//                       <div>
+//                         <label className="block text-sm font-medium text-gray-700 mb-2">
+//                           History
+//                         </label>
+//                         <textarea
+//                           name="history"
+//                           value={formData.history}
+//                           onChange={handleTextareaChange}
+//                           rows="8"
+//                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                           placeholder="Enter history..."
+//                         />
+//                       </div>
+//                     </div>
+
+//                     {/* Images Section */}
+//                     <div className="space-y-4">
+//                       <ImageUploadSection title="Image 1" field="image1" />
+//                       <ImageUploadSection title="Image 2" field="image2" />
+//                     </div>
+//                   </div>
+
+//                   {/* Mission & Vision */}
+//                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8 border-t">
+//                     <div className="space-y-4">
+//                       <div className="flex items-center gap-3 mb-4">
+//                         <Target className="w-6 h-6 text-green-600" />
+//                         <h2 className="text-xl font-bold text-gray-800">Our Mission</h2>
+//                       </div>
+
+//                       <div>
+//                         <label className="block text-sm font-medium text-gray-700 mb-2">
+//                           Mission
+//                         </label>
+//                         <textarea
+//                           name="mission"
+//                           value={formData.mission}
+//                           onChange={handleTextareaChange}
+//                           rows="8"
+//                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                           placeholder="Enter mission statement..."
+//                         />
+//                       </div>
+//                     </div>
+
+//                     <div>
+//                       <ImageUploadSection title="Mission Image" field="missionimage" />
+//                     </div>
+//                   </div>
+
+//                   {/* Vision Section */}
+//                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8 border-t">
+//                     <div className="space-y-4">
+//                       <div className="flex items-center gap-3 mb-4">
+//                         <Eye className="w-6 h-6 text-purple-600" />
+//                         <h2 className="text-xl font-bold text-gray-800">Our Vision</h2>
+//                       </div>
+
+//                       <div>
+//                         <label className="block text-sm font-medium text-gray-700 mb-2">
+//                           Vision
+//                         </label>
+//                         <textarea
+//                           name="vision"
+//                           value={formData.vision}
+//                           onChange={handleTextareaChange}
+//                           rows="8"
+//                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                           placeholder="Enter vision statement..."
+//                         />
+//                       </div>
+//                     </div>
+
+//                     <div>
+//                       <ImageUploadSection title="Vision Image" field="visionimage" />
+//                     </div>
+//                   </div>
+
+//                   {/* Director Section */}
+//                   <div className="pt-8 border-t">
+//                     <div className="flex items-center gap-3 mb-6">
+//                       <Users className="w-6 h-6 text-orange-600" />
+//                       <h2 className="text-xl font-bold text-gray-800">Director's Message</h2>
+//                     </div>
+
+//                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+//                       <div className="space-y-4">
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-2">
+//                             Director Name
+//                           </label>
+//                           <input
+//                             type="text"
+//                             name="directorname"
+//                             value={formData.directorname}
+//                             onChange={handleInputChange}
+//                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                             placeholder="Enter director name..."
+//                           />
+//                         </div>
+
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-2">
+//                             Director Message
+//                           </label>
+//                           <textarea
+//                             name="directormessage"
+//                             value={formData.directormessage}
+//                             onChange={handleTextareaChange}
+//                             rows="6"
+//                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                             placeholder="Enter director's message..."
+//                           />
+//                         </div>
+//                       </div>
+
+//                       <div>
+//                         <ImageUploadSection title="Director Image" field="directorimage" />
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {/* Action Button */}
+//                   <div className="flex justify-end pt-8 border-t">
+//                     <button
+//                       type="button"
+//                       onClick={handleUpdate}
+//                       disabled={updateLoading}
+//                       className="flex items-center gap-2 px-8 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors font-medium shadow-lg"
+//                     >
+//                       {updateLoading ? (
+//                         <Loader2 className="w-5 h-5 animate-spin" />
+//                       ) : (
+//                         <Save className="w-5 h-5" />
+//                       )}
+//                       {updateLoading ? "Saving..." : "Save Changes"}
+//                     </button>
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default AboutUsMV;
+
+
+
 import React, { useState, useEffect } from "react";
 import {
   fetchAboutUs,
   updateAboutUs,
-  uploadAboutUsImage
+  uploadAboutUsImage,
+  getFullImageUrl
 } from "../../../../api/userApi";
 import {
   Save,
@@ -1067,7 +1978,6 @@ import {
   Target,
   Eye,
   Users,
-  MessageSquare,
   Calendar,
   Loader2,
   AlertCircle
@@ -1077,6 +1987,8 @@ const AboutUsMV = () => {
   const [aboutUsList, setAboutUsList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeAboutUsId, setActiveAboutUsId] = useState(null);
+
+  // ✅ Form data stores RELATIVE paths for saving
   const [formData, setFormData] = useState({
     introduction: "",
     history: "",
@@ -1089,6 +2001,15 @@ const AboutUsMV = () => {
     directorname: "",
     directorimage: "",
     directormessage: ""
+  });
+
+  // ✅ Separate state for preview URLs (full URLs with BASE_URL)
+  const [previewUrls, setPreviewUrls] = useState({
+    image1: "",
+    image2: "",
+    missionimage: "",
+    visionimage: "",
+    directorimage: ""
   });
 
   const [uploadingImage, setUploadingImage] = useState({
@@ -1121,20 +2042,40 @@ const AboutUsMV = () => {
     }
   };
 
+  // Helper to remove Base URL (Protocol + Domain) from a string
+  // This ensures we only store "/uploads/image.jpg" in the formData
+  const getRelativePath = (url) => {
+    if (!url) return "";
+    // Replaces http://localhost:4000 or https://site.com with empty string, leaving the path
+    return url.replace(/^https?:\/\/[^\/]+/, '');
+  };
+
   const selectAboutUs = (aboutUs) => {
     setActiveAboutUsId(aboutUs.id);
+
+    // ✅ Store RELATIVE paths in formData (Strip base URL if present)
     setFormData({
       introduction: aboutUs.introduction || "",
       history: aboutUs.history || "",
-      image1: aboutUs.image1 || "",
-      image2: aboutUs.image2 || "",
+      image1: getRelativePath(aboutUs.image1),
+      image2: getRelativePath(aboutUs.image2),
       mission: aboutUs.mission || "",
-      missionimage: aboutUs.missionimage || "",
+      missionimage: getRelativePath(aboutUs.missionimage),
       vision: aboutUs.vision || "",
-      visionimage: aboutUs.visionimage || "",
+      visionimage: getRelativePath(aboutUs.visionimage),
       directorname: aboutUs.directorname || "",
-      directorimage: aboutUs.directorimage || "",
+      directorimage: getRelativePath(aboutUs.directorimage),
       directormessage: aboutUs.directormessage || ""
+    });
+
+    // ✅ Store FULL URLs in previewUrls (Add Base URL for display)
+    // Note: We use the cleaned relative path to generate the full URL to avoid double-stacking URLs
+    setPreviewUrls({
+      image1: getFullImageUrl(getRelativePath(aboutUs.image1)),
+      image2: getFullImageUrl(getRelativePath(aboutUs.image2)),
+      missionimage: getFullImageUrl(getRelativePath(aboutUs.missionimage)),
+      visionimage: getFullImageUrl(getRelativePath(aboutUs.visionimage)),
+      directorimage: getFullImageUrl(getRelativePath(aboutUs.directorimage))
     });
   };
 
@@ -1154,17 +2095,29 @@ const AboutUsMV = () => {
     }));
   };
 
+  // ✅ Image upload
   const handleImageUpload = async (field, file) => {
     if (!file) return;
 
     setUploadingImage(prev => ({ ...prev, [field]: true }));
 
     try {
-      const imageUrl = await uploadAboutUsImage(file);
+      // 1. Upload image
+      const responsePath = await uploadAboutUsImage(file);
+      
+      // 2. Remove Base URL from the response (ensure it is relative)
+      const relativePath = getRelativePath(responsePath);
 
+      // 3. Store RELATIVE path in formData (for saving to DB)
       setFormData(prev => ({
         ...prev,
-        [field]: imageUrl
+        [field]: relativePath
+      }));
+
+      // 4. Store FULL URL in previewUrls (for displaying immediately)
+      setPreviewUrls(prev => ({
+        ...prev,
+        [field]: getFullImageUrl(relativePath)
       }));
 
       alert("Image uploaded successfully!");
@@ -1184,7 +2137,9 @@ const AboutUsMV = () => {
   };
 
   const removeImage = (field) => {
+    // ✅ Clear both relative path and preview URL
     setFormData(prev => ({ ...prev, [field]: "" }));
+    setPreviewUrls(prev => ({ ...prev, [field]: "" }));
   };
 
   const formatDate = (dateString) => {
@@ -1197,11 +2152,13 @@ const AboutUsMV = () => {
     });
   };
 
+  // ✅ Update sends RELATIVE paths (formData), not full URLs
   const handleUpdate = async () => {
     if (!activeAboutUsId) return;
 
     setUpdateLoading(true);
     try {
+      // ✅ formData already contains relative paths (cleaned in selectAboutUs/handleImageUpload)
       await updateAboutUs(activeAboutUsId, formData);
       alert("About Us section updated successfully!");
       loadAboutUsSections();
@@ -1212,273 +2169,279 @@ const AboutUsMV = () => {
     }
   };
 
-  const ImageUploadSection = ({ title, field, imageUrl }) => (
-    <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-700">{title}</label>
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors">
-        <input
-          type="file"
-          id={`upload-${field}`}
-          accept="image/*"
-          onChange={(e) => handleImageSelect(field, e)}
-          className="hidden"
-        />
+  // ✅ ImageUploadSection uses previewUrls for display
+  const ImageUploadSection = ({ title, field }) => {
+    // ✅ Use previewUrls (full URL) for displaying the image
+    const imageUrl = previewUrls[field];
 
-        {imageUrl ? (
-          <div className="relative">
-            <img
-              src={imageUrl}
-              alt={title}
-              className="w-full h-48 object-cover rounded-lg"
-            />
-            <button
-              type="button"
-              onClick={() => removeImage(field)}
-              className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        ) : (
-          <label htmlFor={`upload-${field}`} className="cursor-pointer">
-            <div className="py-8">
-              <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-sm text-gray-600">Click to upload image</p>
-              <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 5MB</p>
+    return (
+      <div className="space-y-3">
+        <label className="block text-sm font-medium text-gray-700">{title}</label>
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors">
+          <input
+            type="file"
+            id={`upload-${field}`}
+            accept="image/*"
+            onChange={(e) => handleImageSelect(field, e)}
+            className="hidden"
+          />
+
+          {imageUrl ? (
+            <div className="relative">
+              <img
+                src={imageUrl}
+                alt={title}
+                className="w-full h-48 object-cover rounded-lg"
+                onError={(e) => {
+                  console.error("Image failed to load:", imageUrl);
+                  e.target.style.display = "none";
+                  e.target.nextSibling.style.display = "flex";
+                }}
+              />
+              {/* Fallback for broken image */}
+              <div className="hidden w-full h-48 bg-gray-100 rounded-lg items-center justify-center">
+                <span className="text-gray-400 text-4xl">📷</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => removeImage(field)}
+                className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 shadow-lg"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              {/* Change image button */}
+              <label
+                htmlFor={`upload-${field}`}
+                className="absolute bottom-2 right-2 bg-blue-500 text-white p-1.5 rounded-full hover:bg-blue-600 shadow-lg cursor-pointer"
+              >
+                <Upload className="w-4 h-4" />
+              </label>
             </div>
-          </label>
-        )}
+          ) : (
+            <label htmlFor={`upload-${field}`} className="cursor-pointer block">
+              <div className="py-8">
+                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-sm text-gray-600">Click to upload image</p>
+                <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 5MB</p>
+              </div>
+            </label>
+          )}
 
-        {uploadingImage[field] && (
-          <div className="mt-2 flex items-center justify-center gap-2">
-            <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-            <span className="text-sm text-gray-600">Uploading...</span>
-          </div>
-        )}
+          {uploadingImage[field] && (
+            <div className="mt-2 flex items-center justify-center gap-2 bg-blue-50 py-2 rounded">
+              <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+              <span className="text-sm text-blue-600">Uploading...</span>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const currentAboutUs = aboutUsList.find((a) => a.id === activeAboutUsId);
 
   return (
     <div className="min-h-screen bg-gray-50">
-     
-        
-        {loading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-          </div>
-        ) : aboutUsList.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl border">
-            <p className="text-gray-500">No about us sections available</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-
-            {/* Main Content - Detail Editor */}
-            <div className="lg:col-span-5">
-              {currentAboutUs && (
-                <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
-                  {/* Header */}
-                  <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Building2 className="w-8 h-8 text-blue-600" />
-                        <div>
-                          <h1 className="text-2xl font-bold text-gray-900">About Us Section</h1>
-                          <div className="flex items-center gap-4 mt-1">
-                            {currentAboutUs?.created_at && (
-                              <span className="flex items-center gap-1 text-sm text-gray-600">
-                                <Calendar className="w-4 h-4" />
-                                {formatDate(currentAboutUs.created_at)}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Main Content */}
-                  <div className="p-8 space-y-8">
-                    {/* Introduction & History */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                      <div className="space-y-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Introduction
-                          </label>
-                          <textarea
-                            name="introduction"
-                            value={formData.introduction}
-                            onChange={handleTextareaChange}
-                            rows="8"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            History
-                          </label>
-                          <textarea
-                            name="history"
-                            value={formData.history}
-                            onChange={handleTextareaChange}
-                            rows="8"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Images Section */}
-                      <div className="space-y-4">
-                        <ImageUploadSection
-                          title="Image 1"
-                          field="image1"
-                          imageUrl={formData.image1}
-                        />
-
-                        <ImageUploadSection
-                          title="Image 2"
-                          field="image2"
-                          imageUrl={formData.image2}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Mission & Vision */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8 border-t">
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3 mb-4">
-                          <Target className="w-6 h-6 text-green-600" />
-                          <h2 className="text-xl font-bold text-gray-800">Our Mission</h2>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Mission
-                          </label>
-                          <textarea
-                            name="mission"
-                            value={formData.mission}
-                            onChange={handleTextareaChange}
-                            rows="8"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          />
-                        </div>
-                      </div>
-
+      {loading ? (
+        <div className="flex flex-col justify-center items-center py-12 gap-4">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+          <p className="text-gray-500">Loading...</p>
+        </div>
+      ) : aboutUsList.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-xl border">
+          <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-500">No about us sections available</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Main Content - Detail Editor */}
+          <div className="lg:col-span-5">
+            {currentAboutUs && (
+              <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+                {/* Header */}
+                <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Building2 className="w-8 h-8 text-blue-600" />
                       <div>
-                        <ImageUploadSection
-                          title="Mission Image"
-                          field="missionimage"
-                          imageUrl={formData.missionimage}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Vision Section */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8 border-t">
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3 mb-4">
-                          <Eye className="w-6 h-6 text-purple-600" />
-                          <h2 className="text-xl font-bold text-gray-800">Our Vision</h2>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Vision
-                          </label>
-                          <textarea
-                            name="vision"
-                            value={formData.vision}
-                            onChange={handleTextareaChange}
-                            rows="8"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          />
+                        <h1 className="text-2xl font-bold text-gray-900">About Us Section</h1>
+                        <div className="flex items-center gap-4 mt-1">
+                          {currentAboutUs?.created_at && (
+                            <span className="flex items-center gap-1 text-sm text-gray-600">
+                              <Calendar className="w-4 h-4" />
+                              {formatDate(currentAboutUs.created_at)}
+                            </span>
+                          )}
                         </div>
                       </div>
-
-                      <div>
-                        <ImageUploadSection
-                          title="Vision Image"
-                          field="visionimage"
-                          imageUrl={formData.visionimage}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Director Section */}
-                    <div className="pt-8 border-t">
-                      <div className="flex items-center gap-3 mb-6">
-                        <Users className="w-6 h-6 text-orange-600" />
-                        <h2 className="text-xl font-bold text-gray-800">Director's Message</h2>
-                      </div>
-
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div className="space-y-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Director Name
-                            </label>
-                            <input
-                              type="text"
-                              name="directorname"
-                              value={formData.directorname}
-                              onChange={handleInputChange}
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Director Message
-                            </label>
-                            <textarea
-                              name="directormessage"
-                              value={formData.directormessage}
-                              onChange={handleTextareaChange}
-                              rows="6"
-                              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <ImageUploadSection
-                            title="Director Image"
-                            field="directorimage"
-                            imageUrl={formData.directorimage}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Action Button */}
-                    <div className="flex justify-end pt-8 border-t">
-                      <button
-                        type="button"
-                        onClick={handleUpdate}
-                        disabled={updateLoading}
-                        className="flex items-center gap-2 px-8 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors font-medium"
-                      >
-                        {updateLoading ? (
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                        ) : (
-                          <Save className="w-5 h-5" />
-                        )}
-                        {updateLoading ? "Saving..." : "Save Changes"}
-                      </button>
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
+
+                {/* Main Content */}
+                <div className="p-8 space-y-8">
+                  {/* Introduction & History */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Introduction
+                        </label>
+                        <textarea
+                          name="introduction"
+                          value={formData.introduction}
+                          onChange={handleTextareaChange}
+                          rows="8"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Enter introduction..."
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          History
+                        </label>
+                        <textarea
+                          name="history"
+                          value={formData.history}
+                          onChange={handleTextareaChange}
+                          rows="8"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Enter history..."
+                        />
+                      </div>
+                    </div>
+
+                    {/* Images Section */}
+                    <div className="space-y-4">
+                      <ImageUploadSection title="Image 1" field="image1" />
+                      <ImageUploadSection title="Image 2" field="image2" />
+                    </div>
+                  </div>
+
+                  {/* Mission & Vision */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8 border-t">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 mb-4">
+                        <Target className="w-6 h-6 text-green-600" />
+                        <h2 className="text-xl font-bold text-gray-800">Our Mission</h2>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Mission
+                        </label>
+                        <textarea
+                          name="mission"
+                          value={formData.mission}
+                          onChange={handleTextareaChange}
+                          rows="8"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Enter mission statement..."
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <ImageUploadSection title="Mission Image" field="missionimage" />
+                    </div>
+                  </div>
+
+                  {/* Vision Section */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8 border-t">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 mb-4">
+                        <Eye className="w-6 h-6 text-purple-600" />
+                        <h2 className="text-xl font-bold text-gray-800">Our Vision</h2>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Vision
+                        </label>
+                        <textarea
+                          name="vision"
+                          value={formData.vision}
+                          onChange={handleTextareaChange}
+                          rows="8"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          placeholder="Enter vision statement..."
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <ImageUploadSection title="Vision Image" field="visionimage" />
+                    </div>
+                  </div>
+
+                  {/* Director Section */}
+                  <div className="pt-8 border-t">
+                    <div className="flex items-center gap-3 mb-6">
+                      <Users className="w-6 h-6 text-orange-600" />
+                      <h2 className="text-xl font-bold text-gray-800">Director's Message</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Director Name
+                          </label>
+                          <input
+                            type="text"
+                            name="directorname"
+                            value={formData.directorname}
+                            onChange={handleInputChange}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Enter director name..."
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Director Message
+                          </label>
+                          <textarea
+                            name="directormessage"
+                            value={formData.directormessage}
+                            onChange={handleTextareaChange}
+                            rows="6"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Enter director's message..."
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <ImageUploadSection title="Director Image" field="directorimage" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <div className="flex justify-end pt-8 border-t">
+                    <button
+                      type="button"
+                      onClick={handleUpdate}
+                      disabled={updateLoading}
+                      className="flex items-center gap-2 px-8 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors font-medium shadow-lg"
+                    >
+                      {updateLoading ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <Save className="w-5 h-5" />
+                      )}
+                      {updateLoading ? "Saving..." : "Save Changes"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
+    </div>
   );
 };
 

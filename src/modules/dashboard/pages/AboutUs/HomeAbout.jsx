@@ -575,18 +575,837 @@
 
 // export default HomeAbout;
 
+// import React, { useState, useEffect } from 'react';
+// import {
+//   getAllHomeAbout,
+//   getHomeAboutById,
+//   updateHomeAbout,
+//   uploadGalleryFile
+// } from '../../../../api/userApi';
+// import { BASE_URL } from '../../../../api/apiConfig';
+
+// const HomeAbout = () => {
+//   const [homeAboutList, setHomeAboutList] = useState([]);
+//   const [activeHomeAboutId, setActiveHomeAboutId] = useState(null);
+//   const [formData, setFormData] = useState({
+//     image1: '',
+//     image2: '',
+//     years: '',
+//     specialists: '',
+//     patients: '',
+//     paragraph1: '',
+//     paragraph2: '',
+//     slogan: '',
+//     paragraph3: ''
+//   });
+//   const [loading, setLoading] = useState(false);
+//   const [uploadingImage1, setUploadingImage1] = useState(false);
+//   const [uploadingImage2, setUploadingImage2] = useState(false);
+//   const [updateLoading, setUpdateLoading] = useState(false);
+
+//   useEffect(() => {
+//     fetchHomeAboutData();
+//   }, []);
+
+//   const fetchHomeAboutData = async () => {
+//     setLoading(true);
+//     try {
+//       const data = await getAllHomeAbout();
+//       const itemsArray = Array.isArray(data) ? data : [data];
+//       setHomeAboutList(itemsArray);
+//       if (itemsArray.length > 0) {
+//         selectHomeAbout(itemsArray[0]);
+//       }
+//     } catch (error) {
+//       console.error('Error fetching data:', error);
+//       alert('Failed to load data: ' + error.message);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const selectHomeAbout = (item) => {
+//     setActiveHomeAboutId(item.id);
+//     setFormData({
+//       image1: item.image1 || '',
+//       image2: item.image2 || '',
+//       years: item.years || '',
+//       specialists: item.specialists || '',
+//       patients: item.patients || '',
+//       paragraph1: item.paragraph1 || '',
+//       paragraph2: item.paragraph2 || '',
+//       slogan: item.slogan || '',
+//       paragraph3: item.paragraph3 || ''
+//     });
+//   };
+
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: value
+//     }));
+//   };
+
+//   const handleImage1Upload = async (e) => {
+//     const file = e.target.files[0];
+//     if (!file) return;
+
+//     setUploadingImage1(true);
+//     try {
+//       const filePath = await uploadGalleryFile(file);
+//       const fullImageUrl = filePath.startsWith('http') ? filePath : `${BASE_URL}/${filePath}`;
+//       setFormData(prev => ({
+//         ...prev,
+//         image1: fullImageUrl
+//       }));
+//       alert('Image 1 uploaded successfully!');
+//     } catch (error) {
+//       console.error('Error uploading image:', error);
+//       alert('Failed to upload image 1: ' + error.message);
+//     } finally {
+//       setUploadingImage1(false);
+//     }
+//   };
+
+//   const handleImage2Upload = async (e) => {
+//     const file = e.target.files[0];
+//     if (!file) return;
+
+//     setUploadingImage2(true);
+//     try {
+//       const filePath = await uploadGalleryFile(file);
+//       const fullImageUrl = filePath.startsWith('http') ? filePath : `${BASE_URL}/${filePath}`;
+//       setFormData(prev => ({
+//         ...prev,
+//         image2: fullImageUrl
+//       }));
+//       alert('Image 2 uploaded successfully!');
+//     } catch (error) {
+//       console.error('Error uploading image:', error);
+//       alert('Failed to upload image 2: ' + error.message);
+//     } finally {
+//       setUploadingImage2(false);
+//     }
+//   };
+
+//   const handleUpdate = async () => {
+//     if (!activeHomeAboutId) return;
+
+//     setUpdateLoading(true);
+//     try {
+//       await updateHomeAbout(activeHomeAboutId, formData);
+//       alert('Updated successfully!');
+//       fetchHomeAboutData();
+//     } catch (error) {
+//       console.error('Error updating:', error);
+//       alert('Failed to update: ' + error.message);
+//     } finally {
+//       setUpdateLoading(false);
+//     }
+//   };
+
+//   const formatDate = (dateString) => {
+//     return new Date(dateString).toLocaleDateString('en-US', {
+//       year: 'numeric',
+//       month: 'short',
+//       day: 'numeric',
+//       hour: '2-digit',
+//       minute: '2-digit'
+//     });
+//   };
+
+//   const currentItem = homeAboutList.find(item => item.id === activeHomeAboutId);
+
+//   return (
+//     <div className="min-h-screen bg-gray-50 border border-gray-300 rounded-lg  ">
+//       {/* Header */}
+//       <div className="mb-8 bg-gradient-to-r from-blue-50 p-5 rounded-lg to-indigo-50">
+//         <h1 className="text-3xl font-bold  text-gray-800 mb-2">Home About Manager</h1>
+//         <p className="text-gray-600">Manage your home page about section content and images</p>
+//       </div>
+
+//       {loading ? (
+//         <div className="flex justify-center items-center h-64">
+//           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+//         </div>
+//       ) : homeAboutList.length === 0 ? (
+//         <div className="text-center py-12 bg-white rounded-xl border">
+//           <p className="text-gray-500">No home about items available</p>
+//         </div>
+//       ) : (
+//         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+         
+
+//           {/* Main Content - Detail Editor */}
+//           <div className="lg:col-span-5">
+//             {currentItem && (
+//               <div className="bg-white rounded-xl shadow-lg p-6">
+//                 <div className="flex justify-between items-center mb-6">
+//                   <h2 className="text-2xl font-semibold text-gray-800">
+//                     Edit Item #{currentItem.id}
+//                   </h2>
+//                   <span className="text-sm text-gray-500">
+//                     Created: {formatDate(currentItem.created_at)}
+//                   </span>
+//                 </div>
+
+//                 <div className="space-y-8">
+//                   {/* Images Upload Section */}
+//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//                     {/* Image 1 Upload */}
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-2">
+//                         Image 1
+//                       </label>
+//                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors">
+//                         <input
+//                           type="file"
+//                           accept="image/*"
+//                           onChange={handleImage1Upload}
+//                           className="hidden"
+//                           id="image1-upload"
+//                         />
+//                         <label htmlFor="image1-upload" className="cursor-pointer">
+//                           {uploadingImage1 ? (
+//                             <div className="flex items-center justify-center">
+//                               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+//                               <span className="ml-2 text-gray-600">Uploading...</span>
+//                             </div>
+//                           ) : formData.image1 ? (
+//                             <div>
+//                               <img
+//                                 src={formData.image1}
+//                                 alt="Preview 1"
+//                                 className="w-full h-40 object-cover rounded-lg mb-2"
+//                               />
+//                               <span className="text-blue-600 text-sm">Click to change</span>
+//                             </div>
+//                           ) : (
+//                             <div>
+//                               <div className="mx-auto h-12 w-12 text-gray-400">
+//                                 <svg className="h-full w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+//                                 </svg>
+//                               </div>
+//                               <span className="text-gray-600">Upload Image 1</span>
+//                             </div>
+//                           )}
+//                         </label>
+//                       </div>
+//                     </div>
+
+//                     {/* Image 2 Upload */}
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-2">
+//                         Image 2
+//                       </label>
+//                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors">
+//                         <input
+//                           type="file"
+//                           accept="image/*"
+//                           onChange={handleImage2Upload}
+//                           className="hidden"
+//                           id="image2-upload"
+//                         />
+//                         <label htmlFor="image2-upload" className="cursor-pointer">
+//                           {uploadingImage2 ? (
+//                             <div className="flex items-center justify-center">
+//                               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+//                               <span className="ml-2 text-gray-600">Uploading...</span>
+//                             </div>
+//                           ) : formData.image2 ? (
+//                             <div>
+//                               <img
+//                                 src={formData.image2}
+//                                 alt="Preview 2"
+//                                 className="w-full h-40 object-cover rounded-lg mb-2"
+//                               />
+//                               <span className="text-blue-600 text-sm">Click to change</span>
+//                             </div>
+//                           ) : (
+//                             <div>
+//                               <div className="mx-auto h-12 w-12 text-gray-400">
+//                                 <svg className="h-full w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+//                                 </svg>
+//                               </div>
+//                               <span className="text-gray-600">Upload Image 2</span>
+//                             </div>
+//                           )}
+//                         </label>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {/* Stats Fields */}
+//                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Years
+//                       </label>
+//                       <input
+//                         type="number"
+//                         name="years"
+//                         value={formData.years}
+//                         onChange={handleInputChange}
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="15"
+//                       />
+//                     </div>
+
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Specialists
+//                       </label>
+//                       <input
+//                         type="number"
+//                         name="specialists"
+//                         value={formData.specialists}
+//                         onChange={handleInputChange}
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="25"
+//                       />
+//                     </div>
+
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Patients
+//                       </label>
+//                       <input
+//                         type="number"
+//                         name="patients"
+//                         value={formData.patients}
+//                         onChange={handleInputChange}
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="12000"
+//                       />
+//                     </div>
+//                   </div>
+
+//                   {/* Text Fields */}
+//                   <div className="space-y-4">
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Paragraph 1
+//                       </label>
+//                       <textarea
+//                         name="paragraph1"
+//                         value={formData.paragraph1}
+//                         onChange={handleInputChange}
+//                         rows="3"
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="Enter first paragraph..."
+//                       />
+//                     </div>
+
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Paragraph 2
+//                       </label>
+//                       <textarea
+//                         name="paragraph2"
+//                         value={formData.paragraph2}
+//                         onChange={handleInputChange}
+//                         rows="3"
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="Enter second paragraph..."
+//                       />
+//                     </div>
+
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Slogan
+//                       </label>
+//                       <input
+//                         type="text"
+//                         name="slogan"
+//                         value={formData.slogan}
+//                         onChange={handleInputChange}
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="Your Health, Our Priority"
+//                       />
+//                     </div>
+
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Paragraph 3
+//                       </label>
+//                       <textarea
+//                         name="paragraph3"
+//                         value={formData.paragraph3}
+//                         onChange={handleInputChange}
+//                         rows="3"
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="Enter third paragraph..."
+//                       />
+//                     </div>
+//                   </div>
+
+//                   {/* Action Button */}
+//                   <div className="flex justify-end pt-6 border-t border-gray-200">
+//                     <button
+//                       type="button"
+//                       onClick={handleUpdate}
+//                       disabled={updateLoading}
+//                       className="flex items-center gap-2 px-8 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+//                     >
+//                       {updateLoading ? (
+//                         <span className="flex items-center">
+//                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+//                           Saving...
+//                         </span>
+//                       ) : (
+//                         'Save Changes'
+//                       )}
+//                     </button>
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default HomeAbout;
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import {
+//   getAllHomeAbout,
+//   getHomeAboutById,
+//   updateHomeAbout,
+//   uploadGalleryFile,
+//   getFullImageUrl // ✅ Import this helper
+// } from '../../../../api/userApi';
+// import { BASE_URL } from '../../../../api/apiConfig';
+
+// const HomeAbout = () => {
+//   const [homeAboutList, setHomeAboutList] = useState([]);
+//   const [activeHomeAboutId, setActiveHomeAboutId] = useState(null);
+  
+//   // ✅ formData stores RELATIVE paths for API
+//   const [formData, setFormData] = useState({
+//     image1: '',
+//     image2: '',
+//     years: '',
+//     specialists: '',
+//     patients: '',
+//     paragraph1: '',
+//     paragraph2: '',
+//     slogan: '',
+//     paragraph3: ''
+//   });
+  
+//   const [loading, setLoading] = useState(false);
+//   const [uploadingImage1, setUploadingImage1] = useState(false);
+//   const [uploadingImage2, setUploadingImage2] = useState(false);
+//   const [updateLoading, setUpdateLoading] = useState(false);
+
+//   useEffect(() => {
+//     fetchHomeAboutData();
+//   }, []);
+
+//   const fetchHomeAboutData = async () => {
+//     setLoading(true);
+//     try {
+//       const data = await getAllHomeAbout();
+//       const itemsArray = Array.isArray(data) ? data : [data];
+//       setHomeAboutList(itemsArray);
+//       if (itemsArray.length > 0) {
+//         selectHomeAbout(itemsArray[0]);
+//       }
+//     } catch (error) {
+//       console.error('Error fetching data:', error);
+//       alert('Failed to load data: ' + error.message);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ✅ Helper to remove Base URL (Protocol + Domain)
+//   const getRelativePath = (url) => {
+//     if (!url) return "";
+//     return url.replace(/^https?:\/\/[^\/]+/, '');
+//   };
+
+//   const selectHomeAbout = (item) => {
+//     setActiveHomeAboutId(item.id);
+//     // ✅ Store RELATIVE paths in formData (Strip base URL if present)
+//     setFormData({
+//       image1: getRelativePath(item.image1) || '',
+//       image2: getRelativePath(item.image2) || '',
+//       years: item.years || '',
+//       specialists: item.specialists || '',
+//       patients: item.patients || '',
+//       paragraph1: item.paragraph1 || '',
+//       paragraph2: item.paragraph2 || '',
+//       slogan: item.slogan || '',
+//       paragraph3: item.paragraph3 || ''
+//     });
+//   };
+
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: value
+//     }));
+//   };
+
+//   const handleImage1Upload = async (e) => {
+//     const file = e.target.files[0];
+//     if (!file) return;
+
+//     setUploadingImage1(true);
+//     try {
+//       const filePath = await uploadGalleryFile(file);
+      
+//       // ✅ Store RELATIVE path in formData
+//       const relativePath = getRelativePath(filePath);
+      
+//       setFormData(prev => ({
+//         ...prev,
+//         image1: relativePath
+//       }));
+//       alert('Image 1 uploaded successfully!');
+//     } catch (error) {
+//       console.error('Error uploading image:', error);
+//       alert('Failed to upload image 1: ' + error.message);
+//     } finally {
+//       setUploadingImage1(false);
+//     }
+//   };
+
+//   const handleImage2Upload = async (e) => {
+//     const file = e.target.files[0];
+//     if (!file) return;
+
+//     setUploadingImage2(true);
+//     try {
+//       const filePath = await uploadGalleryFile(file);
+      
+//       // ✅ Store RELATIVE path in formData
+//       const relativePath = getRelativePath(filePath);
+
+//       setFormData(prev => ({
+//         ...prev,
+//         image2: relativePath
+//       }));
+//       alert('Image 2 uploaded successfully!');
+//     } catch (error) {
+//       console.error('Error uploading image:', error);
+//       alert('Failed to upload image 2: ' + error.message);
+//     } finally {
+//       setUploadingImage2(false);
+//     }
+//   };
+
+//   const handleUpdate = async () => {
+//     if (!activeHomeAboutId) return;
+
+//     setUpdateLoading(true);
+//     try {
+//       // ✅ formData contains relative paths, safe to POST/PUT
+//       await updateHomeAbout(activeHomeAboutId, formData);
+//       alert('Updated successfully!');
+//       fetchHomeAboutData();
+//     } catch (error) {
+//       console.error('Error updating:', error);
+//       alert('Failed to update: ' + error.message);
+//     } finally {
+//       setUpdateLoading(false);
+//     }
+//   };
+
+//   const formatDate = (dateString) => {
+//     return new Date(dateString).toLocaleDateString('en-US', {
+//       year: 'numeric',
+//       month: 'short',
+//       day: 'numeric',
+//       hour: '2-digit',
+//       minute: '2-digit'
+//     });
+//   };
+
+//   const currentItem = homeAboutList.find(item => item.id === activeHomeAboutId);
+
+//   return (
+//     <div className="min-h-screen bg-gray-50 border border-gray-300 rounded-lg  ">
+//       {/* Header */}
+//       <div className="mb-8 bg-gradient-to-r from-blue-50 p-5 rounded-lg to-indigo-50">
+//         <h1 className="text-3xl font-bold  text-gray-800 mb-2">Home About Manager</h1>
+//         <p className="text-gray-600">Manage your home page about section content and images</p>
+//       </div>
+
+//       {loading ? (
+//         <div className="flex justify-center items-center h-64">
+//           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+//         </div>
+//       ) : homeAboutList.length === 0 ? (
+//         <div className="text-center py-12 bg-white rounded-xl border">
+//           <p className="text-gray-500">No home about items available</p>
+//         </div>
+//       ) : (
+//         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+         
+
+//           {/* Main Content - Detail Editor */}
+//           <div className="lg:col-span-5">
+//             {currentItem && (
+//               <div className="bg-white rounded-xl shadow-lg p-6">
+//                 <div className="flex justify-between items-center mb-6">
+//                   <h2 className="text-2xl font-semibold text-gray-800">
+//                     Edit Item #{currentItem.id}
+//                   </h2>
+//                   <span className="text-sm text-gray-500">
+//                     Created: {formatDate(currentItem.created_at)}
+//                   </span>
+//                 </div>
+
+//                 <div className="space-y-8">
+//                   {/* Images Upload Section */}
+//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//                     {/* Image 1 Upload */}
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-2">
+//                         Image 1
+//                       </label>
+//                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors">
+//                         <input
+//                           type="file"
+//                           accept="image/*"
+//                           onChange={handleImage1Upload}
+//                           className="hidden"
+//                           id="image1-upload"
+//                         />
+//                         <label htmlFor="image1-upload" className="cursor-pointer">
+//                           {uploadingImage1 ? (
+//                             <div className="flex items-center justify-center">
+//                               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+//                               <span className="ml-2 text-gray-600">Uploading...</span>
+//                             </div>
+//                           ) : formData.image1 ? (
+//                             <div>
+//                               <img
+//                                 // ✅ Use getFullImageUrl for display
+//                                 src={getFullImageUrl(formData.image1)}
+//                                 alt="Preview 1"
+//                                 className="w-full h-40 object-cover rounded-lg mb-2"
+//                               />
+//                               <span className="text-blue-600 text-sm">Click to change</span>
+//                             </div>
+//                           ) : (
+//                             <div>
+//                               <div className="mx-auto h-12 w-12 text-gray-400">
+//                                 <svg className="h-full w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+//                                 </svg>
+//                               </div>
+//                               <span className="text-gray-600">Upload Image 1</span>
+//                             </div>
+//                           )}
+//                         </label>
+//                       </div>
+//                     </div>
+
+//                     {/* Image 2 Upload */}
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-2">
+//                         Image 2
+//                       </label>
+//                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-500 transition-colors">
+//                         <input
+//                           type="file"
+//                           accept="image/*"
+//                           onChange={handleImage2Upload}
+//                           className="hidden"
+//                           id="image2-upload"
+//                         />
+//                         <label htmlFor="image2-upload" className="cursor-pointer">
+//                           {uploadingImage2 ? (
+//                             <div className="flex items-center justify-center">
+//                               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+//                               <span className="ml-2 text-gray-600">Uploading...</span>
+//                             </div>
+//                           ) : formData.image2 ? (
+//                             <div>
+//                               <img
+//                                 // ✅ Use getFullImageUrl for display
+//                                 src={getFullImageUrl(formData.image2)}
+//                                 alt="Preview 2"
+//                                 className="w-full h-40 object-cover rounded-lg mb-2"
+//                               />
+//                               <span className="text-blue-600 text-sm">Click to change</span>
+//                             </div>
+//                           ) : (
+//                             <div>
+//                               <div className="mx-auto h-12 w-12 text-gray-400">
+//                                 <svg className="h-full w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+//                                 </svg>
+//                               </div>
+//                               <span className="text-gray-600">Upload Image 2</span>
+//                             </div>
+//                           )}
+//                         </label>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {/* Stats Fields */}
+//                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Years
+//                       </label>
+//                       <input
+//                         type="number"
+//                         name="years"
+//                         value={formData.years}
+//                         onChange={handleInputChange}
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="15"
+//                       />
+//                     </div>
+
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Specialists
+//                       </label>
+//                       <input
+//                         type="number"
+//                         name="specialists"
+//                         value={formData.specialists}
+//                         onChange={handleInputChange}
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="25"
+//                       />
+//                     </div>
+
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Patients
+//                       </label>
+//                       <input
+//                         type="number"
+//                         name="patients"
+//                         value={formData.patients}
+//                         onChange={handleInputChange}
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="12000"
+//                       />
+//                     </div>
+//                   </div>
+
+//                   {/* Text Fields */}
+//                   <div className="space-y-4">
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Paragraph 1
+//                       </label>
+//                       <textarea
+//                         name="paragraph1"
+//                         value={formData.paragraph1}
+//                         onChange={handleInputChange}
+//                         rows="3"
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="Enter first paragraph..."
+//                       />
+//                     </div>
+
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Paragraph 2
+//                       </label>
+//                       <textarea
+//                         name="paragraph2"
+//                         value={formData.paragraph2}
+//                         onChange={handleInputChange}
+//                         rows="3"
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="Enter second paragraph..."
+//                       />
+//                     </div>
+
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Slogan
+//                       </label>
+//                       <input
+//                         type="text"
+//                         name="slogan"
+//                         value={formData.slogan}
+//                         onChange={handleInputChange}
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="Your Health, Our Priority"
+//                       />
+//                     </div>
+
+//                     <div>
+//                       <label className="block text-sm font-medium text-gray-700 mb-1">
+//                         Paragraph 3
+//                       </label>
+//                       <textarea
+//                         name="paragraph3"
+//                         value={formData.paragraph3}
+//                         onChange={handleInputChange}
+//                         rows="3"
+//                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                         placeholder="Enter third paragraph..."
+//                       />
+//                     </div>
+//                   </div>
+
+//                   {/* Action Button */}
+//                   <div className="flex justify-end pt-6 border-t border-gray-200">
+//                     <button
+//                       type="button"
+//                       onClick={handleUpdate}
+//                       disabled={updateLoading}
+//                       className="flex items-center gap-2 px-8 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+//                     >
+//                       {updateLoading ? (
+//                         <span className="flex items-center">
+//                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+//                           Saving...
+//                         </span>
+//                       ) : (
+//                         'Save Changes'
+//                       )}
+//                     </button>
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default HomeAbout;
+
+
 import React, { useState, useEffect } from 'react';
 import {
   getAllHomeAbout,
   getHomeAboutById,
   updateHomeAbout,
-  uploadGalleryFile
+  uploadGalleryFile,
+  getFullImageUrl
 } from '../../../../api/userApi';
 import { BASE_URL } from '../../../../api/apiConfig';
 
 const HomeAbout = () => {
   const [homeAboutList, setHomeAboutList] = useState([]);
   const [activeHomeAboutId, setActiveHomeAboutId] = useState(null);
+  
   const [formData, setFormData] = useState({
     image1: '',
     image2: '',
@@ -598,6 +1417,7 @@ const HomeAbout = () => {
     slogan: '',
     paragraph3: ''
   });
+  
   const [loading, setLoading] = useState(false);
   const [uploadingImage1, setUploadingImage1] = useState(false);
   const [uploadingImage2, setUploadingImage2] = useState(false);
@@ -624,11 +1444,26 @@ const HomeAbout = () => {
     }
   };
 
+  // ✅ FIXED: Helper to remove Base URL and ensure leading slash
+  const getRelativePath = (url) => {
+    if (!url) return "";
+    
+    // Remove protocol and domain
+    let path = url.replace(/^https?:\/\/[^\/]+/, '');
+    
+    // ✅ Ensure path starts with /
+    if (path && !path.startsWith('/')) {
+      path = '/' + path;
+    }
+    
+    return path;
+  };
+
   const selectHomeAbout = (item) => {
     setActiveHomeAboutId(item.id);
     setFormData({
-      image1: item.image1 || '',
-      image2: item.image2 || '',
+      image1: getRelativePath(item.image1) || '',
+      image2: getRelativePath(item.image2) || '',
       years: item.years || '',
       specialists: item.specialists || '',
       patients: item.patients || '',
@@ -654,10 +1489,17 @@ const HomeAbout = () => {
     setUploadingImage1(true);
     try {
       const filePath = await uploadGalleryFile(file);
-      const fullImageUrl = filePath.startsWith('http') ? filePath : `${BASE_URL}/${filePath}`;
+      
+      // ✅ Store RELATIVE path with leading slash
+      const relativePath = getRelativePath(filePath);
+      
+      console.log("Upload response:", filePath);
+      console.log("Relative path:", relativePath);
+      console.log("Full URL:", getFullImageUrl(relativePath));
+      
       setFormData(prev => ({
         ...prev,
-        image1: fullImageUrl
+        image1: relativePath
       }));
       alert('Image 1 uploaded successfully!');
     } catch (error) {
@@ -675,10 +1517,17 @@ const HomeAbout = () => {
     setUploadingImage2(true);
     try {
       const filePath = await uploadGalleryFile(file);
-      const fullImageUrl = filePath.startsWith('http') ? filePath : `${BASE_URL}/${filePath}`;
+      
+      // ✅ Store RELATIVE path with leading slash
+      const relativePath = getRelativePath(filePath);
+
+      console.log("Upload response:", filePath);
+      console.log("Relative path:", relativePath);
+      console.log("Full URL:", getFullImageUrl(relativePath));
+
       setFormData(prev => ({
         ...prev,
-        image2: fullImageUrl
+        image2: relativePath
       }));
       alert('Image 2 uploaded successfully!');
     } catch (error) {
@@ -718,10 +1567,10 @@ const HomeAbout = () => {
   const currentItem = homeAboutList.find(item => item.id === activeHomeAboutId);
 
   return (
-    <div className="min-h-screen bg-gray-50 border border-gray-300 rounded-lg  ">
+    <div className="min-h-screen bg-gray-50 border border-gray-300 rounded-lg">
       {/* Header */}
       <div className="mb-8 bg-gradient-to-r from-blue-50 p-5 rounded-lg to-indigo-50">
-        <h1 className="text-3xl font-bold  text-gray-800 mb-2">Home About Manager</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">Home About Manager</h1>
         <p className="text-gray-600">Manage your home page about section content and images</p>
       </div>
 
@@ -735,8 +1584,6 @@ const HomeAbout = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-         
-
           {/* Main Content - Detail Editor */}
           <div className="lg:col-span-5">
             {currentItem && (
@@ -775,11 +1622,18 @@ const HomeAbout = () => {
                           ) : formData.image1 ? (
                             <div>
                               <img
-                                src={formData.image1}
+                                src={getFullImageUrl(formData.image1)}
                                 alt="Preview 1"
                                 className="w-full h-40 object-cover rounded-lg mb-2"
+                                onError={(e) => {
+                                  console.error("Image 1 failed to load:", getFullImageUrl(formData.image1));
+                                }}
                               />
                               <span className="text-blue-600 text-sm">Click to change</span>
+                              {/* Debug info */}
+                              <p className="text-xs text-gray-400 mt-1 break-all">
+                                Path: {formData.image1}
+                              </p>
                             </div>
                           ) : (
                             <div>
@@ -817,11 +1671,18 @@ const HomeAbout = () => {
                           ) : formData.image2 ? (
                             <div>
                               <img
-                                src={formData.image2}
+                                src={getFullImageUrl(formData.image2)}
                                 alt="Preview 2"
                                 className="w-full h-40 object-cover rounded-lg mb-2"
+                                onError={(e) => {
+                                  console.error("Image 2 failed to load:", getFullImageUrl(formData.image2));
+                                }}
                               />
                               <span className="text-blue-600 text-sm">Click to change</span>
+                              {/* Debug info */}
+                              <p className="text-xs text-gray-400 mt-1 break-all">
+                                Path: {formData.image2}
+                              </p>
                             </div>
                           ) : (
                             <div>

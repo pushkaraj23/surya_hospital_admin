@@ -832,15 +832,501 @@
 
 
 
+// import React, { useState, useEffect } from "react";
+// import {
+//   fetchHeroSections,
+//   updateHeroSection,
+//   uploadMultipleFiles,
+// } from "../../../api/userApi";
+// import { BASE_URL } from "../../../api/apiConfig";
+// import { FiTrash2 } from "react-icons/fi";
+
+
+// import {
+//   Save,
+//   X,
+//   Upload,
+//   AlertCircle,
+//   Loader2,
+//   Calendar,
+//   Clock,
+// } from "lucide-react";
+
+// const HeroSectionManager = () => {
+//   const [heroSections, setHeroSections] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [activeHeroId, setActiveHeroId] = useState(null);
+//   const [formData, setFormData] = useState({
+//     title: "",
+//     subtitle: "",
+//     slogan: "",
+//     images: [],
+//   });
+
+//   const [selectedImages, setSelectedImages] = useState([]);
+//   const [uploadingImages, setUploadingImages] = useState(false);
+//   const [imageUploadError, setImageUploadError] = useState("");
+//   const [updateLoading, setUpdateLoading] = useState(false);
+
+//   useEffect(() => {
+//     loadHeroSections();
+//   }, []);
+
+//   const loadHeroSections = async () => {
+//     setLoading(true);
+//     try {
+//       const data = await fetchHeroSections();
+//       setHeroSections(Array.isArray(data) ? data : [data]);
+//       if (Array.isArray(data) && data.length > 0) {
+//         selectHero(data[0]);
+//       } else if (!Array.isArray(data)) {
+//         selectHero(data);
+//       }
+//     } catch (error) {
+//       console.error("Error loading hero sections:", error);
+//       alert("Error loading hero sections: " + error.message);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const selectHero = (hero) => {
+//     setActiveHeroId(hero.id);
+//     setFormData({
+//       title: hero.title,
+//       subtitle: hero.subtitle,
+//       slogan: hero.slogan || "",
+//       images: hero.images || [],
+//     });
+//     setSelectedImages([]);
+//     setImageUploadError("");
+//   };
+
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData((prev) => ({
+//       ...prev,
+//       [name]: value,
+//     }));
+//   };
+
+//   const handleImageSelect = (e) => {
+//     const files = Array.from(e.target.files);
+//     const imageFiles = files.map((file) => ({
+//       file,
+//       id: Math.random().toString(36).substr(2, 9),
+//       preview: URL.createObjectURL(file),
+//       name: file.name,
+//       size: (file.size / (1024 * 1024)).toFixed(2),
+//     }));
+
+//     setSelectedImages((prev) => [...prev, ...imageFiles]);
+//     e.target.value = "";
+//   };
+
+//   const removeSelectedImage = (id) => {
+//     const image = selectedImages.find((img) => img.id === id);
+//     if (image) {
+//       URL.revokeObjectURL(image.preview);
+//     }
+//     setSelectedImages((prev) => prev.filter((img) => img.id !== id));
+//   };
+
+//   const uploadImages = async () => {
+//     if (selectedImages.length === 0) return;
+
+//     setUploadingImages(true);
+//     setImageUploadError("");
+
+//     try {
+//       const files = selectedImages.map((img) => img.file);
+//       const response = await uploadMultipleFiles(files);
+
+//       let uploadedPaths = [];
+
+//       if (response.success && response.files && Array.isArray(response.files)) {
+//         uploadedPaths = response.files;
+//       } else if (response.files && Array.isArray(response.files)) {
+//         uploadedPaths = response.files;
+//       } else if (Array.isArray(response)) {
+//         uploadedPaths = response;
+//       } else if (response.data && response.data.files) {
+//         uploadedPaths = response.data.files;
+//       }
+
+//       if (uploadedPaths.length === 0) {
+//         throw new Error("No files were uploaded successfully");
+//       }
+
+//       const fullImageUrls = uploadedPaths.map((path) => {
+//         if (path.startsWith("http://") || path.startsWith("https://")) {
+//           return path;
+//         }
+//         const cleanPath = path.startsWith("/") ? path.substring(1) : path;
+//         return `${BASE_URL}/${cleanPath}`;
+//       });
+
+//       setFormData((prev) => ({
+//         ...prev,
+//         images: [...prev.images, ...fullImageUrls],
+//       }));
+
+//       selectedImages.forEach((img) => URL.revokeObjectURL(img.preview));
+//       setSelectedImages([]);
+//     } catch (error) {
+//       console.error("Upload error:", error);
+//       setImageUploadError(
+//         error.response?.data?.message ||
+//         error.message ||
+//         "Failed to upload images"
+//       );
+//     } finally {
+//       setUploadingImages(false);
+//     }
+//   };
+
+//   const removeUploadedImage = (index) => {
+//     setFormData((prev) => ({
+//       ...prev,
+//       images: prev.images.filter((_, i) => i !== index),
+//     }));
+//   };
+
+//   const formatDate = (dateString) => {
+//     const date = new Date(dateString);
+//     return date.toLocaleDateString("en-US", {
+//       year: "numeric",
+//       month: "short",
+//       day: "numeric",
+//     });
+//   };
+
+//   const formatTime = (dateString) => {
+//     const date = new Date(dateString);
+//     return date.toLocaleTimeString("en-US", {
+//       hour: "2-digit",
+//       minute: "2-digit",
+//     });
+//   };
+
+//   const handleUpdate = async () => {
+//     if (!activeHeroId) return;
+
+//     setUpdateLoading(true);
+//     try {
+//       await updateHeroSection(activeHeroId, formData);
+//       alert("Hero section updated successfully!");
+//       loadHeroSections();
+//     } catch (error) {
+//       alert("Error updating hero section: " + error.message);
+//     } finally {
+//       setUpdateLoading(false);
+//     }
+//   };
+
+//   const currentHero = heroSections.find((h) => h.id === activeHeroId);
+
+//   return (
+//     <div className="min-h-screen bg-gray-50 p-8">
+//       <div className="max-w-9xl mx-auto">
+//         {/* Header */}
+//         <div className="mb-8">
+//           <div
+//             className="rounded-3xl py-6 px-8 shadow-xl relative overflow-hidden 
+//                     bg-gradient-to-br from-blue-50 to-white border border-gray-200"
+//           >
+//             <div className="absolute -top-8 -right-8 w-32 h-32 bg-purple-200 rounded-full blur-2xl"></div>
+//             <div className="absolute bottom-0 left-0 w-40 h-40 bg-blue-100 rounded-full blur-2xl"></div>
+
+//             <div className="relative z-10">
+//               <div className="flex items-center gap-2 mb-2">
+//                 <div className="h-5 w-1 rounded-full bg-purple-600"></div>
+//                 <span className="uppercase tracking-wider text-xs font-semibold text-blue-700">
+//                   Manage Hero Content
+//                 </span>
+//               </div>
+//               <h1 className="text-3xl font-extrabold text-blue-900 leading-tight">
+//                 Hero Section
+//               </h1>
+//               <p className="text-blue-700 mt-1 text-sm">
+//                 Update banners, titles, images and call-to-action content
+//               </p>
+//             </div>
+//           </div>
+//         </div>
+
+//         {loading ? (
+//           <div className="flex justify-center py-12">
+//             <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+//           </div>
+//         ) : heroSections.length === 0 ? (
+//           <div className="text-center py-12 bg-white rounded-xl border">
+//             <p className="text-gray-500">No hero sections available</p>
+//           </div>
+//         ) : (
+//           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+//             {/* Main Content - Detail Editor */}
+//             <div className="lg:col-span-5">
+//               {currentHero && (
+//                 <div className="bg-white rounded-xl border shadow-sm p-8">
+//                   <div className="space-y-8">
+//                     {/* Metadata */}
+//                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-lg">
+//                       <div className="space-y-2">
+//                         <div className="flex items-center gap-2 text-gray-500">
+//                           <Calendar className="w-4 h-4" />
+//                           <span className="text-sm font-medium">Created</span>
+//                         </div>
+//                         <p className="text-gray-800">
+//                           {formatDate(currentHero.created_at)} at{" "}
+//                           {formatTime(currentHero.created_at)}
+//                         </p>
+//                       </div>
+
+//                       <div className="space-y-2">
+//                         <div className="flex items-center gap-2 text-gray-500">
+//                           <Clock className="w-4 h-4" />
+//                           <span className="text-sm font-medium">Last Updated</span>
+//                         </div>
+//                         <p className="text-gray-800">
+//                           {formatDate(currentHero.updated_at)} at{" "}
+//                           {formatTime(currentHero.updated_at)}
+//                         </p>
+//                       </div>
+//                     </div>
+
+//                     {/* Form Section */}
+//                     <div className="border-t pt-6">
+//                       <h2 className="text-lg font-semibold text-gray-800 mb-6">
+//                         Edit Details
+//                       </h2>
+
+//                       <div className="space-y-6 mb-8">
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-2">
+//                             Title
+//                           </label>
+//                           <input
+//                             type="text"
+//                             name="title"
+//                             value={formData.title}
+//                             onChange={handleInputChange}
+//                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                             placeholder="Enter hero title"
+//                           />
+//                         </div>
+
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-2">
+//                             Subtitle
+//                           </label>
+//                           <input
+//                             type="text"
+//                             name="subtitle"
+//                             value={formData.subtitle}
+//                             onChange={handleInputChange}
+//                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                             placeholder="Enter subtitle"
+//                           />
+//                         </div>
+
+//                         <div>
+//                           <label className="block text-sm font-medium text-gray-700 mb-2">
+//                             Slogan
+//                           </label>
+//                           <input
+//                             type="text"
+//                             name="slogan"
+//                             value={formData.slogan}
+//                             onChange={handleInputChange}
+//                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                             placeholder="Enter slogan (optional)"
+//                           />
+//                         </div>
+//                       </div>
+
+//                       {/* Images Section */}
+//                       <div className="border-t pt-6">
+//                         <h3 className="text-lg font-semibold text-gray-800 mb-6">
+//                           Images
+//                         </h3>
+
+//                         {/* Upload Area */}
+//                         <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-400 hover:bg-blue-50 transition-colors cursor-pointer mb-6">
+//                           <input
+//                             type="file"
+//                             id="imageUpload"
+//                             multiple
+//                             accept="image/*"
+//                             onChange={handleImageSelect}
+//                             className="hidden"
+//                           />
+//                           <label htmlFor="imageUpload" className="cursor-pointer block">
+//                             <div className="space-y-4">
+//                               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100">
+//                                 <Upload className="w-8 h-8 text-blue-500" />
+//                               </div>
+//                               <div>
+//                                 <h3 className="text-lg font-semibold text-gray-700">
+//                                   Upload Images
+//                                 </h3>
+//                                 <p className="text-gray-500 mt-1">
+//                                   Click to browse or drag & drop
+//                                 </p>
+//                                 <p className="text-sm text-gray-400 mt-2">
+//                                   PNG, JPG, GIF, WEBP up to 10MB each
+//                                 </p>
+//                               </div>
+//                             </div>
+//                           </label>
+//                         </div>
+
+//                         {/* Selected Images */}
+//                         {selectedImages.length > 0 && (
+//                           <div className="mb-6">
+//                             <div className="flex items-center justify-between mb-4">
+//                               <h3 className="font-medium text-gray-700">
+//                                 Selected Images ({selectedImages.length})
+//                               </h3>
+//                               <button
+//                                 type="button"
+//                                 onClick={uploadImages}
+//                                 disabled={uploadingImages}
+//                                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-green-400 transition-colors"
+//                               >
+//                                 {uploadingImages ? (
+//                                   <Loader2 className="w-4 h-4 animate-spin" />
+//                                 ) : (
+//                                   <Upload className="w-4 h-4" />
+//                                 )}
+//                                 {uploadingImages ? "Uploading..." : "Upload"}
+//                               </button>
+//                             </div>
+
+//                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+//                               {selectedImages.map((image) => (
+//                                 <div key={image.id} className="relative group">
+//                                   <img
+//                                     src={image.preview}
+//                                     alt={image.name}
+//                                     className="w-full h-32 object-cover rounded-lg"
+//                                   />
+//                                   <button
+//                                     type="button"
+//                                     onClick={() => removeSelectedImage(image.id)}
+//                                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+//                                   >
+//                                     <X className="w-4 h-4" />
+//                                   </button>
+//                                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+//                                     <p className="text-xs text-white truncate">
+//                                       {image.name}
+//                                     </p>
+//                                     <p className="text-xs text-gray-300">
+//                                       {image.size} MB
+//                                     </p>
+//                                   </div>
+//                                 </div>
+//                               ))}
+//                             </div>
+//                           </div>
+//                         )}
+
+//                         {/* Uploaded Images Gallery */}
+//                         {formData.images.length > 0 && (
+//                           <div>
+//                             <h3 className="font-medium text-gray-700 mb-4">
+//                               Hero Images ({formData.images.length})
+//                             </h3>
+
+//                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+//                               {formData.images?.map((img, i) => (
+//                                 <div
+//                                   key={i}
+//                                   className="relative group rounded-lg overflow-hidden border border-gray-200 shadow"
+//                                 >
+//                                   <img
+//                                     src={img}
+//                                     alt={`Image ${i + 1}`}
+//                                     className="w-full h-48 object-cover"
+//                                   />
+
+//                                   {/* delete icon */}
+//                                   <button
+//                                     type="button"
+//                                     onClick={() => removeUploadedImage(i)}
+//                                     className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 
+//                    opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-red-700"
+//                                   >
+//                                     <FiTrash2 className="w-4 h-4" />
+//                                   </button>
+
+//                                   {/* image label */}
+//                                   <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+//                                     <p className="text-xs text-white font-medium">Image {i + 1}</p>
+//                                   </div>
+//                                 </div>
+//                               ))}
+//                             </div>
+
+//                           </div>
+//                         )}
+
+//                         {/* Upload Error */}
+//                         {imageUploadError && (
+//                           <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+//                             <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+//                             <div>
+//                               <p className="text-red-600 font-medium">
+//                                 Upload Failed
+//                               </p>
+//                               <p className="text-red-500 text-sm mt-1">
+//                                 {imageUploadError}
+//                               </p>
+//                             </div>
+//                           </div>
+//                         )}
+//                       </div>
+
+//                       {/* Action Buttons */}
+//                       <div className="flex justify-end gap-4 pt-8 border-t mt-8">
+//                         <button
+//                           type="button"
+//                           onClick={handleUpdate}
+//                           disabled={updateLoading || uploadingImages}
+//                           className="flex items-center gap-2 px-8 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors font-medium"
+//                         >
+//                           {updateLoading ? (
+//                             <Loader2 className="w-5 h-5 animate-spin" />
+//                           ) : (
+//                             <Save className="w-5 h-5" />
+//                           )}
+//                           {updateLoading ? "Saving..." : "Save Changes"}
+//                         </button>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default HeroSectionManager;
+
+
 import React, { useState, useEffect } from "react";
 import {
   fetchHeroSections,
   updateHeroSection,
   uploadMultipleFiles,
+  getFullImageUrl // ✅ Import this
 } from "../../../api/userApi";
-import { BASE_URL } from "../../../api/apiConfig";
 import { FiTrash2 } from "react-icons/fi";
-
 
 import {
   Save,
@@ -856,6 +1342,8 @@ const HeroSectionManager = () => {
   const [heroSections, setHeroSections] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeHeroId, setActiveHeroId] = useState(null);
+  
+  // ✅ formData.images will store RELATIVE paths (e.g., "/uploads/img.jpg")
   const [formData, setFormData] = useState({
     title: "",
     subtitle: "",
@@ -890,13 +1378,25 @@ const HeroSectionManager = () => {
     }
   };
 
+  // ✅ Helper to remove Base URL (Protocol + Domain)
+  const getRelativePath = (url) => {
+    if (!url) return "";
+    return url.replace(/^https?:\/\/[^\/]+/, '');
+  };
+
   const selectHero = (hero) => {
     setActiveHeroId(hero.id);
+    
+    // ✅ Store RELATIVE paths in formData
+    const relativeImages = hero.images 
+      ? hero.images.map(img => getRelativePath(img)) 
+      : [];
+
     setFormData({
       title: hero.title,
       subtitle: hero.subtitle,
       slogan: hero.slogan || "",
-      images: hero.images || [],
+      images: relativeImages,
     });
     setSelectedImages([]);
     setImageUploadError("");
@@ -944,6 +1444,7 @@ const HeroSectionManager = () => {
 
       let uploadedPaths = [];
 
+      // Handle various response structures
       if (response.success && response.files && Array.isArray(response.files)) {
         uploadedPaths = response.files;
       } else if (response.files && Array.isArray(response.files)) {
@@ -958,17 +1459,14 @@ const HeroSectionManager = () => {
         throw new Error("No files were uploaded successfully");
       }
 
-      const fullImageUrls = uploadedPaths.map((path) => {
-        if (path.startsWith("http://") || path.startsWith("https://")) {
-          return path;
-        }
-        const cleanPath = path.startsWith("/") ? path.substring(1) : path;
-        return `${BASE_URL}/${cleanPath}`;
+      // ✅ Ensure we only store RELATIVE paths in formData
+      const relativePaths = uploadedPaths.map((path) => {
+        return getRelativePath(path);
       });
 
       setFormData((prev) => ({
         ...prev,
-        images: [...prev.images, ...fullImageUrls],
+        images: [...prev.images, ...relativePaths],
       }));
 
       selectedImages.forEach((img) => URL.revokeObjectURL(img.preview));
@@ -1014,6 +1512,7 @@ const HeroSectionManager = () => {
 
     setUpdateLoading(true);
     try {
+      // ✅ formData.images are relative paths, safe for API
       await updateHeroSection(activeHeroId, formData);
       alert("Hero section updated successfully!");
       loadHeroSections();
@@ -1246,7 +1745,8 @@ const HeroSectionManager = () => {
                                   className="relative group rounded-lg overflow-hidden border border-gray-200 shadow"
                                 >
                                   <img
-                                    src={img}
+                                    // ✅ Use getFullImageUrl for List Display
+                                    src={getFullImageUrl(img)}
                                     alt={`Image ${i + 1}`}
                                     className="w-full h-48 object-cover"
                                   />

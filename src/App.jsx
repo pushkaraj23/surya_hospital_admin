@@ -21,22 +21,22 @@ import Newsletter from "./modules/dashboard/pages/Newsletter";
 import UsersManagement from "./modules/dashboard/pages/UsersManagement";
 import TourismEnquiry from "./modules/dashboard/pages/TourismEnquiry";
 
-// function PrivateRoute({ children }) {
-//   const isLoggedIn = localStorage.getItem("adminToken");
-//   return isLoggedIn ? children : <Navigate to="/login" replace />;
-// }
+function PrivateRoute({ children }) {
+  const isLoggedIn = localStorage.getItem("adminToken");
+  return isLoggedIn ? children : <Navigate to="/login" replace />;
+}
 
 export default function App() {
   return (
     <Routes>
-      {/* <Route path="/login" element={<LoginPage />} /> */}
+      <Route path="/login" element={<LoginPage />} />
 
       <Route
         path="/"
         element={
-          // <PrivateRoute>
-          <MainLayout />
-          // </PrivateRoute>
+          <PrivateRoute>
+            <MainLayout />
+          </PrivateRoute>
         }
       >
         <Route index element={<Dashboard />} />

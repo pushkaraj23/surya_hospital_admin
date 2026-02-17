@@ -1,6 +1,37 @@
 import { BASE_URL } from "./apiConfig";
 import axiosInstance from "./axiosInstance";
 
+
+export const getFullImageUrl = (url) => {
+  if (!url) return "";
+  if (url.startsWith("http") || url.startsWith("blob:")) return url;
+  return `${BASE_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+};
+
+// Helper to extract relative path from full URL (for saving to API)
+export const getRelativePath = (url) => {
+  if (!url) return "";
+  if (url.startsWith("blob:")) return "";
+  if (url.startsWith(BASE_URL)) {
+    return url.replace(BASE_URL, "");
+  }
+  if (url.startsWith("http")) return url; // External URL, keep as is
+  return url; // Already relative
+};
+
+
+// Helper to transform array of photos
+export const getFullImageUrlArray = (photos) => {
+  if (!photos || !Array.isArray(photos)) return [];
+  return photos.flat().map(photo => getFullImageUrl(photo));
+};
+
+// Helper to get relative paths from array
+export const getRelativePathArray = (photos) => {
+  if (!photos || !Array.isArray(photos)) return [];
+  return photos.flat().map(photo => getRelativePath(photo));
+};
+
 // ✅ Fetch all departments
 export const fetchDepartments = async () => {
   try {
@@ -270,7 +301,7 @@ export const getDoctorsBySpecialization = async (specialization) => {
   } catch (error) {
     throw new Error(
       error.response?.data?.message ||
-        "Failed to fetch doctors by specialization"
+      "Failed to fetch doctors by specialization"
     );
   }
 };
@@ -569,11 +600,11 @@ export const testAppointmentEndpoints = async () => {
         data:
           test.method !== "GET"
             ? {
-                fullname: "Test User",
-                mobilenumber: "1234567890",
-                email: "test@example.com",
-                status: "Pending",
-              }
+              fullname: "Test User",
+              mobilenumber: "1234567890",
+              email: "test@example.com",
+              status: "Pending",
+            }
             : undefined,
       });
       console.log(`✅ ${test.description}: SUCCESS`, response.status);
@@ -1406,9 +1437,9 @@ export const getFeedbackStats = async () => {
       averageRating:
         feedback.length > 0
           ? (
-              feedback.reduce((acc, item) => acc + item.rating, 0) /
-              feedback.length
-            ).toFixed(1)
+            feedback.reduce((acc, item) => acc + item.rating, 0) /
+            feedback.length
+          ).toFixed(1)
           : 0,
       ratingDistribution: {
         5: feedback.filter((item) => item.rating === 5).length,
